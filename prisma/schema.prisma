@@ -57,3 +57,11 @@ model VerificationRequest {
   createdAt  DateTime @default(now()) @map(name: "created_at")
   updatedAt  DateTime @default(now()) @map(name: "updated_at")
 }
+
+model Emoji {
+  id         Int    @id @default(autoincrement())
+  name       String
+  externalId String @map(name: "external_id")
+  unified    String @unique
+  colons     String
+}
