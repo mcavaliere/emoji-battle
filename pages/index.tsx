@@ -40,10 +40,17 @@ const Home: NextPage = () => {
 
   return (
     <Container>
-      <Heading>Next.js + Prisma = Magic</Heading>
-      <Heading size='md'>Welcome, {session?.user?.name}.</Heading>
+      <Heading mb={5} textAlign='center'>
+        Emoji Battle
+      </Heading>
 
-      <HStack>
+      {session?.user?.name && (
+        <Heading size='md' mb={20} textAlign='center'>
+          Welcome to the Dojo, {session?.user?.name}.
+        </Heading>
+      )}
+
+      <HStack spacing={20}>
         <EmojiPicker afterSelect={mutateEmojiList} />
         {emojiList && <EmojiGrid emojis={emojiList} />}
       </HStack>

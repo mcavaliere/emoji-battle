@@ -1,5 +1,5 @@
 import { useState, FC } from 'react';
-import { Button, Container, HStack } from '@chakra-ui/react';
+import { Button, Container, Heading, HStack } from '@chakra-ui/react';
 import { Picker, EmojiSet } from 'emoji-mart';
 
 export type EmojiPickerProps = {
@@ -25,7 +25,10 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({ afterSelect }) => {
   };
 
   return (
-    <Container>
+    <Container textAlign='center'>
+      <Heading size='md' mb={5}>
+        Pick an emoji!
+      </Heading>
       <HStack>
         <Button onClick={() => setEmojiSet('apple')}>Apple</Button>
         <Button onClick={() => setEmojiSet('google')}>Google</Button>
