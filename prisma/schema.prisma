@@ -62,6 +62,7 @@ model Emoji {
   id         Int    @id @default(autoincrement())
   name       String
   externalId String @map(name: "external_id")
+  native     String
   unified    String @unique
   colons     String
 }
