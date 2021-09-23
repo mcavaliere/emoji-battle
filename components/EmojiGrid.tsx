@@ -6,6 +6,6 @@ type Props = {
   emojis: Emoji[];
 };
 
-export const EmojiGrid: FC<Props> = ({ emojis }) => (
-  <Container>{emojis.map((e) => e.native)}</Container>
-);
+export const EmojiGrid: FC<Props> = ({ emojis }) => {
+  return <Container>{emojis.map((e) => e.native)}</Container>;
+};
