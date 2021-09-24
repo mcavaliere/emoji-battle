@@ -9,7 +9,7 @@ export const UserList: FC = () => {
     data: usersData,
     error: usersError,
     mutate: mutateUsersList,
-  } = useSWR(`/api/users/list`, fetcher);
+  } = useSWR(`/api/users/list`, fetcher, { refreshInterval: 200 });
 
   if (usersError) return <div>failed to load</div>;
   if (!usersData?.users) return <div>loading...</div>;
