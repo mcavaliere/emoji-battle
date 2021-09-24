@@ -14,6 +14,10 @@ import { EmojiGrid } from '../components/EmojiGrid';
 import { EmojiPicker } from '../components/EmojiPicker';
 import { UserList } from '../components/UserList';
 
+const handleResetClick = async () => {
+  await fetch('/api/reset', { method: 'POST' });
+};
+
 // @ts-ignore
 const Home: NextPage = () => {
   const [session, loading] = useSession();
@@ -49,9 +53,21 @@ const Home: NextPage = () => {
       </Heading>
 
       {session?.user?.name && (
-        <Heading size='md' mb={20} textAlign='center'>
-          Welcome to the Dojo, {session?.user?.name}.
-        </Heading>
+        <>
+          <Heading size='md' mb={20} textAlign='center'>
+            Welcome to the Dojo, {session?.user?.name}.
+          </Heading>
+          {session?.user?.name === 'Mike Cavaliere' && (
+            <Button
+              onClick={handleResetClick}
+              position='absolute'
+              top={10}
+              right={10}
+            >
+              Reset Game
+            </Button>
+          )}
+        </>
       )}
 
       <HStack spacing={20} alignItems='flex-start'>
