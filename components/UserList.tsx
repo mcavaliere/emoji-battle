@@ -19,7 +19,7 @@ export const UserList: FC = () => {
   return (
     <Container textAlign='center'>
       <Heading size='md' mb={5}>
-        Who's battling?
+        Who&#39;s battling?
       </Heading>
       <VStack>
         {users.map(({ id, name }) => (

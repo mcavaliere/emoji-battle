@@ -52,6 +52,7 @@ export default async function handler(
         },
         User: {
           connect: {
+            // @ts-ignore
             id: user.id,
           },
         },
