@@ -10,7 +10,7 @@ export const EmojiGrid: FC = () => {
     data: emojiData,
     error: listError,
     mutate: mutateEmojiList,
-  } = useSWR(`/api/emoji/list`, fetcher);
+  } = useSWR(`/api/emoji/list`, fetcher, { refreshInterval: 500 });
 
   if (listError) return <div>failed to load</div>;
   if (!emojiData?.emojis) return <div>loading...</div>;
