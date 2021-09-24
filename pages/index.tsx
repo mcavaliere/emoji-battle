@@ -33,8 +33,8 @@ const Home: NextPage = () => {
 
       <HStack spacing={20} alignItems='flex-start'>
         <EmojiPicker />
-        <UserList />
         <EmojiGrid />
+        <UserList />
       </HStack>
     </Container>
   );

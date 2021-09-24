@@ -13,7 +13,13 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   try {
-    const emojis = await prisma.emoji.findMany();
+    const emojis = await prisma.emoji.findMany({
+      include: {
+        votes: true,
+      },
+    });
+
+    // console.log(`---------------- emojis:  `, emojis);
 
     res.status(200).json({ emojis });
   } catch (error) {

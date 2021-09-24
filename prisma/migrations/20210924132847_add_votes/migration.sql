@@ -1,0 +1,16 @@
+-- CreateTable
+CREATE TABLE "Vote" (
+    "id" SERIAL NOT NULL,
+    "user_id" INTEGER NOT NULL,
+    "emoji_id" INTEGER NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Vote_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "Vote" ADD CONSTRAINT "Vote_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Vote" ADD CONSTRAINT "Vote_emoji_id_fkey" FOREIGN KEY ("emoji_id") REFERENCES "Emoji"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

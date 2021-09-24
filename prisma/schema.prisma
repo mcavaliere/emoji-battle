@@ -18,6 +18,7 @@ model User {
   image         String?
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+  votes         Vote[]
 }
 
 model Account {
@@ -65,4 +66,15 @@ model Emoji {
   native     String
   unified    String @unique
   colons     String
+  votes      Vote[]
+}
+
+model Vote {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map(name: "user_id")
+  emojiId   Int      @map(name: "emoji_id")
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+  User      User     @relation(fields: [userId], references: [id])
+  Emoji     Emoji    @relation(fields: [emojiId], references: [id])
 }

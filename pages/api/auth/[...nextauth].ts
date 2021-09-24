@@ -12,4 +12,13 @@ export default NextAuth({
       clientSecret: process.env.GITHUB_SECRET,
     }),
   ],
+  callbacks: {
+    async session(session, token) {
+      // expose user id
+      return Promise.resolve({
+        ...session,
+        user: { ...session.user, id: token.id },
+      });
+    },
+  },
 });
