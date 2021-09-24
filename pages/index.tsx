@@ -43,9 +43,9 @@ const Home: NextPage = () => {
   }
 
   return (
-    <Container maxW='100%'>
+    <Container maxW='100%' p={10}>
       <Heading mb={5} textAlign='center'>
-        Emoji Battle
+        Emoji 🤪 ⚔️ 😀 Battle
       </Heading>
 
       {session?.user?.name && (
