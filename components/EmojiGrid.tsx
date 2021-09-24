@@ -26,8 +26,11 @@ export const EmojiGrid: FC = () => {
         <VStack>
           {emojis.map((e) => (
             <Container key='e.native'>
-              {e.native}
-              <Text size='sm'>{e._count.votes} votes</Text>
+              <span style={{ fontSize: 15 + e._count.votes * 5 }}>
+                {e.native}
+              </span>
+
+              <Text fontSize='xs'>{e._count.votes} votes</Text>
             </Container>
           ))}
         </VStack>
