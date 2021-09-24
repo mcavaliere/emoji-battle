@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Emoji } from '@prisma/client';
-import { Container, Heading, VStack } from '@chakra-ui/react';
+import { Container, Heading, Text, VStack } from '@chakra-ui/react';
 import useSWR from 'swr';
 
 import { fetcher } from '../lib/fetcher';
@@ -25,7 +25,10 @@ export const EmojiGrid: FC = () => {
         </Heading>
         <VStack>
           {emojis.map((e) => (
-            <Container key='e.native'>{e.native}</Container>
+            <Container key='e.native'>
+              {e.native}
+              <Text size='sm'>{e._count.votes} votes</Text>
+            </Container>
           ))}
         </VStack>
       </Container>

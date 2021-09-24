@@ -14,12 +14,20 @@ export default async function handler(
 ) {
   try {
     const emojis = await prisma.emoji.findMany({
-      include: {
-        votes: true,
+      select: {
+        id: true,
+        name: true,
+        native: true,
+        _count: {
+          select: {
+            votes: true,
+          },
+        },
+      },
+      orderBy: {
+        votes: { _count: 'desc' },
       },
     });
-
-    // console.log(`---------------- emojis:  `, emojis);
 
     res.status(200).json({ emojis });
   } catch (error) {
