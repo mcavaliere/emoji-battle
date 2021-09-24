@@ -1,7 +1,14 @@
-import { Flex } from '@chakra-ui/react';
+import { Container, Flex } from '@chakra-ui/react';
 
 export const PageLayout = ({ children }) => (
-  <Flex align='center' justify='center' minH='100vh' width='100%'>
+  <Container
+    maxW='100%'
+    direction='column'
+    align='center'
+    justify='center'
+    minH='100vh'
+    width='100%'
+  >
     {children}
-  </Flex>
+  </Container>
 );

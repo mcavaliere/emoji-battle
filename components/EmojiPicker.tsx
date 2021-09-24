@@ -29,7 +29,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({ afterSelect }) => {
       <Heading size='md' mb={5}>
         Pick an emoji!
       </Heading>
-      <HStack>
+      <HStack justifyContent='center' mb={5}>
         <Button onClick={() => setEmojiSet('apple')}>Apple</Button>
         <Button onClick={() => setEmojiSet('google')}>Google</Button>
         <Button onClick={() => setEmojiSet('twitter')}>Twitter</Button>
