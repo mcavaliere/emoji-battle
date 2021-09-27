@@ -5,7 +5,7 @@ import useSWR from 'swr';
 
 import { fetcher } from '../lib/fetcher';
 
-export const EmojiGrid: FC = () => {
+export const Leaderboard: FC = () => {
   const {
     data: emojiData,
     error: listError,

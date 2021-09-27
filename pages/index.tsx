@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import 'emoji-mart/css/emoji-mart.css';
 
-import { EmojiGrid } from '../components/EmojiGrid';
+import { Leaderboard } from '../components/Leaderboard';
 import { EmojiPicker } from '../components/EmojiPicker';
 import { UserList } from '../components/UserList';
 
@@ -72,7 +72,7 @@ const Home: NextPage = () => {
 
       <HStack spacing={20} alignItems='flex-start'>
         <EmojiPicker />
-        <EmojiGrid />
+        <Leaderboard />
         <UserList />
       </HStack>
     </Container>
