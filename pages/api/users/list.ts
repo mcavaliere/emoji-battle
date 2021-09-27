@@ -13,7 +13,21 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+      where: {
+        votes: {
+          some: {
+            createdAt: {
+              // Show only users who voted in the last 15 minutes.
+              gt: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
+            },
+          },
+        },
+      },
+      include: {
+        votes: true,
+      },
+    });
 
     res.status(200).json({ users });
   } catch (error) {

@@ -23,6 +23,17 @@ export default async function handler(
             votes: true,
           },
         },
+        votes: true,
+      },
+      where: {
+        votes: {
+          some: {
+            createdAt: {
+              // Show only votes from the last 15 minutes.
+              gt: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
+            },
+          },
+        },
       },
       orderBy: {
         votes: { _count: 'desc' },

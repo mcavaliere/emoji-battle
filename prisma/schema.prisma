@@ -19,6 +19,7 @@ model User {
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
   votes         Vote[]
+  sessions      Session[]
 }
 
 model Account {
@@ -48,6 +49,7 @@ model Session {
   accessToken  String   @unique
   createdAt    DateTime @default(now()) @map(name: "created_at")
   updatedAt    DateTime @default(now()) @map(name: "updated_at")
+  User         User     @relation(fields: [userId], references: [id])
 }
 
 model VerificationRequest {
