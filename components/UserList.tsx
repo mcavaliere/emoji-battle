@@ -5,11 +5,11 @@ import useSWR from 'swr';
 import { fetcher } from '../lib/fetcher';
 
 export const UserList: FC = () => {
-  const {
-    data: usersData,
-    error: usersError,
-    mutate: mutateUsersList,
-  } = useSWR(`/api/users/list`, fetcher, { refreshInterval: 200 });
+  const { data: usersData, error: usersError } = useSWR(
+    `/api/users/list`,
+    fetcher,
+    { refreshInterval: 200 }
+  );
 
   if (usersError) return <div>failed to load</div>;
   if (!usersData?.users) return <div>loading...</div>;

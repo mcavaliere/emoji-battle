@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth';
+import NextAuth, { Session, User } from 'next-auth';
 import Providers from 'next-auth/providers';
 import Adapters from 'next-auth/adapters';
 
@@ -13,7 +13,10 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    async session(session, token) {
+    async session(
+      session,
+      token
+    ): Promise<Session & { user: User & { id?: unknown } }> {
       // expose user id
       return Promise.resolve({
         ...session,

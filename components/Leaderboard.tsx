@@ -6,11 +6,11 @@ import useSWR from 'swr';
 import { fetcher } from '../lib/fetcher';
 
 export const Leaderboard: FC = () => {
-  const {
-    data: emojiData,
-    error: listError,
-    mutate: mutateEmojiList,
-  } = useSWR(`/api/emoji/list`, fetcher, { refreshInterval: 200 });
+  const { data: emojiData, error: listError } = useSWR(
+    `/api/emoji/list`,
+    fetcher,
+    { refreshInterval: 200 }
+  );
 
   if (listError) return <div>failed to load</div>;
   if (!emojiData?.emojis) return <div>loading...</div>;
