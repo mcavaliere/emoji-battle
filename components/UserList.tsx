@@ -1,10 +1,16 @@
 import { FC } from 'react';
 import { Container, Heading, VStack, Text } from '@chakra-ui/react';
-import { User } from '@prisma/client';
 import useSWR from 'swr';
 import { fetcher } from '../lib/fetcher';
 
+import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
+import * as Constants from '../lib/websocketConstants';
+
 export const UserList: FC = () => {
+  const [channel] = useWebsocketChannel(Constants.CHANNELS.MAIN, (message) => {
+    console.log(`UserList received message`, message);
+  });
+
   const { data: usersData, error: usersError } = useSWR(
     `/api/users/list`,
     fetcher,

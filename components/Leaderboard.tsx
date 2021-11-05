@@ -1,11 +1,16 @@
 import { FC } from 'react';
-import { Emoji } from '@prisma/client';
 import { Container, Heading, Text, VStack } from '@chakra-ui/react';
 import useSWR from 'swr';
 
 import { fetcher } from '../lib/fetcher';
+import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
+import * as Constants from '../lib/websocketConstants';
 
 export const Leaderboard: FC = () => {
+  const [channel] = useWebsocketChannel(Constants.CHANNELS.MAIN, (message) => {
+    console.log(`Leaderboard received message`, message);
+  });
+
   const { data: emojiData, error: listError } = useSWR(
     `/api/emoji/list`,
     fetcher,
