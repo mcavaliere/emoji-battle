@@ -13,6 +13,7 @@ import 'emoji-mart/css/emoji-mart.css';
 import { Leaderboard } from '../components/Leaderboard';
 import { EmojiPicker } from '../components/EmojiPicker';
 import { UserList } from '../components/UserList';
+import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 
 const handleResetClick = async () => {
   await fetch('/api/reset', { method: 'POST' });
@@ -21,6 +22,16 @@ const handleResetClick = async () => {
 // @ts-ignore
 const Home: NextPage = () => {
   const [session, loading] = useSession();
+  const [channel, ably] = useWebsocketChannel('emoji-battle', (message) => {
+    console.log(`index.tsx received message:`, message);
+    // Here we're computing the state that'll be drawn into the message history
+    // We do that by slicing the last 199 messages from the receivedMessages buffer
+    // const history = receivedMessages.slice(-199);
+    // setMessages([...history, message]);
+    // Then finally, we take the message history, and combine it with the new message
+    // This means we'll always have up to 199 message + 1 new message, stored using the
+    // setMessages react useState hook
+  });
 
   if (loading) {
     return <div>Loading...</div>;

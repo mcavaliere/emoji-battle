@@ -2,12 +2,17 @@ import { useState, FC } from 'react';
 import { Button, Container, Heading, HStack } from '@chakra-ui/react';
 import { Picker, EmojiSet } from 'emoji-mart';
 
+import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
+
 export type EmojiPickerProps = {
   afterSelect?: (emoji) => void;
 };
 
 export const EmojiPicker: FC<EmojiPickerProps> = ({ afterSelect }) => {
   const [emojiSet, setEmojiSet] = useState<EmojiSet>('apple');
+  const [channel, ably] = useWebsocketChannel('emoji-battle', (message) => {
+    console.log(`EmojiPicker received message `, message);
+  });
 
   const handleEmojiSelect = async (emoji: any) => {
     await fetch('/api/emoji/create', {
@@ -17,6 +22,11 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({ afterSelect }) => {
         Accept: 'application/json',
       },
       body: JSON.stringify({ emoji }),
+    });
+
+    channel.publish({
+      name: 'emoji-selected',
+      emoji,
     });
 
     if (afterSelect) {
