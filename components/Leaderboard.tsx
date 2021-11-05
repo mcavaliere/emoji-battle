@@ -25,7 +25,7 @@ export const Leaderboard: FC = () => {
         </Heading>
         <VStack>
           {emojis.map((e) => (
-            <Container key='e.native'>
+            <Container key={e.native}>
               <span style={{ fontSize: 15 + e._count.votes * 5 }}>
                 {e.native}
               </span>
