@@ -3,7 +3,7 @@ import { Container, Heading, VStack, Text } from '@chakra-ui/react';
 import useSWR from 'swr';
 import { fetcher } from '../lib/fetcher';
 
-import { useWebsocketChannel, on } from '../lib/hooks/useWebsocketChannel';
+import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import * as Constants from '../lib/websocketConstants';
 
 export const UserList: FC = () => {

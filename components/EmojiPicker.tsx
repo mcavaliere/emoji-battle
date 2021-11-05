@@ -19,6 +19,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({ afterSelect }) => {
   );
 
   const handleEmojiSelect = async (emoji: any) => {
+    // @ts-ignore
     channel.publish(Constants.EVENTS.EMOJI_CLICKED, {
       emoji,
     });
@@ -32,6 +33,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({ afterSelect }) => {
       body: JSON.stringify({ emoji }),
     });
 
+    // @ts-ignore
     channel.publish(Constants.EVENTS.EMOJI_SELECTION_RECORDED, {
       emoji,
     });
