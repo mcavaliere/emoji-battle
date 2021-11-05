@@ -1,16 +1,11 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { Emoji } from '@prisma/client';
-import prisma from '../../../lib/prismaClientInstance';
 
-type Data = {
-  emojis?: Emoji[];
-  error?: unknown;
-};
+import prisma from '../../../lib/prismaClientInstance';
+import { EmojiListResponsePayload } from '../../../lib/types/EmojiListResponsePayload';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<EmojiListResponsePayload>
 ) {
   try {
     const emojis = await prisma.emoji.findMany({
