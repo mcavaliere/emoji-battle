@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
-import { Container, Heading, Text, VStack } from '@chakra-ui/react';
+import { Box, Container, Heading, Text, SimpleGrid } from '@chakra-ui/react';
 import useSWR from 'swr';
+import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
 
 import { Emoji } from '.prisma/client';
 import { fetcher } from '../lib/fetcher';
@@ -8,11 +9,38 @@ import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import * as Constants from '../lib/websocketConstants';
 import { EmojiFromListResponsePayload } from '../lib/types/EmojiListResponsePayload';
 
+const MotionBox = motion(Box);
+
 export const mapEmojis = (emojis: Emoji[]) =>
   emojis.reduce((acc, emoji) => {
     acc[emoji.id] = emoji;
     return acc;
   }, {});
+
+export type EmojiContainerProps = {
+  emoji: EmojiFromListResponsePayload;
+};
+
+export const EmojiContainer: FC<EmojiContainerProps> = ({ emoji }) => (
+  <MotionBox
+    display='inline'
+    key={emoji.native}
+    width='auto'
+    m={0}
+    p={0}
+    initial={{ opacity: 0, y: 100 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.2 }}
+    layout
+  >
+    <span style={{ fontSize: 15 + emoji._count.votes * 5 }}>
+      {emoji.native}
+    </span>
+
+    <Text fontSize='xs'>{emoji._count.votes} votes</Text>
+  </MotionBox>
+);
 
 export const Leaderboard: FC = () => {
   const [emojis, setEmojis] = useState<EmojiFromListResponsePayload[]>([]);
@@ -59,17 +87,13 @@ export const Leaderboard: FC = () => {
         <Heading size='md' mb={5}>
           Leaderboard
         </Heading>
-        <VStack>
-          {emojis.map((e) => (
-            <Container key={e.native}>
-              <span style={{ fontSize: 15 + e._count.votes * 5 }}>
-                {e.native}
-              </span>
-
-              <Text fontSize='xs'>{e._count.votes} votes</Text>
-            </Container>
-          ))}
-        </VStack>
+        <SimpleGrid columns={6} spacing={5} alignItems='center'>
+          <AnimatePresence>
+            {emojis.map((e) => (
+              <EmojiContainer emoji={e} key={e.id} />
+            ))}
+          </AnimatePresence>
+        </SimpleGrid>
       </Container>
     </>
   );
