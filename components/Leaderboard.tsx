@@ -1,5 +1,13 @@
 import { FC, useState } from 'react';
-import { Box, Container, Heading, Text, SimpleGrid } from '@chakra-ui/react';
+import {
+  Box,
+  Container,
+  Heading,
+  Text,
+  SimpleGrid,
+  Tag,
+  TagLabel,
+} from '@chakra-ui/react';
 import useSWR from 'swr';
 import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
 
@@ -21,24 +29,49 @@ export type EmojiContainerProps = {
   emoji: EmojiFromListResponsePayload;
 };
 
+export const Count = ({ children }) => (
+  <Box
+    p={1}
+    // bg='blue.100'
+    d='block'
+    w='100%'
+    pos='absolute'
+    bottom={-5}
+    margin='0 auto'
+    flex='1'
+    direction='row'
+  >
+    <Text fontSize={12}>{children}</Text>
+  </Box>
+);
+
 export const EmojiContainer: FC<EmojiContainerProps> = ({ emoji }) => (
   <MotionBox
-    display='inline'
+    display='flex'
+    direction='column'
+    alignItems='center'
+    justify='center'
     key={emoji.native}
-    width='auto'
-    m={0}
-    p={0}
     initial={{ opacity: 0, y: 100 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0 }}
     transition={{ duration: 0.2 }}
     layout
+    pos='relative'
+    // bg='pink'
+    height='100%'
+    flex='1'
+    textAlign='center'
   >
-    <span style={{ fontSize: 15 + emoji._count.votes * 5 }}>
+    <Text
+      style={{ fontSize: 15 + emoji._count.votes * 5 }}
+      // bg='green'
+      margin='0 auto'
+    >
       {emoji.native}
-    </span>
+    </Text>
 
-    <Text fontSize='xs'>{emoji._count.votes} votes</Text>
+    <Count>{emoji._count.votes}</Count>
   </MotionBox>
 );
 

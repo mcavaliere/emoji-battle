@@ -18,7 +18,6 @@ const handleResetClick = async () => {
   await fetch('/api/reset', { method: 'POST' });
 };
 
-// @ts-ignore
 const Home: NextPage = () => {
   const [session, loading] = useSession();
 
