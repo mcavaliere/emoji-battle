@@ -6,6 +6,7 @@ import {
   Flex,
   Heading,
   HStack,
+  SimpleGrid,
   Text,
 } from '@chakra-ui/react';
 import 'emoji-mart/css/emoji-mart.css';
@@ -69,11 +70,11 @@ const Home: NextPage = () => {
         </>
       )}
 
-      <HStack spacing={20} alignItems='flex-start'>
+      <SimpleGrid columns={3} spacing={3}>
         <EmojiPicker />
         <Leaderboard />
         <UserList />
-      </HStack>
+      </SimpleGrid>
     </Container>
   );
 };

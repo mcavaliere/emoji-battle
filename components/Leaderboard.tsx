@@ -2,6 +2,7 @@ import { FC, useState } from 'react';
 import {
   Box,
   Container,
+  Flex,
   Heading,
   Text,
   SimpleGrid,
@@ -60,7 +61,7 @@ export const EmojiContainer: FC<EmojiContainerProps> = ({ emoji }) => (
     pos='relative'
     // bg='pink'
     height='100%'
-    flex='1'
+    // flex='1'
     textAlign='center'
   >
     <Text
@@ -116,7 +117,13 @@ export const Leaderboard: FC = () => {
 
   return (
     <>
-      <Container textAlign='center'>
+      <Flex
+        direction='column'
+        align='center'
+        textAlign='center'
+        m={0}
+        width='100%'
+      >
         <Heading size='md' mb={5}>
           Leaderboard
         </Heading>
@@ -127,7 +134,7 @@ export const Leaderboard: FC = () => {
             ))}
           </AnimatePresence>
         </SimpleGrid>
-      </Container>
+      </Flex>
     </>
   );
 };
