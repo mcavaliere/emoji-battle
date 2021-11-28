@@ -19,6 +19,7 @@ import * as Constants from '../lib/websocketConstants';
 import { EmojiFromListResponsePayload } from '../lib/types/EmojiListResponsePayload';
 
 const MotionBox = motion(Box);
+const MotionText = motion(Text);
 
 export const mapEmojis = (emojis: Emoji[]) =>
   emojis.reduce((acc, emoji) => {
@@ -52,6 +53,7 @@ export const EmojiContainer: FC<EmojiContainerProps> = ({ emoji }) => (
     direction='column'
     alignItems='center'
     justify='center'
+    verticalAlign='middle'
     key={emoji.native}
     initial={{ opacity: 0, y: 100 }}
     animate={{ opacity: 1, y: 0 }}
@@ -60,9 +62,10 @@ export const EmojiContainer: FC<EmojiContainerProps> = ({ emoji }) => (
     layout
     pos='relative'
     // bg='pink'
-    height='100%'
-    // flex='1'
     textAlign='center'
+    float='left'
+    height={150}
+    mr={4}
   >
     <Text
       style={{ fontSize: 15 + emoji._count.votes * 5 }}
@@ -127,13 +130,13 @@ export const Leaderboard: FC = () => {
         <Heading size='md' mb={5}>
           Leaderboard
         </Heading>
-        <SimpleGrid columns={6} spacing={5} alignItems='center'>
+        <Box>
           <AnimatePresence>
             {emojis.map((e) => (
               <EmojiContainer emoji={e} key={e.id} />
             ))}
           </AnimatePresence>
-        </SimpleGrid>
+        </Box>
       </Flex>
     </>
   );
