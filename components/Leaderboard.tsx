@@ -1,16 +1,6 @@
-import { FC, useState } from 'react';
-import {
-  Box,
-  Container,
-  Flex,
-  Heading,
-  Text,
-  SimpleGrid,
-  Tag,
-  TagLabel,
-} from '@chakra-ui/react';
-import useSWR from 'swr';
-import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
+import { FC, useEffect, useState } from 'react';
+import { Box, Flex, Heading, Text } from '@chakra-ui/react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { Emoji } from '.prisma/client';
 import { fetcher } from '../lib/fetcher';
@@ -87,24 +77,32 @@ export const Leaderboard: FC = () => {
       }
     }
 
-  const [channel] = useWebsocketChannel(Constants.CHANNELS.MAIN, (message) => {
-    // If an emoji was clicked, update its count optimistically.
-    if (message.name === Constants.EVENTS.EMOJI_CLICKED) {
-      const { emoji } = message.data;
-      const newEmojis = [...emojis];
+    loadEmoji();
+  }, []);
 
-      const targetIndex = newEmojis.findIndex((e) => e.native === emoji.native);
+  const [leaderboardChannel] = useWebsocketChannel(
+    Constants.CHANNELS.LEADERBOARD,
+    (message) => {
+      // If an emoji was clicked, update its count optimistically.
+      if (message.name === Constants.EVENTS.EMOJI_CLICKED) {
+        const { emoji } = message.data;
+        const newEmojis = [...emojis];
 
-      // If the emoji is not in the list, add it. Otherwise find it in the list and update its count.
-      if (targetIndex === -1) {
-        newEmojis.push({ ...emoji, _count: { votes: 1 } });
-      } else {
-        newEmojis[targetIndex]._count.votes += 1;
+        const targetIndex = newEmojis.findIndex(
+          (e) => e.native === emoji.native
+        );
+
+        // If the emoji is not in the list, add it. Otherwise find it in the list and update its count.
+        if (targetIndex === -1) {
+          newEmojis.push({ ...emoji, _count: { votes: 1 } });
+        } else {
+          newEmojis[targetIndex]._count.votes += 1;
+        }
+
+        setEmojis(newEmojis);
       }
-
-      setEmojis(newEmojis);
     }
-  });
+  );
 
   if (!emojis) return <div>loading...</div>;
 

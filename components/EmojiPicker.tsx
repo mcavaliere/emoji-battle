@@ -11,16 +11,16 @@ export type EmojiPickerProps = {
 
 export const EmojiPicker: FC<EmojiPickerProps> = ({ afterSelect }) => {
   const [emojiSet, setEmojiSet] = useState<EmojiSet>('apple');
-  const [channel, ably] = useWebsocketChannel(
-    Constants.CHANNELS.MAIN,
-    (message) => {
-      console.log(`EmojiPicker received message `, message);
-    }
+  const [voteChannel] = useWebsocketChannel(Constants.CHANNELS.VOTE, () => {});
+
+  const [leaderboardChannel] = useWebsocketChannel(
+    Constants.CHANNELS.LEADERBOARD,
+    () => {}
   );
 
   const handleEmojiSelect = async (emoji: any) => {
     // @ts-ignore
-    channel.publish(Constants.EVENTS.EMOJI_CLICKED, {
+    leaderboardChannel.publish(Constants.EVENTS.EMOJI_CLICKED, {
       emoji,
     });
 
@@ -31,11 +31,6 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({ afterSelect }) => {
         Accept: 'application/json',
       },
       body: JSON.stringify({ emoji }),
-    });
-
-    // @ts-ignore
-    channel.publish(Constants.EVENTS.EMOJI_SELECTION_RECORDED, {
-      emoji,
     });
 
     if (afterSelect) {

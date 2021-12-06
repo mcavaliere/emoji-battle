@@ -1,5 +1,7 @@
 export const CHANNELS = {
-  ['MAIN']: 'main-channel',
+  ['VOTE']: 'VOTE',
+  ['LEADERBOARD']: 'LEADERBOARD',
+  ['PLAYERS']: 'PLAYERS',
 };
 
 export const EVENTS = {
