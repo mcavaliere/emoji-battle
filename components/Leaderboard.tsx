@@ -97,6 +97,7 @@ export const Leaderboard: FC = () => {
           newEmojis.push({ ...emoji, _count: { votes: 1 } });
         } else {
           newEmojis[targetIndex]._count.votes += 1;
+          newEmojis.sort((a, b) => b._count.votes - a._count.votes);
         }
 
         setEmojis(newEmojis);
