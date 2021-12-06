@@ -19,7 +19,6 @@ import * as Constants from '../lib/websocketConstants';
 import { EmojiFromListResponsePayload } from '../lib/types/EmojiListResponsePayload';
 
 const MotionBox = motion(Box);
-const MotionText = motion(Text);
 
 export const mapEmojis = (emojis: Emoji[]) =>
   emojis.reduce((acc, emoji) => {
@@ -34,7 +33,6 @@ export type EmojiContainerProps = {
 export const Count = ({ children }) => (
   <Box
     p={1}
-    // bg='blue.100'
     d='block'
     w='100%'
     pos='absolute'
@@ -61,17 +59,12 @@ export const EmojiContainer: FC<EmojiContainerProps> = ({ emoji }) => (
     transition={{ duration: 0.2 }}
     layout
     pos='relative'
-    // bg='pink'
     textAlign='center'
     float='left'
     height={150}
     mr={4}
   >
-    <Text
-      style={{ fontSize: 15 + emoji._count.votes * 5 }}
-      // bg='green'
-      margin='0 auto'
-    >
+    <Text style={{ fontSize: 15 + emoji._count.votes * 5 }} margin='0 auto'>
       {emoji.native}
     </Text>
 
@@ -82,16 +75,17 @@ export const EmojiContainer: FC<EmojiContainerProps> = ({ emoji }) => (
 export const Leaderboard: FC = () => {
   const [emojis, setEmojis] = useState<EmojiFromListResponsePayload[]>([]);
 
-  const { data: emojiData, error: listError } = useSWR(
-    `/api/emoji/list`,
-    fetcher,
-    {
-      refreshInterval: 200,
-      onSuccess: (data, key, config) => {
-        setEmojis(data.emojis);
-      },
+  // Initial load: fetch current list of emoji votes.
+  useEffect(() => {
+    async function loadEmoji() {
+      try {
+        const emojiFromApi = await fetcher(`/api/emoji/list`);
+
+        setEmojis(emojiFromApi.emojis);
+      } catch (error) {
+        console.warn(`error from initial emoji load:`, error);
+      }
     }
-  );
 
   const [channel] = useWebsocketChannel(Constants.CHANNELS.MAIN, (message) => {
     // If an emoji was clicked, update its count optimistically.
@@ -112,10 +106,6 @@ export const Leaderboard: FC = () => {
     }
   });
 
-  if (listError) {
-    console.log(`Leaderboard list error `, listError);
-    return <div>failed to load</div>;
-  }
   if (!emojis) return <div>loading...</div>;
 
   return (
