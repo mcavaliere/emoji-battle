@@ -22,16 +22,23 @@ export type EmojiContainerProps = {
 
 export const Count = ({ children }) => (
   <Box
-    p={1}
-    d='block'
-    w='100%'
+    d='flex'
+    alignItems='center'
+    justifyContent='center'
     pos='absolute'
-    bottom={-5}
-    margin='0 auto'
-    flex='1'
-    direction='row'
+    top={-3}
+    left={-3}
+    opacity={0.5}
+    bg='#313638'
+    borderRadius={32}
+    lineHeight='10px'
+    p={1}
+    as='span'
+    minW='16px'
   >
-    <Text fontSize={12}>{children}</Text>
+    <Text as='span' color='white' fontSize={10}>
+      {children}
+    </Text>
   </Box>
 );
 
@@ -39,9 +46,8 @@ export const EmojiContainer: FC<EmojiContainerProps> = ({ emoji }) => (
   <MotionBox
     display='flex'
     direction='column'
-    alignItems='center'
-    justify='center'
-    verticalAlign='middle'
+    align='flex-start'
+    justify='flex-start'
     key={emoji.native}
     initial={{ opacity: 0, y: 100 }}
     animate={{ opacity: 1, y: 0 }}
@@ -53,6 +59,7 @@ export const EmojiContainer: FC<EmojiContainerProps> = ({ emoji }) => (
     float='left'
     height={150}
     mr={4}
+    lineHeight='1'
   >
     <Text style={{ fontSize: 15 + emoji._count.votes * 5 }} margin='0 auto'>
       {emoji.native}
@@ -119,7 +126,7 @@ export const Leaderboard: FC = () => {
         <Heading size='md' mb={5}>
           Leaderboard
         </Heading>
-        <Box>
+        <Box width='100%'>
           <AnimatePresence>
             {emojis.map((e) => (
               <EmojiContainer emoji={e} key={e.id} />
