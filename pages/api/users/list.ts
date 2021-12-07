@@ -15,17 +15,14 @@ export default async function handler(
   try {
     const users = await prisma.user.findMany({
       where: {
-        votes: {
+        sessions: {
           some: {
             createdAt: {
-              // Show only users who voted in the last 15 minutes.
+              // Show only users who were active in the last 15 minutes.
               gt: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
             },
           },
         },
-      },
-      include: {
-        votes: true,
       },
     });
 

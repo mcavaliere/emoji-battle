@@ -1,12 +1,24 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Container, Heading, VStack, Text } from '@chakra-ui/react';
-import useSWR from 'swr';
+import { User } from '@prisma/client';
 import { fetcher } from '../lib/fetcher';
 
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import * as Constants from '../lib/websocketConstants';
 
 export const UserList: FC = () => {
+  const [users, setUsers] = useState<User[]>();
+
+  // Initial load.
+  useEffect(() => {
+    async function loadPlayers() {
+      const { users } = await fetcher(`/api/users/list`);
+      setUsers(users);
+    }
+
+    loadPlayers();
+  }, []);
+
   const [channel] = useWebsocketChannel(
     Constants.CHANNELS.PLAYERS,
     (message) => {
@@ -14,16 +26,7 @@ export const UserList: FC = () => {
     }
   );
 
-  const { data: usersData, error: usersError } = useSWR(
-    `/api/users/list`,
-    fetcher,
-    { refreshInterval: 200 }
-  );
-
-  if (usersError) return <div>failed to load</div>;
-  if (!usersData?.users) return <div>loading...</div>;
-
-  const { users } = usersData;
+  if (!users) return <div>loading...</div>;
 
   return (
     <Container textAlign='center'>
