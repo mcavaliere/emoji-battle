@@ -1,12 +1,13 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, Flex, Heading, Text } from '@chakra-ui/react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 
 import { Emoji } from '.prisma/client';
 import { fetcher } from '../lib/fetcher';
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import * as Constants from '../lib/websocketConstants';
 import { EmojiFromListResponsePayload } from '../lib/types/EmojiListResponsePayload';
+import { usePreviousValue } from '../lib/hooks/usePreviousValue';
 
 const MotionBox = motion(Box);
 
@@ -20,54 +21,83 @@ export type EmojiContainerProps = {
   emoji: EmojiFromListResponsePayload;
 };
 
-export const Count = ({ children }) => (
-  <Box
-    d='flex'
-    alignItems='center'
-    justifyContent='center'
-    pos='absolute'
-    top={-3}
-    left={-3}
-    opacity={0.5}
-    bg='#313638'
-    borderRadius={32}
-    lineHeight='10px'
-    p={1}
-    as='span'
-    minW='16px'
-  >
-    <Text as='span' color='white' fontSize={10}>
-      {children}
-    </Text>
-  </Box>
-);
+export const Count = ({ value }) => {
+  const controls = useAnimation();
+  const previousValue = usePreviousValue(value);
 
-export const EmojiContainer: FC<EmojiContainerProps> = ({ emoji }) => (
-  <MotionBox
-    display='flex'
-    direction='column'
-    align='flex-start'
-    justify='flex-start'
-    key={emoji.native}
-    initial={{ opacity: 0, y: 100 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0 }}
-    transition={{ duration: 0.2 }}
-    layout
-    pos='relative'
-    textAlign='center'
-    float='left'
-    height={150}
-    mr={4}
-    lineHeight='1'
-  >
-    <Text style={{ fontSize: 15 + emoji._count.votes * 5 }} margin='0 auto'>
-      {emoji.native}
-    </Text>
+  useEffect(() => {
+    if (!previousValue || value > previousValue) {
+      console.log(`calling controls.start`);
+      controls.start({
+        scale: [1, 1.5, 1],
+        transition: {
+          duration: 0.5,
+        },
+      });
+    }
+  }, [value]);
 
-    <Count>{emoji._count.votes}</Count>
-  </MotionBox>
-);
+  return (
+    <MotionBox
+      d='flex'
+      animate={controls}
+      alignItems='center'
+      justifyContent='center'
+      pos='absolute'
+      top={-3}
+      left={-3}
+      opacity={0.5}
+      bg='#313638'
+      borderRadius={32}
+      lineHeight='10px'
+      p={1}
+      initial={{ scale: 1 }}
+      as='span'
+      minW='16px'
+    >
+      <Text as='span' color='white' fontSize={10}>
+        {value}
+      </Text>
+    </MotionBox>
+  );
+};
+
+export const EmojiContainer: FC<EmojiContainerProps> = ({ emoji }) => {
+  const controls = useAnimation();
+  const previousValue = usePreviousValue(emoji._count.votes);
+
+  // Fade in/slide up on mount
+  useEffect(() => {
+    controls.start({ opacity: 1, y: 0 });
+  }, []);
+
+  return (
+    <MotionBox
+      display='flex'
+      direction='column'
+      align='flex-start'
+      justify='flex-start'
+      key={emoji.native}
+      initial={{ opacity: 0, y: 100 }}
+      animate={controls}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      layout
+      pos='relative'
+      textAlign='center'
+      float='left'
+      height={150}
+      mr={4}
+      lineHeight='1'
+    >
+      <Text style={{ fontSize: 15 + emoji._count.votes * 5 }} margin='0 auto'>
+        {emoji.native}
+      </Text>
+
+      <Count value={emoji._count.votes} />
+    </MotionBox>
+  );
+};
 
 export const Leaderboard: FC = () => {
   const [emojis, setEmojis] = useState<EmojiFromListResponsePayload[]>([]);
