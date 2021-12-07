@@ -27,7 +27,6 @@ export const Count = ({ value }) => {
 
   useEffect(() => {
     if (!previousValue || value > previousValue) {
-      console.log(`calling controls.start`);
       controls.start({
         scale: [1, 1.5, 1],
         transition: {
@@ -39,21 +38,21 @@ export const Count = ({ value }) => {
 
   return (
     <MotionBox
-      d='flex'
-      animate={controls}
       alignItems='center'
-      justifyContent='center'
-      pos='absolute'
-      top={-3}
-      left={-3}
-      opacity={0.5}
+      animate={controls}
+      as='span'
       bg='#313638'
       borderRadius={32}
-      lineHeight='10px'
-      p={1}
+      d='flex'
       initial={{ scale: 1 }}
-      as='span'
-      minW='16px'
+      justifyContent='center'
+      left={-3}
+      lineHeight='10px'
+      minH='20px'
+      minW='20px'
+      opacity={0.5}
+      pos='absolute'
+      top={-3}
     >
       <Text as='span' color='white' fontSize={10}>
         {value}
@@ -73,22 +72,22 @@ export const EmojiContainer: FC<EmojiContainerProps> = ({ emoji }) => {
 
   return (
     <MotionBox
-      display='flex'
-      direction='column'
       align='flex-start'
-      justify='flex-start'
-      key={emoji.native}
-      initial={{ opacity: 0, y: 100 }}
       animate={controls}
+      direction='column'
+      display='flex'
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-      layout
-      pos='relative'
-      textAlign='center'
       float='left'
       height={150}
-      mr={4}
+      initial={{ opacity: 0, y: 100 }}
+      justify='flex-start'
+      key={emoji.native}
+      layout
       lineHeight='1'
+      mr={4}
+      pos='relative'
+      textAlign='center'
+      transition={{ duration: 0.2 }}
     >
       <Text style={{ fontSize: 15 + emoji._count.votes * 5 }} margin='0 auto'>
         {emoji.native}
