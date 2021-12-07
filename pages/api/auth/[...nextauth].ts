@@ -23,7 +23,7 @@ export default NextAuth({
       // expose user id
       return {
         ...session,
-        user: { ...session.user, id: token.id as string },
+        user: { ...session.user, id: token?.id as string },
       };
     },
   },
