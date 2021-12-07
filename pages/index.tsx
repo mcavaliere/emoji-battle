@@ -1,6 +1,7 @@
 import type { NextPage } from 'next';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import {
+  Box,
   Button,
   Container,
   Flex,
@@ -58,16 +59,14 @@ const Home: NextPage = () => {
           <Heading size='md' mb={20} textAlign='center'>
             Welcome to the Dojo, {session?.user?.name}.
           </Heading>
-          {session?.user?.name === 'Mike Cavaliere' && (
-            <Button
-              onClick={handleResetClick}
-              position='absolute'
-              top={10}
-              right={10}
-            >
-              Reset Game
-            </Button>
-          )}
+          <Box position='absolute' top={10} right={10}>
+            <HStack>
+              {session?.user?.name === 'Mike Cavaliere' && (
+                <Button onClick={handleResetClick}>Reset Game</Button>
+              )}
+              <Button onClick={() => signOut()}>Sign out</Button>
+            </HStack>
+          </Box>
         </>
       )}
 
