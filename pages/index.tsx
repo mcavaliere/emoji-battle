@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import { signIn, useSession } from 'next-auth/client';
+import { signIn, useSession } from 'next-auth/react';
 import {
   Button,
   Container,
@@ -20,7 +20,8 @@ const handleResetClick = async () => {
 };
 
 const Home: NextPage = () => {
-  const [session, loading] = useSession();
+  const { data: session, status } = useSession();
+  const loading = status === 'loading';
 
   if (loading) {
     return <div>Loading...</div>;

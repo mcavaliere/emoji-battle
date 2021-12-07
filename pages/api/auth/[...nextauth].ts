@@ -1,27 +1,30 @@
 import NextAuth, { Session, User } from 'next-auth';
-import Providers from 'next-auth/providers';
-import Adapters from 'next-auth/adapters';
-
+import GitHubProvider from 'next-auth/providers/github';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '../../../lib/prismaClientInstance';
 
 export default NextAuth({
-  adapter: Adapters.Prisma.Adapter({ prisma }),
+  adapter: PrismaAdapter(prisma),
+  theme: {
+    colorScheme: 'auto',
+  },
   providers: [
-    Providers.GitHub({
+    GitHubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async session(
+    async session({
       session,
-      token
-    ): Promise<Session & { user: User & { id?: unknown } }> {
+      token,
+    }): Promise<Session & { user: User & { id?: unknown } }> {
       // expose user id
-      return Promise.resolve({
+      return {
         ...session,
-        user: { ...session.user, id: token.id },
-      });
+        user: { ...session.user, id: token.id as string },
+      };
     },
   },
 });

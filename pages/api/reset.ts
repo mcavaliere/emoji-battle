@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../lib/prismaClientInstance';
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 
 type Data = {
   name: string;

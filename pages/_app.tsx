@@ -1,6 +1,6 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { Provider } from 'next-auth/client';
+import { SessionProvider } from 'next-auth/react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { PageLayout } from '../components/PageLayout';
 import { SWRConfig } from 'swr';
@@ -11,7 +11,7 @@ const swrConfig = {
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <Provider session={session}>
+    <SessionProvider session={session}>
       <SWRConfig value={swrConfig}>
         <ChakraProvider>
           <PageLayout>
@@ -19,7 +19,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           </PageLayout>
         </ChakraProvider>
       </SWRConfig>
-    </Provider>
+    </SessionProvider>
   );
 }
 export default MyApp;
