@@ -7,9 +7,12 @@ import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import * as Constants from '../lib/websocketConstants';
 
 export const UserList: FC = () => {
-  const [channel] = useWebsocketChannel(Constants.CHANNELS.MAIN, (message) => {
-    console.log(`UserList received message`, message);
-  });
+  const [channel] = useWebsocketChannel(
+    Constants.CHANNELS.PLAYERS,
+    (message) => {
+      console.log(`UserList received message`, message);
+    }
+  );
 
   const { data: usersData, error: usersError } = useSWR(
     `/api/users/list`,
