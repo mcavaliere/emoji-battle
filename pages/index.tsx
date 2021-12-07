@@ -12,9 +12,12 @@ import {
 } from '@chakra-ui/react';
 import 'emoji-mart/css/emoji-mart.css';
 
+import * as Constants from '../lib/websocketConstants';
 import { Leaderboard } from '../components/Leaderboard';
 import { EmojiPicker } from '../components/EmojiPicker';
 import { UserList } from '../components/UserList';
+import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
+import { useEffect } from 'react';
 
 const handleResetClick = async () => {
   await fetch('/api/reset', { method: 'POST' });
@@ -23,6 +26,17 @@ const handleResetClick = async () => {
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
   const loading = status === 'loading';
+  const [playersChannel] = useWebsocketChannel(
+    Constants.CHANNELS.PLAYERS,
+    () => {}
+  );
+
+  useEffect((): void => {
+    if (session?.user) {
+      // @ts-ignore
+      playersChannel.publish(Constants.EVENTS.PLAYER_JOINED, session.user);
+    }
+  }, [session?.user]);
 
   if (loading) {
     return <div>Loading...</div>;

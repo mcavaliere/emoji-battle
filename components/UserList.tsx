@@ -19,10 +19,13 @@ export const UserList: FC = () => {
     loadPlayers();
   }, []);
 
-  const [channel] = useWebsocketChannel(
+  const [playersChannel] = useWebsocketChannel(
     Constants.CHANNELS.PLAYERS,
     (message) => {
-      console.log(`UserList received message`, message);
+      if (message.name === Constants.EVENTS.PLAYER_JOINED) {
+        const user = message.data as User;
+        setUsers((users) => [...(users as User[]), user]);
+      }
     }
   );
 
@@ -35,7 +38,7 @@ export const UserList: FC = () => {
       </Heading>
       <VStack>
         {users.map(({ id, name }) => (
-          <Text key={id}>{name}</Text>
+          <Text key={`${id}-${name}`}>{name}</Text>
         ))}
       </VStack>
     </Container>

@@ -12,6 +12,10 @@ if (typeof window !== 'undefined') {
 }
 
 export function useWebsocketChannel(channelName, callbackOnMessage) {
+  if (!ably) {
+    return [];
+  }
+
   const channel = ably.channels.get(channelName);
 
   const onMount = () => {
