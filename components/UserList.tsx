@@ -1,10 +1,13 @@
 import { FC, useEffect, useState } from 'react';
-import { Container, Heading, VStack, Text } from '@chakra-ui/react';
+import { Box, Container, Heading, VStack, Text } from '@chakra-ui/react';
 import { User } from '@prisma/client';
-import { fetcher } from '../lib/fetcher';
+import { motion } from 'framer-motion';
 
+import { fetcher } from '../lib/fetcher';
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import * as Constants from '../lib/websocketConstants';
+
+const MotionBox = motion(Box);
 
 export const UserList: FC = () => {
   const [users, setUsers] = useState<User[]>();
@@ -37,8 +40,16 @@ export const UserList: FC = () => {
         Who&#39;s battling?
       </Heading>
       <VStack>
-        {users.map(({ id, name }) => (
-          <Text key={`${id}-${name}`}>{name}</Text>
+        {users?.map(({ id, name, image }) => (
+          <MotionBox
+            position='relative'
+            key={`${id}-${name}`}
+            layout
+            initial={{ opacity: 0, right: -100 }}
+            animate={{ opacity: 1, right: 0 }}
+          >
+            <Text>{name}</Text>
+          </MotionBox>
         ))}
       </VStack>
     </Container>
