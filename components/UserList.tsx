@@ -1,21 +1,11 @@
 import { FC, useEffect, useState } from 'react';
-import {
-  Box,
-  Container,
-  Heading,
-  VStack,
-  Text,
-  chakra,
-} from '@chakra-ui/react';
+import { Container, Heading, VStack, Text } from '@chakra-ui/react';
 import { User } from '@prisma/client';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
 
+import { UserRow } from '../components/UserRow';
 import { fetcher } from '../lib/fetcher';
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import * as Constants from '../lib/websocketConstants';
-
-const MotionBox = motion(Box);
 
 export const UserList: FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -57,32 +47,8 @@ export const UserList: FC = () => {
         Who&#39;s battling?
       </Heading>
       <VStack as='ul'>
-        {users?.map(({ id, name, image }) => (
-          <MotionBox
-            d='flex'
-            alignItems='center'
-            position='relative'
-            key={`${id}-${name}`}
-            layout
-            initial={{ opacity: 0, right: -100 }}
-            animate={{ opacity: 1, right: 0 }}
-            direction='row'
-            as='li'
-          >
-            {image && (
-              <Box width={30} height={30} borderRadius={30} overflow='hidden'>
-                <Image
-                  width={30}
-                  height={30}
-                  layout='responsive'
-                  alt='Photo of ${name}'
-                  src={image}
-                />
-              </Box>
-            )}
-
-            <Text ml={2}>{name}</Text>
-          </MotionBox>
+        {users?.map((user) => (
+          <UserRow {...user} key={user.id} />
         ))}
       </VStack>
     </Container>
