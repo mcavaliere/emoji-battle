@@ -17,9 +17,9 @@ export default async function handler(
       where: {
         sessions: {
           some: {
-            createdAt: {
+            expires: {
               // Show only users who were active in the last 15 minutes.
-              gt: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
+              gt: new Date(Date.now()).toISOString(),
             },
           },
         },
