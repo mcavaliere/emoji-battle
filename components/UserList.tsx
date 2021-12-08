@@ -1,5 +1,12 @@
 import { FC, useEffect, useState } from 'react';
-import { Box, Container, Heading, VStack, Text } from '@chakra-ui/react';
+import {
+  Avatar,
+  Box,
+  Container,
+  Heading,
+  VStack,
+  Text,
+} from '@chakra-ui/react';
 import { User } from '@prisma/client';
 import { motion } from 'framer-motion';
 
@@ -39,15 +46,21 @@ export const UserList: FC = () => {
       <Heading size='md' mb={5}>
         Who&#39;s battling?
       </Heading>
-      <VStack>
+      <VStack as='ul'>
         {users?.map(({ id, name, image }) => (
           <MotionBox
+            d='flex'
+            alignItems='center'
             position='relative'
             key={`${id}-${name}`}
             layout
             initial={{ opacity: 0, right: -100 }}
             animate={{ opacity: 1, right: 0 }}
+            direction='row'
+            as='li'
           >
+            {image && <Avatar src={image} size='md' mr={2} />}
+
             <Text>{name}</Text>
           </MotionBox>
         ))}
