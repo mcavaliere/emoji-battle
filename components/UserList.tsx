@@ -18,13 +18,12 @@ import * as Constants from '../lib/websocketConstants';
 const MotionBox = motion(Box);
 
 export const UserList: FC = () => {
-  const [users, setUsers] = useState<User[]>();
+  const [users, setUsers] = useState<User[]>([]);
 
   // Initial load.
   useEffect(() => {
     async function loadPlayers() {
       const { users } = await fetcher(`/api/users/list`);
-      console.log(`loaded players from api: `, users);
       setUsers(users);
     }
 
@@ -35,10 +34,8 @@ export const UserList: FC = () => {
     Constants.CHANNELS.PLAYERS,
     (message) => {
       if (message.name === Constants.EVENTS.PLAYER_JOINED) {
-        console.log(`PLAYER_JOINED: `, message.data);
-        console.log(`existing users: `, users);
         const user = message.data as User;
-        setUsers((users) => [...(users as User[]), user]);
+        setUsers((users = []) => [...(users as User[]), user]);
       }
     }
   );

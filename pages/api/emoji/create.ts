@@ -1,7 +1,7 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import prisma from '../../../lib/prismaClientInstance';
+import { User } from '@prisma/client';
 
 type Data = {
   name: string;
@@ -18,7 +18,8 @@ export default async function handler(
   const session = await getSession({ req });
 
   if (!session) {
-    return res.status(401);
+    res.status(401);
+    return;
   }
 
   const { user } = session;
@@ -43,7 +44,8 @@ export default async function handler(
       },
     });
 
-    const vote = await prisma.vote.create({
+    // Record the vote.
+    await prisma.vote.create({
       data: {
         Emoji: {
           connect: {
@@ -52,16 +54,19 @@ export default async function handler(
         },
         User: {
           connect: {
-            // @ts-ignore
-            id: user.id,
+            id: (user as User).id,
           },
         },
       },
     });
 
     res.status(200).json(emoji);
+    res.end();
+    return;
   } catch (error) {
     console.log(`error: `, error);
     res.status(500);
+    res.end();
+    return;
   }
 }

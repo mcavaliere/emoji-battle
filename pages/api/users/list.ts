@@ -14,11 +14,12 @@ export default async function handler(
 ) {
   try {
     const users = await prisma.user.findMany({
+      distinct: ['id'],
       where: {
         sessions: {
           some: {
             expires: {
-              // Show only users who were active in the last 15 minutes.
+              // Show only users whose session expires in the future.
               gt: new Date(Date.now()).toISOString(),
             },
           },

@@ -16,14 +16,11 @@ export default NextAuth({
   ],
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async session({
-      session,
-      token,
-    }): Promise<Session & { user: User & { id?: unknown } }> {
+    async session({ session, user, token }) {
       // expose user id
       return {
         ...session,
-        user: { ...session.user, id: token?.id as string },
+        user: { ...session.user, id: user.id },
       };
     },
   },
