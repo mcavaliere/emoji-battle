@@ -33,9 +33,18 @@ export const UserList: FC = () => {
   const [playersChannel] = useWebsocketChannel(
     Constants.CHANNELS.PLAYERS,
     (message) => {
+      // Add user to list, if not already present.
       if (message.name === Constants.EVENTS.PLAYER_JOINED) {
         const user = message.data as User;
-        setUsers((users = []) => [...(users as User[]), user]);
+
+        setUsers((users = []) => {
+          const newUsers = [...users];
+
+          if (users.findIndex((u) => u.id === user.id) === -1) {
+            newUsers.push(user);
+          }
+          return newUsers;
+        });
       }
     }
   );
