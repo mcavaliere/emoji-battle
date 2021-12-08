@@ -1,14 +1,15 @@
 import { FC, useEffect, useState } from 'react';
 import {
-  Avatar,
   Box,
   Container,
   Heading,
   VStack,
   Text,
+  chakra,
 } from '@chakra-ui/react';
 import { User } from '@prisma/client';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 import { fetcher } from '../lib/fetcher';
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
@@ -23,6 +24,7 @@ export const UserList: FC = () => {
   useEffect(() => {
     async function loadPlayers() {
       const { users } = await fetcher(`/api/users/list`);
+      console.log(`loaded players from api: `, users);
       setUsers(users);
     }
 
@@ -33,6 +35,8 @@ export const UserList: FC = () => {
     Constants.CHANNELS.PLAYERS,
     (message) => {
       if (message.name === Constants.EVENTS.PLAYER_JOINED) {
+        console.log(`PLAYER_JOINED: `, message.data);
+        console.log(`existing users: `, users);
         const user = message.data as User;
         setUsers((users) => [...(users as User[]), user]);
       }
@@ -59,9 +63,19 @@ export const UserList: FC = () => {
             direction='row'
             as='li'
           >
-            {image && <Avatar src={image} size='md' mr={2} />}
+            {image && (
+              <Box width={30} height={30} borderRadius={30} overflow='hidden'>
+                <Image
+                  width={30}
+                  height={30}
+                  layout='responsive'
+                  alt='Photo of ${name}'
+                  src={image}
+                />
+              </Box>
+            )}
 
-            <Text>{name}</Text>
+            <Text ml={2}>{name}</Text>
           </MotionBox>
         ))}
       </VStack>
