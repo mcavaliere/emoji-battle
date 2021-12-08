@@ -12,20 +12,16 @@ if (typeof window !== 'undefined') {
 }
 
 export function useWebsocketChannel(channelName, callbackOnMessage) {
-  if (!ably) {
-    return [];
-  }
-
-  const channel = ably.channels.get(channelName);
+  const channel = ably?.channels?.get(channelName);
 
   const onMount = () => {
-    channel.subscribe((msg) => {
+    channel?.subscribe((msg) => {
       callbackOnMessage(msg);
     });
   };
 
   const onUnmount = () => {
-    channel.unsubscribe();
+    channel?.unsubscribe();
   };
 
   const useEffectHook = () => {
