@@ -26,7 +26,9 @@ export default async function handler(
     await prisma.vote.deleteMany();
     await prisma.emoji.deleteMany();
     res.status(200).json({ name: 'John Doe' });
+    res.end();
   } catch (e) {
     console.log(`error: `, e);
+    res.status(500).end();
   }
 }

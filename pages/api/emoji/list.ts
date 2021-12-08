@@ -36,8 +36,10 @@ export default async function handler(
     });
 
     res.status(200).json({ emojis });
+    res.end();
   } catch (error) {
     console.log(`error`, error);
     res.status(500).json({ error });
+    res.end();
   }
 }

@@ -19,6 +19,7 @@ export default async function handler(
 
   if (!session) {
     res.status(401);
+    res.end();
     return;
   }
 

@@ -6,4 +6,5 @@ export default async function handler(req, res) {
     clientId: 'emoji-battle',
   });
   res.status(200).json(tokenRequestData);
+  res.end();
 }
