@@ -4,10 +4,9 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import {
   Box,
   Button,
+  HStack,
   Container,
   Flex,
-  Heading,
-  HStack,
   SimpleGrid,
   Text,
 } from '@chakra-ui/react';
@@ -18,6 +17,7 @@ import { Leaderboard } from '../components/Leaderboard';
 import { EmojiPicker } from '../components/EmojiPicker';
 import { UserList } from '../components/UserList';
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
+import { LoggedInBranding, LoggedOutBranding } from '../components/Branding';
 
 const handleResetClick = async () => {
   await fetch('/api/reset', { method: 'POST' });
@@ -51,11 +51,7 @@ const Home: NextPage = () => {
         alignItems='center'
         justify='center'
       >
-        <Heading size='3xl'>🤪 ⚔️ 😀</Heading>
-        <Heading size='xl'>Emoji Battle</Heading>
-        <Heading size='md' mb={20} textAlign='center'>
-          Welcome to the Dojo.
-        </Heading>
+        <LoggedOutBranding />
         <Button onClick={() => signIn()}>Sign in</Button>
         <Text mt={20}>Your name will be visible to others.</Text>
       </Flex>
@@ -64,25 +60,16 @@ const Home: NextPage = () => {
 
   return (
     <Container maxW='100%' p={10}>
-      <Heading mb={5} textAlign='center'>
-        Emoji 🤪 ⚔️ 😀 Battle
-      </Heading>
+      <LoggedInBranding name={session?.user?.name} />
 
-      {session?.user?.name && (
-        <>
-          <Heading size='md' mb={20} textAlign='center'>
-            Welcome to the Dojo, {session?.user?.name}.
-          </Heading>
-          <Box position='absolute' top={10} right={10}>
-            <HStack>
-              {session?.user?.name === 'Mike Cavaliere' && (
-                <Button onClick={handleResetClick}>Reset Game</Button>
-              )}
-              <Button onClick={() => signOut()}>Sign out</Button>
-            </HStack>
-          </Box>
-        </>
-      )}
+      <Box position='absolute' top={10} right={10}>
+        <HStack>
+          {session?.user?.name === 'Mike Cavaliere' && (
+            <Button onClick={handleResetClick}>Reset Game</Button>
+          )}
+          <Button onClick={() => signOut()}>Sign out</Button>
+        </HStack>
+      </Box>
 
       <SimpleGrid columns={3} spacing={3}>
         <EmojiPicker />
