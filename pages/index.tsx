@@ -1,4 +1,5 @@
 import type { NextPage } from 'next';
+import { useEffect } from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import {
   Box,
@@ -17,7 +18,6 @@ import { Leaderboard } from '../components/Leaderboard';
 import { EmojiPicker } from '../components/EmojiPicker';
 import { UserList } from '../components/UserList';
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
-import { useEffect } from 'react';
 
 const handleResetClick = async () => {
   await fetch('/api/reset', { method: 'POST' });

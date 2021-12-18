@@ -2,8 +2,10 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { SessionProvider } from 'next-auth/react';
 import { ChakraProvider } from '@chakra-ui/react';
-import { PageLayout } from '../components/PageLayout';
 import { SWRConfig } from 'swr';
+
+import { PageLayout } from '../components/PageLayout';
+import { RoundProvider } from '../lib/context/RoundContext';
 
 const swrConfig = {
   refreshInterval: 0,
@@ -14,9 +16,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
     <SessionProvider session={session}>
       <SWRConfig value={swrConfig}>
         <ChakraProvider>
-          <PageLayout>
-            <Component {...pageProps} />
-          </PageLayout>
+          <RoundProvider>
+            <PageLayout>
+              <Component {...pageProps} />
+            </PageLayout>
+          </RoundProvider>
         </ChakraProvider>
       </SWRConfig>
     </SessionProvider>
