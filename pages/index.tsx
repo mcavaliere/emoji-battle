@@ -62,7 +62,7 @@ const Home: NextPage = () => {
       >
         <LoggedOutBranding />
         <Button onClick={() => signIn()}>Sign in</Button>
-        <Text mt={20}>Your name will be visible to others.</Text>
+        <Text mt={20}>Your name and avatar will be visible to others.</Text>
       </Flex>
     );
   }
@@ -101,9 +101,21 @@ const Home: NextPage = () => {
       </Box>
 
       <SimpleGrid columns={3} spacing={3}>
-        <EmojiPicker />
-        <Leaderboard />
-        <UserList />
+        <Container textAlign='center'>
+          <EmojiPicker />
+        </Container>
+        <Flex
+          direction='column'
+          align='center'
+          textAlign='center'
+          m={0}
+          width='100%'
+        >
+          {roundIsInProgress && <Leaderboard />}
+        </Flex>
+        <Container textAlign='center'>
+          <UserList />
+        </Container>
       </SimpleGrid>
     </Container>
   );

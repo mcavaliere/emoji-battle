@@ -50,7 +50,7 @@ export const EmojiPicker = ({ afterSelect }: EmojiPickerProps) => {
   };
 
   return (
-    <Container textAlign='center'>
+    <>
       <Heading size='md' mb={5}>
         Pick an emoji!
       </Heading>
@@ -61,6 +61,6 @@ export const EmojiPicker = ({ afterSelect }: EmojiPickerProps) => {
         <Button onClick={() => setEmojiSet('facebook')}>Facebook</Button>
       </HStack>
       <Picker set={emojiSet} onSelect={handleEmojiSelect} />
-    </Container>
+    </>
   );
 };

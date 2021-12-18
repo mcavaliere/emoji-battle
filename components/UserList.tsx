@@ -42,7 +42,7 @@ export const UserList: FC = () => {
   if (!users) return <div>loading...</div>;
 
   return (
-    <Container textAlign='center'>
+    <>
       <Heading size='md' mb={5}>
         Who&#39;s battling?
       </Heading>
@@ -51,6 +51,6 @@ export const UserList: FC = () => {
           <UserRow {...user} key={user.id} />
         ))}
       </VStack>
-    </Container>
+    </>
   );
 };

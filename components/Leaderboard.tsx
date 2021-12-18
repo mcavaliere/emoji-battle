@@ -145,24 +145,16 @@ export const Leaderboard: FC = () => {
 
   return (
     <>
-      <Flex
-        direction='column'
-        align='center'
-        textAlign='center'
-        m={0}
-        width='100%'
-      >
-        <Heading size='md' mb={5}>
-          Leaderboard
-        </Heading>
-        <Box width='100%'>
-          <AnimatePresence>
-            {emojis.map((e) => (
-              <EmojiContainer emoji={e} key={e.id} />
-            ))}
-          </AnimatePresence>
-        </Box>
-      </Flex>
+      <Heading size='md' mb={5}>
+        Leaderboard
+      </Heading>
+      <Box width='100%'>
+        <AnimatePresence>
+          {emojis.map((e) => (
+            <EmojiContainer emoji={e} key={e.id} />
+          ))}
+        </AnimatePresence>
+      </Box>
     </>
   );
 };
