@@ -1,7 +1,7 @@
 import { useState, FC } from 'react';
 import { Button, Container, Heading, HStack } from '@chakra-ui/react';
 import { Picker, EmojiSet } from 'emoji-mart';
-import { Session, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import * as Constants from '../lib/websocketConstants';
@@ -10,7 +10,7 @@ export type EmojiPickerProps = {
   afterSelect?: (emoji) => void;
 };
 
-export const EmojiPicker: FC<EmojiPickerProps> = ({ afterSelect }) => {
+export const EmojiPicker = ({ afterSelect }: EmojiPickerProps) => {
   const [emojiSet, setEmojiSet] = useState<EmojiSet>('apple');
   const [voteChannel] = useWebsocketChannel(Constants.CHANNELS.VOTE, () => {});
   const { data: session } = useSession();

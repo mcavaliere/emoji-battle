@@ -8,18 +8,16 @@ import * as Constants from '../lib/websocketConstants';
 const MotionBox = motion(Box);
 
 export const UserRow = ({ id, image, name }) => {
-  console.log(`userRow`);
   const controls = useAnimation();
   const [voteChannel] = useWebsocketChannel(
     Constants.CHANNELS.VOTE,
     (message) => {
-      console.log(`vote channel received:`, message);
       if (message.name === Constants.EVENTS.EMOJI_CLICKED) {
         const { user } = message.data;
 
         if (user.id === id) {
           controls.start({
-            backgroundColor: ['#ff0000', '#00ff00', '#0000ff'],
+            backgroundColor: ['#F09D51', '#ffffff'],
             transition: {
               duration: 1,
             },
@@ -44,6 +42,7 @@ export const UserRow = ({ id, image, name }) => {
       animate={controls}
       direction='row'
       as='li'
+      p={3}
     >
       {image && (
         <Box width={30} height={30} borderRadius={30} overflow='hidden'>
