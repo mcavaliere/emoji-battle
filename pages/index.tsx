@@ -17,6 +17,7 @@ import { Leaderboard } from '../components/Leaderboard';
 import { EmojiPicker } from '../components/EmojiPicker';
 import { UserList } from '../components/UserList';
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
+import { useRoundContext } from '../lib/context/RoundContext';
 import { LoggedInBranding, LoggedOutBranding } from '../components/Branding';
 
 const handleResetClick = async () => {
@@ -30,6 +31,14 @@ const Home: NextPage = () => {
     Constants.CHANNELS.PLAYERS,
     () => {}
   );
+  const {
+    start: startRound,
+    end: endRound,
+    reset: resetRound,
+    inProgress: roundIsInProgress,
+    startedAt: roundCreatedAt,
+    endedAt: roundEndedAt,
+  } = useRoundContext();
 
   useEffect((): void => {
     if (session?.user) {
@@ -60,6 +69,15 @@ const Home: NextPage = () => {
 
   return (
     <Container maxW='100%' p={10}>
+      <Box position='absolute' top={10} left={10}>
+        <h2>Round Status</h2>
+        <ul>
+          <li>inProgress: {roundIsInProgress?.toString()}</li>
+          <li>startedAt: {roundCreatedAt?.toISOString()}</li>
+          <li>endedAt: {roundEndedAt?.toISOString()}</li>
+        </ul>
+      </Box>
+
       <LoggedInBranding name={session?.user?.name} />
 
       <Box position='absolute' top={10} right={10}>
@@ -67,6 +85,17 @@ const Home: NextPage = () => {
           {session?.user?.name === 'Mike Cavaliere' && (
             <Button onClick={handleResetClick}>Reset Game</Button>
           )}
+
+          <Button bg='green.200' onClick={() => startRound!()}>
+            Start Round
+          </Button>
+          <Button bg='red.200' onClick={() => endRound!()}>
+            End Round
+          </Button>
+          <Button bg='yellow.200' onClick={() => resetRound!()}>
+            Reset
+          </Button>
+
           <Button onClick={() => signOut()}>Sign out</Button>
         </HStack>
       </Box>
