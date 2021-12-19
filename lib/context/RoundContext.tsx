@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, useContext, useEffect, useReducer } from 'react';
 
 export type RoundContextType = {
   inProgress: boolean;
@@ -7,18 +7,27 @@ export type RoundContextType = {
   start?: () => void;
   end?: () => void;
   reset?: () => void;
+  currentStep: number;
+  timerStarted: boolean;
 };
 
 export enum RoundActions {
   START = 'START',
   END = 'END',
   RESET = 'RESET',
+  STEP = 'STEP',
+  START_TIMER = 'START_TIMER',
+  STOP_TIMER = 'STOP_TIMER',
 }
+
+export const TIMER_MAX_STEP = 10;
 
 export const defaultRoundContext: RoundContextType = {
   inProgress: false,
   startedAt: undefined,
   endedAt: undefined,
+  currentStep: -1,
+  timerStarted: false,
 };
 
 export function roundReducer(state = defaultRoundContext, action) {
@@ -34,6 +43,21 @@ export function roundReducer(state = defaultRoundContext, action) {
         ...state,
         inProgress: false,
         endedAt: new Date(),
+      };
+    case RoundActions.STEP:
+      return {
+        ...state,
+        currentStep: state.currentStep! + 1,
+      };
+    case RoundActions.START_TIMER:
+      return {
+        ...state,
+        timerStarted: true,
+      };
+    case RoundActions.STOP_TIMER:
+      return {
+        ...state,
+        timerStarted: false,
       };
     case RoundActions.RESET:
       return defaultRoundContext;
@@ -52,12 +76,24 @@ export const useRoundContext = () => {
 
 export const RoundProvider = ({ children }) => {
   const [state, dispatch] = useReducer(roundReducer, defaultRoundContext);
+  useEffect(() => {
+    if (state.timerStarted && state.currentStep < TIMER_MAX_STEP) {
+      setTimeout(tickTimer, 1000);
+    }
+  }, [state.timerStarted, state.currentStep]);
+
+  const tickTimer = () => {
+    dispatch({ type: RoundActions.STEP });
+  };
 
   const start = () => {
     dispatch({ type: RoundActions.START });
+    dispatch({ type: RoundActions.START_TIMER });
+    tickTimer();
   };
 
   const end = () => {
+    dispatch({ type: RoundActions.STOP_TIMER });
     dispatch({ type: RoundActions.END });
   };
 

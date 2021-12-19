@@ -9,6 +9,9 @@ import {
   Flex,
   SimpleGrid,
   Text,
+  Heading,
+  UnorderedList,
+  ListItem,
 } from '@chakra-ui/react';
 import 'emoji-mart/css/emoji-mart.css';
 
@@ -36,6 +39,8 @@ const Home: NextPage = () => {
     end: endRound,
     reset: resetRound,
     inProgress: roundIsInProgress,
+    timerStarted,
+    currentStep,
     startedAt: roundCreatedAt,
     endedAt: roundEndedAt,
   } = useRoundContext();
@@ -70,12 +75,14 @@ const Home: NextPage = () => {
   return (
     <Container maxW='100%' p={10}>
       <Box position='absolute' top={10} left={10}>
-        <h2>Round Status</h2>
-        <ul>
-          <li>inProgress: {roundIsInProgress?.toString()}</li>
-          <li>startedAt: {roundCreatedAt?.toISOString()}</li>
-          <li>endedAt: {roundEndedAt?.toISOString()}</li>
-        </ul>
+        <Heading>Round Status</Heading>
+        <UnorderedList>
+          <ListItem>inProgress: {roundIsInProgress?.toString()}</ListItem>
+          <ListItem>startedAt: {roundCreatedAt?.toISOString()}</ListItem>
+          <ListItem>endedAt: {roundEndedAt?.toISOString()}</ListItem>
+          <ListItem>timerStarted: {timerStarted.toString()}</ListItem>
+          <ListItem>currentStep: {currentStep}</ListItem>
+        </UnorderedList>
       </Box>
 
       <LoggedInBranding name={session?.user?.name} />
