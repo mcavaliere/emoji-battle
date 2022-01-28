@@ -20,6 +20,7 @@ export enum RoundActions {
   STOP_TIMER = 'STOP_TIMER',
 }
 
+// Duration of a Round.
 export const TIMER_MAX_STEP = 10;
 
 export const defaultRoundContext: RoundContextType = {
@@ -76,9 +77,12 @@ export const useRoundContext = () => {
 
 export const RoundProvider = ({ children }) => {
   const [state, dispatch] = useReducer(roundReducer, defaultRoundContext);
+
   useEffect(() => {
     if (state.timerStarted && state.currentStep < TIMER_MAX_STEP) {
       setTimeout(tickTimer, 1000);
+    } else if (state.currentStep >= state.currentStep) {
+      dispatch({ type: RoundActions.STOP_TIMER });
     }
   }, [state.timerStarted, state.currentStep]);
 
