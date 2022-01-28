@@ -21,6 +21,7 @@ model User {
   votes         Vote[]
   accounts      Account[]
   sessions      Session[]
+  Round         Round[]
 }
 
 model Account {
@@ -79,9 +80,22 @@ model Emoji {
 model Vote {
   id        Int      @id @default(autoincrement())
   userId    Int
-  emojiId   Int      @map(name: "emoji_id")
+  emojiId   Int
+  roundId   Int
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   User      User     @relation(fields: [userId], references: [id])
   Emoji     Emoji    @relation(fields: [emojiId], references: [id])
+  Round     Round    @relation(fields: [roundId], references: [id])
+}
+
+model Round {
+  id              Int       @id @default(autoincrement())
+  startedByUserId Int
+  startedAt       DateTime  @default(now())
+  endedAt         DateTime?
+  updatedAt       DateTime  @default(now())
+  createdAt       DateTime  @default(now())
+  startedBy       User      @relation(fields: [startedByUserId], references: [id])
+  Vote            Vote[]
 }
