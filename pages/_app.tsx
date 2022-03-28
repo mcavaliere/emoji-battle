@@ -11,6 +11,13 @@ const swrConfig = {
   refreshInterval: 0,
 };
 
+// Checks for required environment variables.
+if (typeof window === 'undefined') {
+  if (!process.env.API_BASE_URL) {
+    throw new Error("API_BASE_URL is not set.")
+  }
+}
+
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
