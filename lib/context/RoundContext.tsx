@@ -1,4 +1,7 @@
 import { createContext, useContext, useEffect, useReducer } from 'react';
+import { useWebsocketChannel } from '../hooks/useWebsocketChannel';
+import * as Constants from '../../lib/websocketConstants';
+import { start as startTimer } from '../../lib/api/timer';
 
 export type RoundContextType = {
   inProgress: boolean;
@@ -48,7 +51,7 @@ export function roundReducer(state = defaultRoundContext, action) {
     case RoundActions.STEP:
       return {
         ...state,
-        currentStep: state.currentStep! + 1,
+        currentStep: action.currentStep,
       };
     case RoundActions.START_TIMER:
       return {
@@ -78,13 +81,31 @@ export const useRoundContext = () => {
 export const RoundProvider = ({ children }) => {
   const [state, dispatch] = useReducer(roundReducer, defaultRoundContext);
 
-  useEffect(() => {
-    if (state.timerStarted && state.currentStep < TIMER_MAX_STEP) {
-      setTimeout(tickTimer, 1000);
-    } else if (state.currentStep >= state.currentStep) {
-      dispatch({ type: RoundActions.STOP_TIMER });
+  const timerChannelMessageCallback = (message) => {
+    console.log(
+      `----------------  timerChannelMessageCallback received: `,
+      message
+    );
+    if (message.name === Constants.EVENTS.TICK) {
+      console.log(`---------------- dispatching STEP`);
+      dispatch({ type: RoundActions.STEP, currentStep: message.data.number });
     }
-  }, [state.timerStarted, state.currentStep]);
+  };
+
+  const [timerChannel] = useWebsocketChannel(
+    Constants.CHANNELS.TIMER,
+    timerChannelMessageCallback
+  );
+
+  useEffect(() => {
+    const startRound = async () => {
+      await startTimer();
+    };
+
+    if (state.inProgress) {
+      startRound();
+    }
+  }, [state.inProgress]);
 
   const tickTimer = () => {
     dispatch({ type: RoundActions.STEP });
@@ -92,12 +113,10 @@ export const RoundProvider = ({ children }) => {
 
   const start = () => {
     dispatch({ type: RoundActions.START });
-    dispatch({ type: RoundActions.START_TIMER });
     tickTimer();
   };
 
   const end = () => {
-    dispatch({ type: RoundActions.STOP_TIMER });
     dispatch({ type: RoundActions.END });
   };
 

@@ -14,7 +14,11 @@ const swrConfig = {
 // Checks for required environment variables.
 if (typeof window === 'undefined') {
   if (!process.env.API_BASE_URL) {
-    throw new Error("API_BASE_URL is not set.")
+    throw new Error('API_BASE_URL is not set.');
+  }
+} else {
+  if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+    throw new Error('NEXT_PUBLIC_API_BASE_URL is not set.');
   }
 }
 

@@ -16,6 +16,7 @@ import {
 import 'emoji-mart/css/emoji-mart.css';
 
 import * as Constants from '../lib/websocketConstants';
+import { CountdownTimer } from '../components/CountdownTimer';
 import { Leaderboard } from '../components/Leaderboard';
 import { EmojiPicker } from '../components/EmojiPicker';
 import { UserList } from '../components/UserList';
@@ -34,6 +35,7 @@ const Home: NextPage = () => {
     Constants.CHANNELS.PLAYERS,
     () => {}
   );
+
   const {
     start: startRound,
     end: endRound,
@@ -59,11 +61,11 @@ const Home: NextPage = () => {
   if (!session) {
     return (
       <Flex
-        direction='column'
-        width='100%'
-        height='100vh'
-        alignItems='center'
-        justify='center'
+        direction="column"
+        width="100%"
+        height="100vh"
+        alignItems="center"
+        justify="center"
       >
         <LoggedOutBranding />
         <Button onClick={() => signIn()}>Sign in</Button>
@@ -73,8 +75,8 @@ const Home: NextPage = () => {
   }
 
   return (
-    <Container maxW='100%' p={10}>
-      <Box position='absolute' top={10} left={10}>
+    <Container maxW="100%" p={10}>
+      {/* <Box position='absolute' top={10} left={10}>
         <Heading>Round Status</Heading>
         <UnorderedList>
           <ListItem>inProgress: {roundIsInProgress?.toString()}</ListItem>
@@ -83,23 +85,29 @@ const Home: NextPage = () => {
           <ListItem>timerStarted: {timerStarted.toString()}</ListItem>
           <ListItem>currentStep: {currentStep}</ListItem>
         </UnorderedList>
-      </Box>
+      </Box> */}
+
+      {roundIsInProgress ? (
+        <Box position="absolute" top={10} left={10}>
+          <CountdownTimer max={60} count={currentStep} />
+        </Box>
+      ) : null}
 
       <LoggedInBranding name={session?.user?.name} />
 
-      <Box position='absolute' top={10} right={10}>
+      <Box position="absolute" top={10} right={10}>
         <HStack>
           {session?.user?.name === 'Mike Cavaliere' && (
             <Button onClick={handleResetClick}>Reset Game</Button>
           )}
 
-          <Button bg='green.200' onClick={() => startRound!()}>
+          <Button bg="green.200" onClick={() => startRound!()}>
             Start Round
           </Button>
-          <Button bg='red.200' onClick={() => endRound!()}>
+          <Button bg="red.200" onClick={() => endRound!()}>
             End Round
           </Button>
-          <Button bg='yellow.200' onClick={() => resetRound!()}>
+          <Button bg="yellow.200" onClick={() => resetRound!()}>
             Reset
           </Button>
 
@@ -107,23 +115,25 @@ const Home: NextPage = () => {
         </HStack>
       </Box>
 
-      <SimpleGrid columns={3} spacing={3}>
-        <Container textAlign='center'>
-          <EmojiPicker />
-        </Container>
-        <Flex
-          direction='column'
-          align='center'
-          textAlign='center'
-          m={0}
-          width='100%'
-        >
-          {roundIsInProgress && <Leaderboard />}
-        </Flex>
-        <Container textAlign='center'>
-          <UserList />
-        </Container>
-      </SimpleGrid>
+      {roundIsInProgress ? (
+        <SimpleGrid columns={3} spacing={3}>
+          <Container textAlign="center">
+            <EmojiPicker />
+          </Container>
+          <Flex
+            direction="column"
+            align="center"
+            textAlign="center"
+            m={0}
+            width="100%"
+          >
+            <Leaderboard />
+          </Flex>
+          <Container textAlign="center">
+            <UserList />
+          </Container>
+        </SimpleGrid>
+      ) : null}
     </Container>
   );
 };
