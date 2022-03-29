@@ -9,9 +9,6 @@ import {
   Flex,
   SimpleGrid,
   Text,
-  Heading,
-  UnorderedList,
-  ListItem,
 } from '@chakra-ui/react';
 import 'emoji-mart/css/emoji-mart.css';
 
@@ -76,20 +73,9 @@ const Home: NextPage = () => {
 
   return (
     <Container maxW="100%" p={10}>
-      {/* <Box position='absolute' top={10} left={10}>
-        <Heading>Round Status</Heading>
-        <UnorderedList>
-          <ListItem>inProgress: {roundIsInProgress?.toString()}</ListItem>
-          <ListItem>startedAt: {roundCreatedAt?.toISOString()}</ListItem>
-          <ListItem>endedAt: {roundEndedAt?.toISOString()}</ListItem>
-          <ListItem>timerStarted: {timerStarted.toString()}</ListItem>
-          <ListItem>currentStep: {currentStep}</ListItem>
-        </UnorderedList>
-      </Box> */}
-
       {roundIsInProgress ? (
         <Box position="absolute" top={10} left={10}>
-          <CountdownTimer max={60} count={currentStep} />
+          <CountdownTimer max={Constants.ROUNDS.DURATION} count={currentStep} />
         </Box>
       ) : null}
 
@@ -97,19 +83,21 @@ const Home: NextPage = () => {
 
       <Box position="absolute" top={10} right={10}>
         <HStack>
-          {session?.user?.name === 'Mike Cavaliere' && (
+          {/* {session?.user?.name === 'Mike Cavaliere' && (
             <Button onClick={handleResetClick}>Reset Game</Button>
-          )}
+          )} */}
 
-          <Button bg="green.200" onClick={() => startRound!()}>
-            Start Round
-          </Button>
-          <Button bg="red.200" onClick={() => endRound!()}>
+          {!roundIsInProgress ? (
+            <Button bg="green.200" onClick={() => startRound!()}>
+              Start Round
+            </Button>
+          ) : null}
+          {/* <Button bg="red.200" onClick={() => endRound!()}>
             End Round
-          </Button>
-          <Button bg="yellow.200" onClick={() => resetRound!()}>
+          </Button> */}
+          {/* <Button bg="yellow.200" onClick={() => resetRound!()}>
             Reset
-          </Button>
+          </Button> */}
 
           <Button onClick={() => signOut()}>Sign out</Button>
         </HStack>

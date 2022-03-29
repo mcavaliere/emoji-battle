@@ -13,3 +13,7 @@ export const EVENTS = {
   ['ROUND_STARTED']: 'ROUND_STARTED',
   ['ROUND_ENDED']: 'ROUND_ENDED',
 };
+
+export const ROUNDS = {
+  DURATION: 15,
+};
