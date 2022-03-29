@@ -82,13 +82,12 @@ export const RoundProvider = ({ children }) => {
   const [state, dispatch] = useReducer(roundReducer, defaultRoundContext);
 
   const timerChannelMessageCallback = (message) => {
-    console.log(
-      `----------------  timerChannelMessageCallback received: `,
-      message
-    );
     if (message.name === Constants.EVENTS.TICK) {
-      console.log(`---------------- dispatching STEP`);
       dispatch({ type: RoundActions.STEP, currentStep: message.data.number });
+      return;
+    }
+    if (message.name === Constants.EVENTS.ROUND_ENDED) {
+      dispatch({ type: RoundActions.END });
     }
   };
 
