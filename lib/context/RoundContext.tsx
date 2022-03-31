@@ -23,14 +23,11 @@ export enum RoundActions {
   STOP_TIMER = 'STOP_TIMER',
 }
 
-// Duration of a Round.
-export const TIMER_MAX_STEP = 10;
-
 export const defaultRoundContext: RoundContextType = {
-  inProgress: false,
+  inProgress: true,
   startedAt: undefined,
   endedAt: undefined,
-  currentStep: -1,
+  currentStep: 10,
   timerStarted: false,
 };
 
