@@ -1,14 +1,18 @@
-import { Box, CircularProgress, Text } from '@chakra-ui/react';
+import { Flex, CircularProgress, Text } from '@chakra-ui/react';
 
 export type CountdownTimerProps = {
   count: number;
   max: number;
 };
 
-export const CountdownTimer = ({ count, max }) => {
+export const CountdownTimer = ({ count, max }: CountdownTimerProps) => {
   return (
-    <CircularProgress value={count} min={1} max={max}>
-      <Text>{count}</Text>
-    </CircularProgress>
+    <Flex pos="relative">
+      <CircularProgress value={count} min={1} max={max} />
+
+      <Flex pos="absolute" w="100%" h="100%" align="center" justify="center">
+        <Text>{count}</Text>
+      </Flex>
+    </Flex>
   );
 };
