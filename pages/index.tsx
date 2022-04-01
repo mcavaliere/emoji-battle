@@ -16,6 +16,7 @@ import * as Constants from '../lib/websocketConstants';
 import { CountdownTimer } from '../components/CountdownTimer';
 import { Leaderboard } from '../components/Leaderboard';
 import { EmojiPicker } from '../components/EmojiPicker';
+import { RoundSummary } from '../components/RoundSummary';
 import { UserList } from '../components/UserList';
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import { useRoundContext } from '../lib/context/RoundContext';
@@ -98,25 +99,27 @@ const Home: NextPage = () => {
         </Box>
       </SimpleGrid>
 
-      {roundIsInProgress ? (
-        <SimpleGrid columns={3} spacing={3}>
-          <Container textAlign="center">
-            <EmojiPicker />
-          </Container>
-          <Flex
-            direction="column"
-            align="center"
-            textAlign="center"
-            m={0}
-            width="100%"
-          >
+      <SimpleGrid columns={3} spacing={3}>
+        <Container textAlign="center">
+          {roundIsInProgress ? <EmojiPicker /> : null}
+        </Container>
+        <Flex
+          direction="column"
+          align="center"
+          textAlign="center"
+          m={0}
+          width="100%"
+        >
+          {roundIsInProgress ? (
             <Leaderboard />
-          </Flex>
-          <Container textAlign="center">
-            <UserList />
-          </Container>
-        </SimpleGrid>
-      ) : null}
+          ) : roundEndedAt ? (
+            <RoundSummary />
+          ) : null}
+        </Flex>
+        <Container textAlign="center">
+          <UserList />
+        </Container>
+      </SimpleGrid>
     </Container>
   );
 };

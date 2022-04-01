@@ -38,6 +38,7 @@ export function roundReducer(state = defaultRoundContext, action) {
         ...state,
         inProgress: true,
         startedAt: new Date(),
+        endedAt: undefined,
       };
     case RoundActions.END:
       return {
