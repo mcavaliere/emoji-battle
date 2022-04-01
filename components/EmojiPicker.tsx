@@ -2,6 +2,7 @@ import { useState, FC } from 'react';
 import { Button, Container, Heading, HStack } from '@chakra-ui/react';
 import { Picker, EmojiSet } from 'emoji-mart';
 import { useSession } from 'next-auth/react';
+import { Session } from 'next-auth';
 
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import * as Constants from '../lib/websocketConstants';
@@ -51,10 +52,10 @@ export const EmojiPicker = ({ afterSelect }: EmojiPickerProps) => {
 
   return (
     <>
-      <Heading size='md' mb={5}>
+      <Heading size="md" mb={5}>
         Pick an emoji!
       </Heading>
-      <HStack justifyContent='center' mb={5}>
+      <HStack justifyContent="center" mb={5}>
         <Button onClick={() => setEmojiSet('apple')}>Apple</Button>
         <Button onClick={() => setEmojiSet('google')}>Google</Button>
         <Button onClick={() => setEmojiSet('twitter')}>Twitter</Button>
