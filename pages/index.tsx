@@ -73,35 +73,30 @@ const Home: NextPage = () => {
 
   return (
     <Container maxW="100%" p={10}>
-      {roundIsInProgress ? (
-        <Box position="absolute" top={10} left={10}>
-          <CountdownTimer max={Constants.ROUNDS.DURATION} count={currentStep} />
-        </Box>
-      ) : null}
-
-      <LoggedInBranding name={session?.user?.name} />
-
-      <Box position="absolute" top={10} right={10}>
-        <HStack>
-          {/* {session?.user?.name === 'Mike Cavaliere' && (
-            <Button onClick={handleResetClick}>Reset Game</Button>
-          )} */}
-
-          {!roundIsInProgress ? (
-            <Button bg="green.200" onClick={() => startRound!()}>
-              Start Round
-            </Button>
+      <SimpleGrid spacing={3} columns={3}>
+        <Box>
+          {roundIsInProgress ? (
+            <CountdownTimer
+              max={Constants.ROUNDS.DURATION}
+              count={currentStep}
+            />
           ) : null}
-          {/* <Button bg="red.200" onClick={() => endRound!()}>
-            End Round
-          </Button> */}
-          {/* <Button bg="yellow.200" onClick={() => resetRound!()}>
-            Reset
-          </Button> */}
+        </Box>
 
-          <Button onClick={() => signOut()}>Sign out</Button>
-        </HStack>
-      </Box>
+        <LoggedInBranding name={session?.user?.name} />
+
+        <Box position="absolute" top={10} right={10}>
+          <HStack>
+            {!roundIsInProgress ? (
+              <Button bg="green.200" onClick={() => startRound!()}>
+                Start Round
+              </Button>
+            ) : null}
+
+            <Button onClick={() => signOut()}>Sign out</Button>
+          </HStack>
+        </Box>
+      </SimpleGrid>
 
       {roundIsInProgress ? (
         <SimpleGrid columns={3} spacing={3}>
