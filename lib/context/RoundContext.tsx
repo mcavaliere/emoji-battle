@@ -24,7 +24,7 @@ export enum RoundActions {
 }
 
 export const defaultRoundContext: RoundContextType = {
-  inProgress: true,
+  inProgress: false,
   startedAt: undefined,
   endedAt: undefined,
   currentStep: 10,
