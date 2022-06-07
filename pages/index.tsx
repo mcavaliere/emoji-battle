@@ -35,14 +35,14 @@ const Home: NextPage = () => {
   );
 
   const {
+    round: currentRound,
     start: startRound,
     end: endRound,
     reset: resetRound,
     inProgress: roundIsInProgress,
     currentStep,
-    startedAt: roundCreatedAt,
-    endedAt: roundEndedAt,
   } = useRoundContext();
+
 
   useEffect((): void => {
     if (session?.user) {
@@ -111,7 +111,7 @@ const Home: NextPage = () => {
         >
           {roundIsInProgress ? (
             <Leaderboard />
-          ) : roundEndedAt ? (
+          ) : currentRound?.endedAt ? (
             <RoundSummary />
           ) : null}
         </Flex>

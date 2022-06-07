@@ -6,12 +6,11 @@ import { Session } from 'next-auth';
 
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import * as Constants from '../lib/websocketConstants';
+import { create as recordVote } from '../lib/api/votes';
+import { useRoundContext } from '../lib/context/RoundContext';
 
-export type EmojiPickerProps = {
-  afterSelect?: (emoji) => void;
-};
-
-export const EmojiPicker = ({ afterSelect }: EmojiPickerProps) => {
+export const EmojiPicker = () => {
+  const { round } = useRoundContext();
   const [emojiSet, setEmojiSet] = useState<EmojiSet>('apple');
   const [voteChannel] = useWebsocketChannel(Constants.CHANNELS.VOTE, () => {});
   const { data: session } = useSession();
@@ -24,6 +23,10 @@ export const EmojiPicker = ({ afterSelect }: EmojiPickerProps) => {
   );
 
   const handleEmojiSelect = async (emoji: any) => {
+    if (!round) {
+      return;
+    }
+
     // @ts-ignore
     leaderboardChannel.publish(Constants.EVENTS.EMOJI_CLICKED, {
       emoji,
@@ -36,18 +39,7 @@ export const EmojiPicker = ({ afterSelect }: EmojiPickerProps) => {
       user,
     });
 
-    await fetch('/api/emoji/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({ emoji }),
-    });
-
-    if (afterSelect) {
-      afterSelect(emoji);
-    }
+    recordVote(round?.id, emoji).then();
   };
 
   return (

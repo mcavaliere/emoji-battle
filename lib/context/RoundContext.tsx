@@ -2,14 +2,14 @@ import { createContext, useContext, useEffect, useReducer } from 'react';
 import { useWebsocketChannel } from '../hooks/useWebsocketChannel';
 import * as Constants from '../../lib/websocketConstants';
 
-import { start as postStartRound } from '../../lib/api/rounds';
+import { start as startRound } from '../../lib/api/rounds';
 import { Round } from '@prisma/client';
 
 export type RoundContextType = {
   round?: Round;
   inProgress: boolean;
   endedAt?: Date;
-  start?: (round: Round) => void;
+  start?: () => void;
   end?: () => void;
   reset?: () => void;
   currentStep: number;
@@ -80,21 +80,11 @@ export const RoundProvider = ({ children }) => {
     timerChannelMessageCallback
   );
 
-  useEffect(() => {
-    const startRound = async () => {
-      // Create round in database.
-      const round = await postStartRound();
-
-      // Set started state in context
-      start(round);
-    };
-
+  const start = async () => {
     if (state.inProgress) {
-      startRound();
+      return;
     }
-  }, [state.inProgress]);
-
-  const start = (round: Round) => {
+    const round = await startRound();
     dispatch({ type: RoundActions.START, round });
   };
 

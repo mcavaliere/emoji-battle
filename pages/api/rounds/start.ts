@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import prisma from '../../../lib/prismaClientInstance';
 import { Round, User } from '@prisma/client';
+import { start as startTimer } from '../../../lib/api/timer';
 
 type Data = {
   round: Round;
@@ -30,7 +31,9 @@ export default async function handler(
       data: { startedByUserId: user.id },
     });
 
-    return res.status(200).json({ round });
+    await startTimer();
+
+    return res.status(200).json(round);
   } catch (error) {
     console.log(`error in POST /rounds/start: `, error);
     res.status(500);

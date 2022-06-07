@@ -1,16 +1,12 @@
 import { Round } from '@prisma/client';
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = process.env.API_BASE_URL;
 
 /**
  * Start the hearbeat timer for a round, on the Express server.
  * @returns
  */
-export async function start(): Promise<Round> {
+export async function start(): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/rounds/start`, {
-    headers: {
-      'Content-Type': 'application/json',
-      accept: 'application/json',
-    },
     method: 'POST',
     mode: 'cors',
   });
@@ -20,5 +16,5 @@ export async function start(): Promise<Round> {
     throw new Error('Error starting timer.');
   }
 
-  return await response.json();
+  return Promise.resolve();
 }
