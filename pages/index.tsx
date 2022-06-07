@@ -39,7 +39,6 @@ const Home: NextPage = () => {
     end: endRound,
     reset: resetRound,
     inProgress: roundIsInProgress,
-    timerStarted,
     currentStep,
     startedAt: roundCreatedAt,
     endedAt: roundEndedAt,

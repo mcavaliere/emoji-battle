@@ -1,17 +1,18 @@
 import { createContext, useContext, useEffect, useReducer } from 'react';
 import { useWebsocketChannel } from '../hooks/useWebsocketChannel';
 import * as Constants from '../../lib/websocketConstants';
-import { start as startTimer } from '../../lib/api/timer';
+
+import { start as postStartRound } from '../../lib/api/rounds';
+import { Round } from '@prisma/client';
 
 export type RoundContextType = {
+  round?: Round;
   inProgress: boolean;
-  startedAt?: Date;
   endedAt?: Date;
-  start?: () => void;
+  start?: (round: Round) => void;
   end?: () => void;
   reset?: () => void;
   currentStep: number;
-  timerStarted: boolean;
 };
 
 export enum RoundActions {
@@ -19,16 +20,12 @@ export enum RoundActions {
   END = 'END',
   RESET = 'RESET',
   STEP = 'STEP',
-  START_TIMER = 'START_TIMER',
-  STOP_TIMER = 'STOP_TIMER',
 }
 
 export const defaultRoundContext: RoundContextType = {
-  inProgress: true,
-  startedAt: undefined,
-  endedAt: undefined,
-  currentStep: 10,
-  timerStarted: false,
+  inProgress: false,
+  currentStep: 0,
+  round: undefined,
 };
 
 export function roundReducer(state = defaultRoundContext, action) {
@@ -36,30 +33,18 @@ export function roundReducer(state = defaultRoundContext, action) {
     case RoundActions.START:
       return {
         ...state,
+        round: action.round,
         inProgress: true,
-        startedAt: new Date(),
-        endedAt: undefined,
       };
     case RoundActions.END:
       return {
         ...state,
         inProgress: false,
-        endedAt: new Date(),
       };
     case RoundActions.STEP:
       return {
         ...state,
         currentStep: action.currentStep,
-      };
-    case RoundActions.START_TIMER:
-      return {
-        ...state,
-        timerStarted: true,
-      };
-    case RoundActions.STOP_TIMER:
-      return {
-        ...state,
-        timerStarted: false,
       };
     case RoundActions.RESET:
       return defaultRoundContext;
@@ -70,6 +55,7 @@ export function roundReducer(state = defaultRoundContext, action) {
 
 export const RoundContext =
   createContext<RoundContextType>(defaultRoundContext);
+
 RoundContext.displayName = 'RoundContext';
 
 export const useRoundContext = () => {
@@ -96,7 +82,11 @@ export const RoundProvider = ({ children }) => {
 
   useEffect(() => {
     const startRound = async () => {
-      await startTimer();
+      // Create round in database.
+      const round = await postStartRound();
+
+      // Set started state in context
+      start(round);
     };
 
     if (state.inProgress) {
@@ -104,13 +94,8 @@ export const RoundProvider = ({ children }) => {
     }
   }, [state.inProgress]);
 
-  const tickTimer = () => {
-    dispatch({ type: RoundActions.STEP });
-  };
-
-  const start = () => {
-    dispatch({ type: RoundActions.START });
-    tickTimer();
+  const start = (round: Round) => {
+    dispatch({ type: RoundActions.START, round });
   };
 
   const end = () => {

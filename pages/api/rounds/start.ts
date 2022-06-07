@@ -27,7 +27,7 @@ export default async function handler(
 
   try {
     const round = await prisma.round.create({
-      startedByUserId: user.id,
+      data: { startedByUserId: user.id },
     });
 
     return res.status(200).json({ round });
