@@ -4,13 +4,9 @@ import prisma from '../../../lib/prismaClientInstance';
 import { Round, User } from '@prisma/client';
 import { start as startTimer } from '../../../lib/api/timer';
 
-type Data = {
-  round: Round;
-};
-
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Round>
 ) {
   if (req.method !== 'POST') {
     return res.status(405).end();
