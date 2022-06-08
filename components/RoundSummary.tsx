@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   Box,
   Button,
@@ -9,20 +10,37 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Spinner,
 } from '@chakra-ui/react';
+import { useQuery } from 'react-query';
+import { fetchStats } from '../lib/api/rounds';
 
-export const RoundSummary = ({ onClose }) => {
+export type RoundSummaryProps = {
+  onClose: () => void;
+  roundId: number;
+};
+
+export const RoundSummary = ({ onClose, roundId }) => {
+  const { isLoading, data } = useQuery('round-summary', () =>
+    fetchStats(roundId)
+  );
+
+  console.log(`---------------- stats:  `, data);
+
   return (
     <Modal isOpen={true} onClose={onClose}>
       <ModalOverlay>
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>The Battle is Done.</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>
-            <Box>
-              <Heading size="xl">GAME OVER</Heading>
-            </Box>
+            {isLoading ? <Spinner size="xl" /> : null}
+            {!isLoading ? (
+              <Box>
+                <Heading size="xl">GAME OVER</Heading>
+              </Box>
+            ) : null}
           </ModalBody>
 
           <ModalFooter>

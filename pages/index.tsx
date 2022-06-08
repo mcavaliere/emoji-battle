@@ -79,7 +79,8 @@ const Home: NextPage = () => {
 
   return (
     <>
-      {roundSummaryVisible ? <RoundSummary onClose={onClose} /> : null}
+      {/* {roundSummaryVisible ? <RoundSummary onClose={onClose} /> : null} */}
+      <RoundSummary onClose={onClose} roundId={30} />
       <Container maxW="100%" p={10}>
         <SimpleGrid spacing={3} columns={3}>
           <Box>

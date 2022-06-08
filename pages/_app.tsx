@@ -2,14 +2,10 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { SessionProvider } from 'next-auth/react';
 import { ChakraProvider } from '@chakra-ui/react';
-import { SWRConfig } from 'swr';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { PageLayout } from '../components/PageLayout';
 import { RoundProvider } from '../lib/context/RoundContext';
-
-const swrConfig = {
-  refreshInterval: 0,
-};
 
 // Checks for required environment variables.
 if (typeof window === 'undefined') {
@@ -22,10 +18,19 @@ if (typeof window === 'undefined') {
   }
 }
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  },
+});
+
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
-      <SWRConfig value={swrConfig}>
+      <QueryClientProvider client={queryClient}>
         <ChakraProvider>
           <RoundProvider>
             <PageLayout>
@@ -33,7 +38,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             </PageLayout>
           </RoundProvider>
         </ChakraProvider>
-      </SWRConfig>
+      </QueryClientProvider>
     </SessionProvider>
   );
 }
