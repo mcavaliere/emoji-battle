@@ -40,9 +40,11 @@ const Home: NextPage = () => {
     end: endRound,
     reset: resetRound,
     inProgress: roundIsInProgress,
+    showRoundSummary,
+    hideRoundSummary,
+    roundSummaryVisible,
     currentStep,
   } = useRoundContext();
-
 
   useEffect((): void => {
     if (session?.user) {
@@ -71,55 +73,58 @@ const Home: NextPage = () => {
     );
   }
 
+  const onClose = () => {
+    hideRoundSummary!();
+  };
+
   return (
-    <Container maxW="100%" p={10}>
-      <SimpleGrid spacing={3} columns={3}>
-        <Box>
-          {roundIsInProgress ? (
-            <CountdownTimer
-              max={Constants.ROUNDS.DURATION}
-              count={currentStep}
-            />
-          ) : null}
-        </Box>
-
-        <LoggedInBranding name={session?.user?.name} />
-
-        <Box position="absolute" top={10} right={10}>
-          <HStack>
-            {!roundIsInProgress ? (
-              <Button bg="green.200" onClick={() => startRound!()}>
-                Start Round
-              </Button>
+    <>
+      {roundSummaryVisible ? <RoundSummary onClose={onClose} /> : null}
+      <Container maxW="100%" p={10}>
+        <SimpleGrid spacing={3} columns={3}>
+          <Box>
+            {roundIsInProgress ? (
+              <CountdownTimer
+                max={Constants.ROUNDS.DURATION}
+                count={currentStep}
+              />
             ) : null}
+          </Box>
 
-            <Button onClick={() => signOut()}>Sign out</Button>
-          </HStack>
-        </Box>
-      </SimpleGrid>
+          <LoggedInBranding name={session?.user?.name} />
 
-      <SimpleGrid columns={3} spacing={3}>
-        <Container textAlign="center">
-          {roundIsInProgress ? <EmojiPicker /> : null}
-        </Container>
-        <Flex
-          direction="column"
-          align="center"
-          textAlign="center"
-          m={0}
-          width="100%"
-        >
-          {roundIsInProgress ? (
-            <Leaderboard />
-          ) : currentRound?.endedAt ? (
-            <RoundSummary />
-          ) : null}
-        </Flex>
-        <Container textAlign="center">
-          <UserList />
-        </Container>
-      </SimpleGrid>
-    </Container>
+          <Box position="absolute" top={10} right={10}>
+            <HStack>
+              {!roundIsInProgress ? (
+                <Button bg="green.200" onClick={() => startRound!()}>
+                  Start Round
+                </Button>
+              ) : null}
+
+              <Button onClick={() => signOut()}>Sign out</Button>
+            </HStack>
+          </Box>
+        </SimpleGrid>
+
+        <SimpleGrid columns={3} spacing={3}>
+          <Container textAlign="center">
+            {roundIsInProgress ? <EmojiPicker /> : null}
+          </Container>
+          <Flex
+            direction="column"
+            align="center"
+            textAlign="center"
+            m={0}
+            width="100%"
+          >
+            {roundIsInProgress ? <Leaderboard /> : null}
+          </Flex>
+          <Container textAlign="center">
+            <UserList />
+          </Container>
+        </SimpleGrid>
+      </Container>
+    </>
   );
 };
 

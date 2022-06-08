@@ -4338,6 +4338,11 @@ use-callback-ref@^1.2.1, use-callback-ref@^1.2.3:
   resolved "https://registry.yarnpkg.com/use-callback-ref/-/use-callback-ref-1.2.5.tgz#6115ed242cfbaed5915499c0a9842ca2912f38a5"
   integrity sha512-gN3vgMISAgacF7sqsLPByqoePooY3n2emTH59Ur5d/M8eg4WTWu1xp8i8DHjohftIyEx0S08RiYxbffr4j8Peg==
 
+use-effect-reducer@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/use-effect-reducer/-/use-effect-reducer-0.7.0.tgz#7e08714145a44b84c39c101e8898750b400d61de"
+  integrity sha512-TinyyjN4AdKztczq0nG0GuGPWwOLjUw29qWEOSxv/YDc954EbVNFbobQQwnzSAhM4xpE/2zt5rw0t/EZjJ0HSA==
+
 use-sidecar@^1.0.1:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/use-sidecar/-/use-sidecar-1.0.5.tgz#ffff2a17c1df42e348624b699ba6e5c220527f2b"

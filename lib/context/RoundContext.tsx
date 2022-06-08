@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useReducer } from 'react';
+import { createContext, useContext, useReducer } from 'react';
+import { useEffectReducer } from 'use-effect-reducer';
 import { useWebsocketChannel } from '../hooks/useWebsocketChannel';
 import * as Constants from '../../lib/websocketConstants';
 
@@ -7,12 +8,16 @@ import { Round } from '@prisma/client';
 
 export type RoundContextType = {
   round?: Round;
+  previousRound?: Round;
   inProgress: boolean;
   endedAt?: Date;
   start?: () => void;
   end?: () => void;
   reset?: () => void;
+  showRoundSummary?: () => void;
+  hideRoundSummary?: () => void;
   currentStep: number;
+  roundSummaryVisible: boolean;
 };
 
 export enum RoundActions {
@@ -20,15 +25,33 @@ export enum RoundActions {
   END = 'END',
   RESET = 'RESET',
   STEP = 'STEP',
+  SHOW_ROUND_SUMMARY = 'SHOW_ROUND_SUMMARY',
+  HIDE_ROUND_SUMMARY = 'HIDE_ROUND_SUMMARY',
 }
 
 export const defaultRoundContext: RoundContextType = {
   inProgress: false,
   currentStep: 0,
   round: undefined,
+  roundSummaryVisible: false,
 };
 
-export function roundReducer(state = defaultRoundContext, action) {
+export function triggerSummaryModalEffect(_, _effect, dispatch) {
+  console.log(`----------------  triggerSummaryModalEffect`);
+  dispatch({
+    type: RoundActions.SHOW_ROUND_SUMMARY,
+  });
+}
+
+export const effectMap = {
+  triggerSummaryModal: triggerSummaryModalEffect,
+};
+
+export function roundReducer(
+  state: RoundContextType = defaultRoundContext,
+  action,
+  exec
+) {
   switch (action.type) {
     case RoundActions.START:
       return {
@@ -37,8 +60,13 @@ export function roundReducer(state = defaultRoundContext, action) {
         inProgress: true,
       };
     case RoundActions.END:
+      exec({ type: 'triggerSummaryModal' });
+
+      const previousRound = state.round;
       return {
         ...state,
+        previousRound,
+        round: undefined,
         inProgress: false,
       };
     case RoundActions.STEP:
@@ -46,8 +74,19 @@ export function roundReducer(state = defaultRoundContext, action) {
         ...state,
         currentStep: action.currentStep,
       };
+    case RoundActions.SHOW_ROUND_SUMMARY:
+      return {
+        ...state,
+        roundSummaryVisible: true,
+      };
+    case RoundActions.HIDE_ROUND_SUMMARY:
+      return {
+        ...state,
+        roundSummaryVisible: false,
+      };
     case RoundActions.RESET:
       return defaultRoundContext;
+
     default:
       return state;
   }
@@ -63,7 +102,11 @@ export const useRoundContext = () => {
 };
 
 export const RoundProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(roundReducer, defaultRoundContext);
+  const [state, dispatch] = useEffectReducer(
+    roundReducer,
+    defaultRoundContext,
+    effectMap
+  );
 
   const timerChannelMessageCallback = (message) => {
     if (message.name === Constants.EVENTS.TICK) {
@@ -81,7 +124,7 @@ export const RoundProvider = ({ children }) => {
   );
 
   const start = async () => {
-    if (state.inProgress) {
+    if (state!.inProgress) {
       return;
     }
     const round = await startRound();
@@ -96,13 +139,23 @@ export const RoundProvider = ({ children }) => {
     dispatch({ type: RoundActions.RESET });
   };
 
+  const showRoundSummary = () => {
+    dispatch({ type: RoundActions.SHOW_ROUND_SUMMARY });
+  };
+
+  const hideRoundSummary = () => {
+    dispatch({ type: RoundActions.HIDE_ROUND_SUMMARY });
+  };
+
   return (
     <RoundContext.Provider
       value={{
-        ...state,
+        ...state!,
         start,
         end,
         reset,
+        showRoundSummary,
+        hideRoundSummary,
       }}
     >
       {children}
