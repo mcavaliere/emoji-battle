@@ -16,6 +16,7 @@ import {
   StatLabel,
   StatGroup,
   StatNumber,
+  Tbody,
   TableContainer,
   Table,
   TableCaption,
@@ -51,47 +52,51 @@ export const RoundSummary = ({ onClose, roundId }) => {
             {isLoading ? <Spinner size="xl" /> : null}
             {!isLoading ? (
               <>
-                <Box>
-                  <Heading size="xl" textAlign="center">
-                    GAME OVER
-                  </Heading>
-                </Box>
-                <StatGroup>
+                <Heading size="xl" textAlign="center" mb={5}>
+                  GAME OVER
+                </Heading>
+
+                <StatGroup textAlign="center">
                   <Stat>
                     <StatLabel>Total Votes</StatLabel>
                     <StatNumber>{roundStats?.votes}</StatNumber>
                   </Stat>
                 </StatGroup>
+
                 <Flex direction="row">
                   <TableContainer>
                     <Table>
                       <TableCaption placement="top">Top Emoji</TableCaption>
-                      {emojiStats.map(([id, count]) => (
-                        <Tr key={id}>
-                          <Td>{emojiMap[id].native}</Td>
-                          <Td>{count}</Td>
-                        </Tr>
-                      ))}
+                      <Tbody>
+                        {emojiStats.map(([id, count]) => (
+                          <Tr key={id}>
+                            <Td>{emojiMap[id].native}</Td>
+                            <Td>{count}</Td>
+                          </Tr>
+                        ))}
+                      </Tbody>
                     </Table>
                   </TableContainer>
                   <TableContainer>
                     <Table>
                       <TableCaption placement="top">Top Battlers</TableCaption>
-                      {userStats.map(([id, count]) => (
-                        <Tr key={id}>
-                          <Td verticalAlign="center">
-                            <Flex direction="row" align="center">
-                              <Avatar
-                                src={userMap[id].image}
-                                size="xs"
-                                mr={2}
-                              />{' '}
-                              {userMap[id].name}{' '}
-                            </Flex>
-                          </Td>
-                          <Td>{count}</Td>
-                        </Tr>
-                      ))}
+                      <Tbody>
+                        {userStats.map(([id, count]) => (
+                          <Tr key={id}>
+                            <Td verticalAlign="center">
+                              <Flex direction="row" align="center">
+                                <Avatar
+                                  src={userMap[id].image}
+                                  size="xs"
+                                  mr={2}
+                                />{' '}
+                                {userMap[id].name}{' '}
+                              </Flex>
+                            </Td>
+                            <Td>{count}</Td>
+                          </Tr>
+                        ))}
+                      </Tbody>
                     </Table>
                   </TableContainer>
                 </Flex>
@@ -99,11 +104,10 @@ export const RoundSummary = ({ onClose, roundId }) => {
             ) : null}
           </ModalBody>
 
-          <ModalFooter>
+          <ModalFooter justifyContent="center">
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button variant="ghost">Secondary Action</Button>
           </ModalFooter>
         </ModalContent>
       </ModalOverlay>

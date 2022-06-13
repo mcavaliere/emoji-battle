@@ -37,7 +37,6 @@ export const defaultRoundContext: RoundContextType = {
 };
 
 export function triggerSummaryModalEffect(_, _effect, dispatch) {
-  console.log(`----------------  triggerSummaryModalEffect`);
   dispatch({
     type: RoundActions.SHOW_ROUND_SUMMARY,
   });
@@ -52,6 +51,7 @@ export function roundReducer(
   action,
   exec
 ) {
+  console.log(`ACTION: ${action.type}`);
   switch (action.type) {
     case RoundActions.START:
       return {
@@ -109,10 +109,13 @@ export const RoundProvider = ({ children }) => {
   );
 
   const timerChannelMessageCallback = (message) => {
+    // When the server sends TICK, dispatch a STEP to the reducer.
     if (message.name === Constants.EVENTS.TICK) {
       dispatch({ type: RoundActions.STEP, currentStep: message.data.number });
       return;
     }
+
+    // Dispatched by node server when timer completes;
     if (message.name === Constants.EVENTS.ROUND_ENDED) {
       dispatch({ type: RoundActions.END });
     }

@@ -35,12 +35,9 @@ const Home: NextPage = () => {
   );
 
   const {
-    round: currentRound,
+    previousRound,
     start: startRound,
-    end: endRound,
-    reset: resetRound,
     inProgress: roundIsInProgress,
-    showRoundSummary,
     hideRoundSummary,
     roundSummaryVisible,
     currentStep,
@@ -79,8 +76,10 @@ const Home: NextPage = () => {
 
   return (
     <>
-      {/* {roundSummaryVisible ? <RoundSummary onClose={onClose} /> : null} */}
-      <RoundSummary onClose={onClose} roundId={30} />
+      {previousRound && roundSummaryVisible ? (
+        <RoundSummary roundId={previousRound.id} onClose={onClose} />
+      ) : null}
+
       <Container maxW="100%" p={10}>
         <SimpleGrid spacing={3} columns={3}>
           <Box>
