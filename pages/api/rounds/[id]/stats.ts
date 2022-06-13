@@ -77,11 +77,13 @@ export default async function handler(
     // TODO: this is a lot of excess iteration to work around JS's forcing of keys to strings. Change this to something more efficient.
     const userStats = Object.entries(stats.users)
       .map<[number, number]>(([id, count]) => [parseInt(id, 10), count])
-      .sort((a, b) => b[1] - a[1]);
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
 
     const emojiStats = Object.entries(stats.emoji)
       .map<[number, number]>(([id, count]) => [parseInt(id, 10), count])
-      .sort((a, b) => b[1] - a[1]);
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
 
     // Users who played this round.
     const users = await prisma.user.findMany({

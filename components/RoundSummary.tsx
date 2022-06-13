@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
 import {
+  Avatar,
   Box,
   Button,
+  Flex,
   Heading,
   Modal,
   ModalOverlay,
@@ -12,14 +13,9 @@ import {
   ModalCloseButton,
   Spinner,
   Stat,
-  StatArrow,
   StatLabel,
   StatGroup,
   StatNumber,
-  StatUpArrow,
-  StatHelpText,
-  StatDownArrow,
-  Text,
   TableContainer,
   Table,
   TableCaption,
@@ -43,12 +39,12 @@ export const RoundSummary = ({ onClose, roundId }) => {
   const userStats = data?.stats?.users;
   const emojiStats = data?.stats?.emoji;
   const emojiMap = data?.emojiMap;
+  const userMap = data?.userMap;
 
   return (
     <Modal isOpen={true} onClose={onClose}>
       <ModalOverlay>
         <ModalContent>
-          <ModalHeader>The Battle is Done.</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>
@@ -56,7 +52,9 @@ export const RoundSummary = ({ onClose, roundId }) => {
             {!isLoading ? (
               <>
                 <Box>
-                  <Heading size="xl">GAME OVER</Heading>
+                  <Heading size="xl" textAlign="center">
+                    GAME OVER
+                  </Heading>
                 </Box>
                 <StatGroup>
                   <Stat>
@@ -64,16 +62,39 @@ export const RoundSummary = ({ onClose, roundId }) => {
                     <StatNumber>{roundStats?.votes}</StatNumber>
                   </Stat>
                 </StatGroup>
-                <TableContainer>
-                  <Table>
-                    {emojiStats.map(([id, count]) => (
-                      <Tr key={id}>
-                        <Td>{emojiMap[id].native}</Td>
-                        <Td>{count}</Td>
-                      </Tr>
-                    ))}
-                  </Table>
-                </TableContainer>
+                <Flex direction="row">
+                  <TableContainer>
+                    <Table>
+                      <TableCaption placement="top">Top Emoji</TableCaption>
+                      {emojiStats.map(([id, count]) => (
+                        <Tr key={id}>
+                          <Td>{emojiMap[id].native}</Td>
+                          <Td>{count}</Td>
+                        </Tr>
+                      ))}
+                    </Table>
+                  </TableContainer>
+                  <TableContainer>
+                    <Table>
+                      <TableCaption placement="top">Top Battlers</TableCaption>
+                      {userStats.map(([id, count]) => (
+                        <Tr key={id}>
+                          <Td verticalAlign="center">
+                            <Flex direction="row" align="center">
+                              <Avatar
+                                src={userMap[id].image}
+                                size="xs"
+                                mr={2}
+                              />{' '}
+                              {userMap[id].name}{' '}
+                            </Flex>
+                          </Td>
+                          <Td>{count}</Td>
+                        </Tr>
+                      ))}
+                    </Table>
+                  </TableContainer>
+                </Flex>
               </>
             ) : null}
           </ModalBody>
