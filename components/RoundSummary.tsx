@@ -1,13 +1,11 @@
 import {
   Avatar,
-  Box,
   Button,
   Flex,
   Heading,
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
   ModalFooter,
   ModalBody,
   ModalCloseButton,

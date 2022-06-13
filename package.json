@@ -23,8 +23,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-hook-form": "^7.15.4",
-    "react-query": "^3.39.1",
-    "use-effect-reducer": "^0.7.0"
+    "react-query": "^3.39.1"
   },
   "devDependencies": {
     "@types/emoji-mart": "^3.0.6",

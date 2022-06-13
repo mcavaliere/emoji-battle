@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer } from 'react';
-import { useEffectReducer } from 'use-effect-reducer';
+import { useEffectReducer } from '../hooks/useEffectReducer';
 import { useWebsocketChannel } from '../hooks/useWebsocketChannel';
 import * as Constants from '../../lib/websocketConstants';
 
