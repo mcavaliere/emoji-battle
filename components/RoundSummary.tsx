@@ -11,6 +11,20 @@ import {
   ModalBody,
   ModalCloseButton,
   Spinner,
+  Stat,
+  StatArrow,
+  StatLabel,
+  StatGroup,
+  StatNumber,
+  StatUpArrow,
+  StatHelpText,
+  StatDownArrow,
+  Text,
+  TableContainer,
+  Table,
+  TableCaption,
+  Tr,
+  Td,
 } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import { fetchStats } from '../lib/api/rounds';
@@ -25,7 +39,10 @@ export const RoundSummary = ({ onClose, roundId }) => {
     fetchStats(roundId)
   );
 
-  console.log(`---------------- stats:  `, data);
+  const roundStats = data?.stats?.round;
+  const userStats = data?.stats?.users;
+  const emojiStats = data?.stats?.emoji;
+  const emojiMap = data?.emojiMap;
 
   return (
     <Modal isOpen={true} onClose={onClose}>
@@ -37,9 +54,27 @@ export const RoundSummary = ({ onClose, roundId }) => {
           <ModalBody>
             {isLoading ? <Spinner size="xl" /> : null}
             {!isLoading ? (
-              <Box>
-                <Heading size="xl">GAME OVER</Heading>
-              </Box>
+              <>
+                <Box>
+                  <Heading size="xl">GAME OVER</Heading>
+                </Box>
+                <StatGroup>
+                  <Stat>
+                    <StatLabel>Total Votes</StatLabel>
+                    <StatNumber>{roundStats?.votes}</StatNumber>
+                  </Stat>
+                </StatGroup>
+                <TableContainer>
+                  <Table>
+                    {emojiStats.map(([id, count]) => (
+                      <Tr key={id}>
+                        <Td>{emojiMap[id].native}</Td>
+                        <Td>{count}</Td>
+                      </Tr>
+                    ))}
+                  </Table>
+                </TableContainer>
+              </>
             ) : null}
           </ModalBody>
 
