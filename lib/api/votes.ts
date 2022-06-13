@@ -8,7 +8,6 @@ export async function create(
   roundId: Round['id'],
   emoji: typeof EmojiGetPayload
 ): Promise<Emoji> {
-  console.log(`---------------- fetching /api/votes/create`);
   const response = await fetch('/api/votes/create', {
     method: 'POST',
     headers: {

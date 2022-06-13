@@ -41,7 +41,7 @@ export const RoundSummary = ({ onClose, roundId }) => {
   const userMap = data?.userMap;
 
   return (
-    <Modal isOpen={true} onClose={onClose}>
+    <Modal isOpen={true} onClose={onClose} closeOnOverlayClick={false}>
       <ModalOverlay>
         <ModalContent>
           <ModalCloseButton />
