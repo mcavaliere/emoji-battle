@@ -1,6 +1,9 @@
-import { useState, FC } from 'react';
-import { Button, Container, Heading, HStack } from '@chakra-ui/react';
-import { Picker, EmojiSet } from 'emoji-mart';
+import { useEffect, useState, useRef } from 'react';
+import { Button, Heading, HStack } from '@chakra-ui/react';
+
+import data from '@emoji-mart/data';
+import { Picker } from 'emoji-mart';
+import { EmojiSet } from 'emoji-mart';
 import { useSession } from 'next-auth/react';
 import { Session } from 'next-auth';
 
@@ -9,12 +12,29 @@ import * as Constants from '../lib/websocketConstants';
 import { create as recordVote } from '../lib/api/votes';
 import { useRoundContext } from '../lib/context/RoundContext';
 
+export function Picker(props) {
+  const pickerRef = useRef<HTMLDivElement | null>(null);
+  const moduleRef = useRef<Picker | null>(null);
+
+  // Use deferred import to make emoji-mart not break during SSR https://github.com/missive/emoji-mart/issues/575#issuecomment-1111323710
+  const handleDivRef = (divEl) => {
+    pickerRef.current = divEl;
+    if (!moduleRef.current) {
+      import('emoji-mart').then(
+        // @ts-ignore
+        (m) => (moduleRef.current = new m.Picker({ ref: pickerRef, data }))
+      );
+    }
+  };
+
+  return <div ref={handleDivRef} />;
+}
+
 export const EmojiPicker = () => {
   const { round } = useRoundContext();
   const [emojiSet, setEmojiSet] = useState<EmojiSet>('apple');
   const [voteChannel] = useWebsocketChannel(Constants.CHANNELS.VOTE, () => {});
   const { data: session } = useSession();
-
   const { user } = session as Session;
 
   const [leaderboardChannel] = useWebsocketChannel(

@@ -10,7 +10,6 @@ import {
   SimpleGrid,
   Text,
 } from '@chakra-ui/react';
-import 'emoji-mart/css/emoji-mart.css';
 
 import * as Constants from '../lib/websocketConstants';
 import { CountdownTimer } from '../components/CountdownTimer';
