@@ -1,9 +1,8 @@
-import { useState, useRef } from 'react';
-import { Button, Heading, HStack } from '@chakra-ui/react';
+import { useRef } from 'react';
+import { Heading, HStack } from '@chakra-ui/react';
 
 import data from '@emoji-mart/data';
 import { Picker as EmojiMartPicker } from 'emoji-mart';
-import { EmojiSet } from 'emoji-mart';
 import { useSession } from 'next-auth/react';
 import { Session } from 'next-auth';
 
@@ -33,7 +32,6 @@ export function Picker(props) {
 
 export const EmojiPicker = () => {
   const { round } = useRoundContext();
-  const [emojiSet, setEmojiSet] = useState<EmojiSet>('apple');
   const [voteChannel] = useWebsocketChannel(Constants.CHANNELS.VOTE, () => {});
   const { data: session } = useSession();
   const { user } = session as Session;
@@ -44,7 +42,6 @@ export const EmojiPicker = () => {
   );
 
   const handleEmojiSelect = async (emoji: any) => {
-    console.log(`---------------- handleEmojiSelect `, emoji);
     if (!round) {
       return;
     }
@@ -61,11 +58,7 @@ export const EmojiPicker = () => {
       user,
     });
 
-    recordVote(round?.id, emoji).then();
-  };
-
-  const handleClick = (emoji) => {
-    console.log(`---------------- handleClick `, emoji);
+    recordVote(round?.id, emoji);
   };
 
   return (
@@ -74,16 +67,8 @@ export const EmojiPicker = () => {
         Pick an emoji!
       </Heading>
       <HStack justifyContent="center" mb={5}>
-        <Button onClick={() => setEmojiSet('apple')}>Apple</Button>
-        <Button onClick={() => setEmojiSet('google')}>Google</Button>
-        <Button onClick={() => setEmojiSet('twitter')}>Twitter</Button>
-        <Button onClick={() => setEmojiSet('facebook')}>Facebook</Button>
+        <Picker onEmojiSelect={handleEmojiSelect} />
       </HStack>
-      <Picker
-        set={emojiSet}
-        onEmojiSelect={handleEmojiSelect}
-        onClick={handleClick}
-      />
     </>
   );
 };
