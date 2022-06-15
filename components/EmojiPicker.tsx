@@ -1,8 +1,8 @@
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Button, Heading, HStack } from '@chakra-ui/react';
 
 import data from '@emoji-mart/data';
-import { Picker } from 'emoji-mart';
+import { Picker as EmojiMartPicker } from 'emoji-mart';
 import { EmojiSet } from 'emoji-mart';
 import { useSession } from 'next-auth/react';
 import { Session } from 'next-auth';
@@ -14,7 +14,7 @@ import { useRoundContext } from '../lib/context/RoundContext';
 
 export function Picker(props) {
   const pickerRef = useRef<HTMLDivElement | null>(null);
-  const moduleRef = useRef<Picker | null>(null);
+  const moduleRef = useRef<EmojiMartPicker | null>(null);
 
   // Use deferred import to make emoji-mart not break during SSR https://github.com/missive/emoji-mart/issues/575#issuecomment-1111323710
   const handleDivRef = (divEl) => {
@@ -22,7 +22,8 @@ export function Picker(props) {
     if (!moduleRef.current) {
       import('emoji-mart').then(
         // @ts-ignore
-        (m) => (moduleRef.current = new m.Picker({ ref: pickerRef, data }))
+        (m) =>
+          (moduleRef.current = new m.Picker({ ...props, ref: pickerRef, data }))
       );
     }
   };
@@ -43,6 +44,7 @@ export const EmojiPicker = () => {
   );
 
   const handleEmojiSelect = async (emoji: any) => {
+    console.log(`---------------- handleEmojiSelect `, emoji);
     if (!round) {
       return;
     }
@@ -62,6 +64,10 @@ export const EmojiPicker = () => {
     recordVote(round?.id, emoji).then();
   };
 
+  const handleClick = (emoji) => {
+    console.log(`---------------- handleClick `, emoji);
+  };
+
   return (
     <>
       <Heading size="md" mb={5}>
@@ -73,7 +79,11 @@ export const EmojiPicker = () => {
         <Button onClick={() => setEmojiSet('twitter')}>Twitter</Button>
         <Button onClick={() => setEmojiSet('facebook')}>Facebook</Button>
       </HStack>
-      <Picker set={emojiSet} onSelect={handleEmojiSelect} />
+      <Picker
+        set={emojiSet}
+        onEmojiSelect={handleEmojiSelect}
+        onClick={handleClick}
+      />
     </>
   );
 };

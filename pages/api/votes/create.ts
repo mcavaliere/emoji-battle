@@ -29,7 +29,7 @@ export default async function handler(
 
     const {
       roundId,
-      emoji: { id, name, native, colons, unified },
+      emoji: { id, name, native, shortcodes, unified },
     } = req.body;
 
     const round = await prisma.round.findUnique({
@@ -42,7 +42,7 @@ export default async function handler(
         externalId: id,
         name,
         native,
-        colons,
+        shortcodes,
         unified,
       },
       update: {},
