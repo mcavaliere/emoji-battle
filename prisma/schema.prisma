@@ -73,7 +73,7 @@ model Emoji {
   externalId String @map(name: "external_id")
   native     String
   unified    String @unique
-  colons     String
+  shortcodes     String
   votes      Vote[]
 }
 
