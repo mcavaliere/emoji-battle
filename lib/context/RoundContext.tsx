@@ -130,6 +130,7 @@ export const RoundProvider = ({ children }) => {
     if (state!.inProgress) {
       return;
     }
+    dispatch({ type: RoundActions.RESET });
     const round = await startRound();
     dispatch({ type: RoundActions.START, round });
   };

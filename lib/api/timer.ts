@@ -1,4 +1,3 @@
-import { Round } from '@prisma/client';
 const API_BASE_URL = process.env.API_BASE_URL;
 
 /**

@@ -18,21 +18,6 @@ export const mapEmojis = (emojis: Emoji[]) =>
 export const Leaderboard = () => {
   const [emojis, setEmojis] = useState<EmojiFromListResponsePayload[]>([]);
 
-  // Initial load: fetch current list of emoji votes.
-  useEffect(() => {
-    async function loadEmoji() {
-      try {
-        const emojiFromApi = await fetcher(`/api/emoji/list`);
-
-        setEmojis(emojiFromApi.emojis);
-      } catch (error) {
-        console.warn(`error from initial emoji load:`, error);
-      }
-    }
-
-    loadEmoji();
-  }, []);
-
   const [leaderboardChannel] = useWebsocketChannel(
     Constants.CHANNELS.LEADERBOARD,
     (message) => {
