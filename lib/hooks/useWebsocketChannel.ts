@@ -6,9 +6,12 @@ const options: Ably.Types.ClientOptions = {
   authUrl: `/api/createTokenRequest`,
 };
 
-// Only create the Ably client once, and only on the frontend.
-if (typeof window !== 'undefined') {
-  ably = new Ably.Realtime.Promise(options);
+// Don't connect to Ably in test since it'll burn resources; we'll mock it.
+if (process.env.NODE_ENV !== 'test') {
+  // Only create the Ably client once, and only on the frontend.
+  if (typeof window !== 'undefined') {
+    ably = new Ably.Realtime.Promise(options);
+  }
 }
 
 export function useWebsocketChannel(channelName: string, callbackOnMessage) {
