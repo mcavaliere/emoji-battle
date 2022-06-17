@@ -1,17 +1,23 @@
-import { createContext, useContext, useEffect, useReducer } from 'react';
+import { createContext, useContext, useReducer } from 'react';
+import { useEffectReducer } from '../hooks/useEffectReducer';
 import { useWebsocketChannel } from '../hooks/useWebsocketChannel';
 import * as Constants from '../../lib/websocketConstants';
-import { start as startTimer } from '../../lib/api/timer';
+
+import { start as startRound } from '../../lib/api/rounds';
+import { Round } from '@prisma/client';
 
 export type RoundContextType = {
+  round?: Round;
+  previousRound?: Round;
   inProgress: boolean;
-  startedAt?: Date;
   endedAt?: Date;
   start?: () => void;
   end?: () => void;
   reset?: () => void;
+  showRoundSummary?: () => void;
+  hideRoundSummary?: () => void;
   currentStep: number;
-  timerStarted: boolean;
+  roundSummaryVisible: boolean;
 };
 
 export enum RoundActions {
@@ -19,50 +25,68 @@ export enum RoundActions {
   END = 'END',
   RESET = 'RESET',
   STEP = 'STEP',
-  START_TIMER = 'START_TIMER',
-  STOP_TIMER = 'STOP_TIMER',
+  SHOW_ROUND_SUMMARY = 'SHOW_ROUND_SUMMARY',
+  HIDE_ROUND_SUMMARY = 'HIDE_ROUND_SUMMARY',
 }
 
 export const defaultRoundContext: RoundContextType = {
   inProgress: false,
-  startedAt: undefined,
-  endedAt: undefined,
-  currentStep: 10,
-  timerStarted: false,
+  currentStep: 0,
+  round: undefined,
+  roundSummaryVisible: false,
 };
 
-export function roundReducer(state = defaultRoundContext, action) {
+export function triggerSummaryModalEffect(_, _effect, dispatch) {
+  dispatch({
+    type: RoundActions.SHOW_ROUND_SUMMARY,
+  });
+}
+
+export const effectMap = {
+  triggerSummaryModal: triggerSummaryModalEffect,
+};
+
+export function roundReducer(
+  state: RoundContextType = defaultRoundContext,
+  action,
+  exec
+) {
+  console.log(`ACTION: ${action.type}`);
   switch (action.type) {
     case RoundActions.START:
       return {
         ...state,
+        round: action.round,
         inProgress: true,
-        startedAt: new Date(),
-        endedAt: undefined,
       };
     case RoundActions.END:
+      exec({ type: 'triggerSummaryModal' });
+
+      const previousRound = state.round;
       return {
         ...state,
+        previousRound,
+        round: undefined,
         inProgress: false,
-        endedAt: new Date(),
       };
     case RoundActions.STEP:
       return {
         ...state,
         currentStep: action.currentStep,
       };
-    case RoundActions.START_TIMER:
+    case RoundActions.SHOW_ROUND_SUMMARY:
       return {
         ...state,
-        timerStarted: true,
+        roundSummaryVisible: true,
       };
-    case RoundActions.STOP_TIMER:
+    case RoundActions.HIDE_ROUND_SUMMARY:
       return {
         ...state,
-        timerStarted: false,
+        roundSummaryVisible: false,
       };
     case RoundActions.RESET:
       return defaultRoundContext;
+
     default:
       return state;
   }
@@ -70,6 +94,7 @@ export function roundReducer(state = defaultRoundContext, action) {
 
 export const RoundContext =
   createContext<RoundContextType>(defaultRoundContext);
+
 RoundContext.displayName = 'RoundContext';
 
 export const useRoundContext = () => {
@@ -77,13 +102,20 @@ export const useRoundContext = () => {
 };
 
 export const RoundProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(roundReducer, defaultRoundContext);
+  const [state, dispatch] = useEffectReducer(
+    roundReducer,
+    defaultRoundContext,
+    effectMap
+  );
 
   const timerChannelMessageCallback = (message) => {
+    // When the server sends TICK, dispatch a STEP to the reducer.
     if (message.name === Constants.EVENTS.TICK) {
       dispatch({ type: RoundActions.STEP, currentStep: message.data.number });
       return;
     }
+
+    // Dispatched by node server when timer completes;
     if (message.name === Constants.EVENTS.ROUND_ENDED) {
       dispatch({ type: RoundActions.END });
     }
@@ -94,23 +126,12 @@ export const RoundProvider = ({ children }) => {
     timerChannelMessageCallback
   );
 
-  useEffect(() => {
-    const startRound = async () => {
-      await startTimer();
-    };
-
-    if (state.inProgress) {
-      startRound();
+  const start = async () => {
+    if (state!.inProgress) {
+      return;
     }
-  }, [state.inProgress]);
-
-  const tickTimer = () => {
-    dispatch({ type: RoundActions.STEP });
-  };
-
-  const start = () => {
-    dispatch({ type: RoundActions.START });
-    tickTimer();
+    const round = await startRound();
+    dispatch({ type: RoundActions.START, round });
   };
 
   const end = () => {
@@ -121,13 +142,23 @@ export const RoundProvider = ({ children }) => {
     dispatch({ type: RoundActions.RESET });
   };
 
+  const showRoundSummary = () => {
+    dispatch({ type: RoundActions.SHOW_ROUND_SUMMARY });
+  };
+
+  const hideRoundSummary = () => {
+    dispatch({ type: RoundActions.HIDE_ROUND_SUMMARY });
+  };
+
   return (
     <RoundContext.Provider
       value={{
-        ...state,
+        ...state!,
         start,
         end,
         reset,
+        showRoundSummary,
+        hideRoundSummary,
       }}
     >
       {children}

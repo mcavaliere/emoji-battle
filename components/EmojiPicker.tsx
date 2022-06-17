@@ -1,21 +1,39 @@
-import { useState, FC } from 'react';
-import { Button, Container, Heading, HStack } from '@chakra-ui/react';
-import { Picker, EmojiSet } from 'emoji-mart';
+import { useRef } from 'react';
+import { Heading, HStack } from '@chakra-ui/react';
+
+import data from '@emoji-mart/data';
+import { Picker as EmojiMartPicker } from 'emoji-mart';
 import { useSession } from 'next-auth/react';
 import { Session } from 'next-auth';
 
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import * as Constants from '../lib/websocketConstants';
+import { create as recordVote } from '../lib/api/votes';
+import { useRoundContext } from '../lib/context/RoundContext';
 
-export type EmojiPickerProps = {
-  afterSelect?: (emoji) => void;
-};
+export function Picker(props) {
+  const pickerRef = useRef<HTMLDivElement | null>(null);
+  const moduleRef = useRef<EmojiMartPicker | null>(null);
 
-export const EmojiPicker = ({ afterSelect }: EmojiPickerProps) => {
-  const [emojiSet, setEmojiSet] = useState<EmojiSet>('apple');
+  // Use deferred import to make emoji-mart not break during SSR https://github.com/missive/emoji-mart/issues/575#issuecomment-1111323710
+  const handleDivRef = (divEl) => {
+    pickerRef.current = divEl;
+    if (!moduleRef.current) {
+      import('emoji-mart').then(
+        // @ts-ignore
+        (m) =>
+          (moduleRef.current = new m.Picker({ ...props, ref: pickerRef, data }))
+      );
+    }
+  };
+
+  return <div ref={handleDivRef} />;
+}
+
+export const EmojiPicker = () => {
+  const { round } = useRoundContext();
   const [voteChannel] = useWebsocketChannel(Constants.CHANNELS.VOTE, () => {});
   const { data: session } = useSession();
-
   const { user } = session as Session;
 
   const [leaderboardChannel] = useWebsocketChannel(
@@ -24,30 +42,21 @@ export const EmojiPicker = ({ afterSelect }: EmojiPickerProps) => {
   );
 
   const handleEmojiSelect = async (emoji: any) => {
-    // @ts-ignore
+    if (!round) {
+      return;
+    }
+
     leaderboardChannel.publish(Constants.EVENTS.EMOJI_CLICKED, {
       emoji,
       user,
     });
 
-    // @ts-ignore
     voteChannel.publish(Constants.EVENTS.EMOJI_CLICKED, {
       emoji,
       user,
     });
 
-    await fetch('/api/emoji/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({ emoji }),
-    });
-
-    if (afterSelect) {
-      afterSelect(emoji);
-    }
+    recordVote(round?.id, emoji);
   };
 
   return (
@@ -56,12 +65,8 @@ export const EmojiPicker = ({ afterSelect }: EmojiPickerProps) => {
         Pick an emoji!
       </Heading>
       <HStack justifyContent="center" mb={5}>
-        <Button onClick={() => setEmojiSet('apple')}>Apple</Button>
-        <Button onClick={() => setEmojiSet('google')}>Google</Button>
-        <Button onClick={() => setEmojiSet('twitter')}>Twitter</Button>
-        <Button onClick={() => setEmojiSet('facebook')}>Facebook</Button>
+        <Picker onEmojiSelect={handleEmojiSelect} />
       </HStack>
-      <Picker set={emojiSet} onSelect={handleEmojiSelect} />
     </>
   );
 };

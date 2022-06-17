@@ -10,7 +10,6 @@ import {
   SimpleGrid,
   Text,
 } from '@chakra-ui/react';
-import 'emoji-mart/css/emoji-mart.css';
 
 import * as Constants from '../lib/websocketConstants';
 import { CountdownTimer } from '../components/CountdownTimer';
@@ -35,19 +34,16 @@ const Home: NextPage = () => {
   );
 
   const {
+    previousRound,
     start: startRound,
-    end: endRound,
-    reset: resetRound,
     inProgress: roundIsInProgress,
-    timerStarted,
+    hideRoundSummary,
+    roundSummaryVisible,
     currentStep,
-    startedAt: roundCreatedAt,
-    endedAt: roundEndedAt,
   } = useRoundContext();
 
   useEffect((): void => {
     if (session?.user) {
-      // @ts-ignore
       playersChannel.publish(Constants.EVENTS.PLAYER_JOINED, session.user);
     }
   }, [session?.user]);
@@ -72,55 +68,61 @@ const Home: NextPage = () => {
     );
   }
 
+  const onClose = () => {
+    hideRoundSummary!();
+  };
+
   return (
-    <Container maxW="100%" p={10}>
-      <SimpleGrid spacing={3} columns={3}>
-        <Box>
-          {roundIsInProgress ? (
-            <CountdownTimer
-              max={Constants.ROUNDS.DURATION}
-              count={currentStep}
-            />
-          ) : null}
-        </Box>
+    <>
+      {previousRound && roundSummaryVisible ? (
+        <RoundSummary roundId={previousRound.id} onClose={onClose} />
+      ) : null}
 
-        <LoggedInBranding name={session?.user?.name} />
-
-        <Box position="absolute" top={10} right={10}>
-          <HStack>
-            {!roundIsInProgress ? (
-              <Button bg="green.200" onClick={() => startRound!()}>
-                Start Round
-              </Button>
+      <Container maxW="100%" p={10}>
+        <SimpleGrid spacing={3} columns={3}>
+          <Box>
+            {roundIsInProgress ? (
+              <CountdownTimer
+                max={Constants.ROUNDS.DURATION}
+                count={currentStep}
+              />
             ) : null}
+          </Box>
 
-            <Button onClick={() => signOut()}>Sign out</Button>
-          </HStack>
-        </Box>
-      </SimpleGrid>
+          <LoggedInBranding name={session?.user?.name} />
 
-      <SimpleGrid columns={3} spacing={3}>
-        <Container textAlign="center">
-          {roundIsInProgress ? <EmojiPicker /> : null}
-        </Container>
-        <Flex
-          direction="column"
-          align="center"
-          textAlign="center"
-          m={0}
-          width="100%"
-        >
-          {roundIsInProgress ? (
-            <Leaderboard />
-          ) : roundEndedAt ? (
-            <RoundSummary />
-          ) : null}
-        </Flex>
-        <Container textAlign="center">
-          <UserList />
-        </Container>
-      </SimpleGrid>
-    </Container>
+          <Box position="absolute" top={10} right={10}>
+            <HStack>
+              {!roundIsInProgress ? (
+                <Button bg="green.200" onClick={() => startRound!()}>
+                  Start Round
+                </Button>
+              ) : null}
+
+              <Button onClick={() => signOut()}>Sign out</Button>
+            </HStack>
+          </Box>
+        </SimpleGrid>
+
+        <SimpleGrid columns={3} spacing={3}>
+          <Container textAlign="center">
+            {roundIsInProgress ? <EmojiPicker /> : null}
+          </Container>
+          <Flex
+            direction="column"
+            align="center"
+            textAlign="center"
+            m={0}
+            width="100%"
+          >
+            {roundIsInProgress ? <Leaderboard /> : null}
+          </Flex>
+          <Container textAlign="center">
+            <UserList />
+          </Container>
+        </SimpleGrid>
+      </Container>
+    </>
   );
 };
 

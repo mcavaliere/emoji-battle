@@ -1,9 +1,13 @@
-import { Emoji } from '@prisma/client';
+import { Emoji, Vote } from '@prisma/client';
 
-export type EmojiFromListResponsePayload = Emoji & {
+export type EmojiFromListResponsePayload = Pick<
+  Emoji,
+  'id' | 'name' | 'native'
+> & {
   _count: {
     votes: number;
   };
+  votes: Vote[];
 };
 
 export type EmojiListResponsePayload = {

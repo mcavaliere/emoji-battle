@@ -6,7 +6,7 @@
  */
 import { PrismaClient } from '@prisma/client';
 
-let prisma;
+let prisma: PrismaClient;
 
 const options: any = {};
 

@@ -2,14 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import prisma from '../../../lib/prismaClientInstance';
 import { Round, User } from '@prisma/client';
-
-type Data = {
-  round: Round;
-};
+import { start as startTimer } from '../../../lib/api/timer';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Round>
 ) {
   if (req.method !== 'POST') {
     return res.status(405).end();
@@ -27,10 +24,12 @@ export default async function handler(
 
   try {
     const round = await prisma.round.create({
-      startedByUserId: user.id,
+      data: { startedByUserId: user.id },
     });
 
-    return res.status(200).json({ round });
+    await startTimer();
+
+    return res.status(200).json(round);
   } catch (error) {
     console.log(`error in POST /rounds/start: `, error);
     res.status(500);

@@ -21,7 +21,7 @@ model User {
   votes         Vote[]
   accounts      Account[]
   sessions      Session[]
-  Round         Round[]
+  rounds        Round[]
 }
 
 model Account {
@@ -73,7 +73,7 @@ model Emoji {
   externalId String @map(name: "external_id")
   native     String
   unified    String @unique
-  colons     String
+  shortcodes     String
   votes      Vote[]
 }
 
@@ -84,9 +84,9 @@ model Vote {
   roundId   Int
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  User      User     @relation(fields: [userId], references: [id])
-  Emoji     Emoji    @relation(fields: [emojiId], references: [id])
-  Round     Round    @relation(fields: [roundId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  emoji     Emoji    @relation(fields: [emojiId], references: [id])
+  round     Round    @relation(fields: [roundId], references: [id])
 }
 
 model Round {
@@ -97,5 +97,5 @@ model Round {
   updatedAt       DateTime  @default(now())
   createdAt       DateTime  @default(now())
   startedBy       User      @relation(fields: [startedByUserId], references: [id])
-  Vote            Vote[]
+  votes           Vote[]
 }

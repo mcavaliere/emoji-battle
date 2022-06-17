@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { motion, useAnimation } from 'framer-motion';
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import * as Constants from '../lib/websocketConstants';
@@ -33,24 +33,32 @@ export const UserRow = ({ id, image, name }) => {
 
   return (
     <MotionBox
-      d='flex'
-      alignItems='center'
-      position='relative'
+      display="flex"
+      alignItems="center"
+      position="relative"
       key={`${id}-${name}`}
       layout
       initial={{ opacity: 0, right: -100 }}
       animate={controls}
-      direction='row'
-      as='li'
+      direction="row"
+      listStyleType="none"
+      as="li"
       p={3}
     >
       {image && (
-        <Box width={30} height={30} borderRadius={30} overflow='hidden'>
+        <Box
+          display="inline-block"
+          width={30}
+          height={30}
+          borderRadius={30}
+          overflow="hidden"
+          flex={1}
+        >
           <Image
             width={30}
             height={30}
-            layout='responsive'
-            alt='Photo of ${name}'
+            layout="responsive"
+            alt="Photo of ${name}"
             src={image}
           />
         </Box>

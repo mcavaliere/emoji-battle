@@ -15,10 +15,10 @@ export default async function handler(
     return res.status(405).end();
   }
 
-  const { id } = req.query;
+  const id = parseInt(req.query.id as string, 10);
 
   try {
-    const round = await prisma.round.findUnique({ id });
+    const round = await prisma.round.findUnique({ where: { id } });
 
     if (!round) {
       res.status(404).json({ error: `Round not found with id: ${id}` });

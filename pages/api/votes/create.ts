@@ -1,15 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import prisma from '../../../lib/prismaClientInstance';
-import { User } from '@prisma/client';
-
-type Data = {
-  name: string;
-};
+import { User, Vote } from '@prisma/client';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Vote>
 ) {
   if (req.method !== 'POST') {
     return res.status(405).end();
@@ -26,9 +22,19 @@ export default async function handler(
   const { user } = session;
 
   try {
+    if (!req.body.emoji || !req.body.roundId) {
+      res.status(400).end();
+      return;
+    }
+
     const {
-      emoji: { id, name, native, colons, unified },
+      roundId,
+      emoji: { id, name, native, shortcodes, unified },
     } = req.body;
+
+    const round = await prisma.round.findUnique({
+      where: { id: roundId },
+    });
 
     // Insert the emoji into the database, if it's not already there
     const emoji = await prisma.emoji.upsert({
@@ -36,7 +42,7 @@ export default async function handler(
         externalId: id,
         name,
         native,
-        colons,
+        shortcodes,
         unified,
       },
       update: {},
@@ -46,22 +52,27 @@ export default async function handler(
     });
 
     // Record the vote.
-    await prisma.vote.create({
+    const vote = await prisma.vote.create({
       data: {
-        Emoji: {
+        emoji: {
           connect: {
-            id: emoji.id,
+            id: emoji?.id,
           },
         },
-        User: {
+        user: {
           connect: {
             id: (user as User).id,
+          },
+        },
+        round: {
+          connect: {
+            id: round?.id,
           },
         },
       },
     });
 
-    res.status(200).json(emoji);
+    res.status(200).json(vote);
     res.end();
     return;
   } catch (error) {
