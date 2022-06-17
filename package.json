@@ -7,7 +7,9 @@
     "dev:debug": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest --watch",
+    "test:ci": "jest --ci"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.2.1",
@@ -16,6 +18,7 @@
     "@emotion/styled": "^11.9.3",
     "@next-auth/prisma-adapter": "^1.0.3",
     "@prisma/client": "^3.15.1",
+    "@testing-library/react": "^13.3.0",
     "ably": "^1.2.25",
     "emoji-mart": "^5.1.0",
     "framer-motion": "^6.3.11",
@@ -26,11 +29,16 @@
     "react-query": "^3.39.1"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/user-event": "^14.2.1",
     "@types/emoji-mart": "^3.0.9",
     "@types/react": "^18.0.12",
     "eslint": "^8.17.0",
     "eslint-config-next": "^12.1.6",
     "eslint-config-prettier": "^8.5.0",
+    "jest": "^28.1.1",
+    "jest-environment-jsdom": "^28.1.1",
+    "jest-fetch-mock": "^3.0.3",
     "prettier": "^2.7.0",
     "prisma": "^3.15.1",
     "typescript": "^4.7.3"
