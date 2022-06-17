@@ -46,13 +46,11 @@ export const EmojiPicker = () => {
       return;
     }
 
-    // @ts-ignore
     leaderboardChannel.publish(Constants.EVENTS.EMOJI_CLICKED, {
       emoji,
       user,
     });
 
-    // @ts-ignore
     voteChannel.publish(Constants.EVENTS.EMOJI_CLICKED, {
       emoji,
       user,

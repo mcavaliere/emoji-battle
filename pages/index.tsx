@@ -44,7 +44,6 @@ const Home: NextPage = () => {
 
   useEffect((): void => {
     if (session?.user) {
-      // @ts-ignore
       playersChannel.publish(Constants.EVENTS.PLAYER_JOINED, session.user);
     }
   }, [session?.user]);
