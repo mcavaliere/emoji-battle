@@ -13,8 +13,11 @@ export const UserList: FC = () => {
   // Initial load.
   useEffect(() => {
     async function loadPlayers() {
-      const { users } = await fetcher(`/api/users/list`);
-      setUsers(users);
+      try {
+        const { users } = await fetcher(`/api/users/list`);
+
+        setUsers(users);
+      } catch (e) {}
     }
 
     loadPlayers();
@@ -43,10 +46,10 @@ export const UserList: FC = () => {
 
   return (
     <>
-      <Heading size='md' mb={5}>
+      <Heading size="md" mb={5}>
         Who&#39;s battling?
       </Heading>
-      <VStack as='ul'>
+      <VStack as="ul">
         {users?.map((user) => (
           <UserRow {...user} key={user.id} />
         ))}

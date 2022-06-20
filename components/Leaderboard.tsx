@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Box, Heading } from '@chakra-ui/react';
 import { AnimatePresence } from 'framer-motion';
 
 import { Emoji } from '.prisma/client';
-import { fetcher } from '../lib/fetcher';
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import * as Constants from '../lib/websocketConstants';
 import { EmojiFromListResponsePayload } from '../lib/types/EmojiListResponsePayload';
