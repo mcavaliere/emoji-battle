@@ -3,10 +3,10 @@ import { Box, Heading } from '@chakra-ui/react';
 import { AnimatePresence } from 'framer-motion';
 
 import { Emoji } from '.prisma/client';
-import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
-import * as Constants from '../lib/websocketConstants';
-import { EmojiFromListResponsePayload } from '../lib/types/EmojiListResponsePayload';
-import { EmojiContainer } from './EmojiContainer';
+import { useWebsocketChannel } from '../../lib/hooks/useWebsocketChannel';
+import * as Constants from '../../lib/websocketConstants';
+import { EmojiFromListResponsePayload } from '../../lib/types/EmojiListResponsePayload';
+import { EmojiContainer } from '../EmojiContainer/EmojiContainer';
 
 export const mapEmojis = (emojis: Emoji[]) =>
   emojis.reduce((acc, emoji) => {

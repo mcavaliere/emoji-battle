@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { Box, Text } from '@chakra-ui/react';
 
-import { usePreviousValue } from '../lib/hooks/usePreviousValue';
+import { usePreviousValue } from '../../lib/hooks/usePreviousValue';
 
 const MotionBox = motion(Box);
 

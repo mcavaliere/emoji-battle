@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import { Box, Text } from '@chakra-ui/react';
 import { motion, useAnimation } from 'framer-motion';
 
-import { EmojiCount } from './EmojiCount';
-import { EmojiFromListResponsePayload } from '../lib/types/EmojiListResponsePayload';
-import { getRandomHoverAnimationConfig } from '../lib/hoverAnimations';
+import { EmojiCount } from '../EmojiCount/EmojiCount';
+import { EmojiFromListResponsePayload } from '../../lib/types/EmojiListResponsePayload';
+import { getRandomHoverAnimationConfig } from '../../lib/hoverAnimations';
 
 const MotionBox = motion(Box);
 

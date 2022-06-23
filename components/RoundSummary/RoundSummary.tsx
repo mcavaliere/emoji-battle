@@ -22,7 +22,7 @@ import {
   Td,
 } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
-import { fetchStats } from '../lib/api/rounds';
+import { fetchStats } from '../../lib/api/rounds';
 
 export type RoundSummaryProps = {
   onClose: () => void;

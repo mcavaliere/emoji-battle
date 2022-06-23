@@ -12,14 +12,17 @@ import {
 } from '@chakra-ui/react';
 
 import * as Constants from '../lib/websocketConstants';
-import { CountdownTimer } from '../components/CountdownTimer';
-import { Leaderboard } from '../components/Leaderboard';
-import { EmojiPicker } from '../components/EmojiPicker';
-import { RoundSummary } from '../components/RoundSummary';
-import { UserList } from '../components/UserList';
+import { CountdownTimer } from '../components/CountdownTimer/CountdownTimer';
+import { Leaderboard } from '../components/Leaderboard/Leaderboard';
+import { EmojiPicker } from '../components/EmojiPicker/EmojiPicker';
+import { RoundSummary } from '../components/RoundSummary/RoundSummary';
+import { UserList } from '../components/UserList/UserList';
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import { useRoundContext } from '../lib/context/RoundContext';
-import { LoggedInBranding, LoggedOutBranding } from '../components/Branding';
+import {
+  LoggedInBranding,
+  LoggedOutBranding,
+} from '../components/Branding/Branding';
 
 const handleResetClick = async () => {
   await fetch('/api/reset', { method: 'POST' });

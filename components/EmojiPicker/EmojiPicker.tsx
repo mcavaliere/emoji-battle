@@ -6,10 +6,10 @@ import { Picker as EmojiMartPicker } from 'emoji-mart';
 import { useSession } from 'next-auth/react';
 import { Session } from 'next-auth';
 
-import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
-import * as Constants from '../lib/websocketConstants';
-import { create as recordVote } from '../lib/api/votes';
-import { useRoundContext } from '../lib/context/RoundContext';
+import { useWebsocketChannel } from '../../lib/hooks/useWebsocketChannel';
+import * as Constants from '../../lib/websocketConstants';
+import { create as recordVote } from '../../lib/api/votes';
+import { useRoundContext } from '../../lib/context/RoundContext';
 
 export function Picker(props) {
   const pickerRef = useRef<HTMLDivElement | null>(null);

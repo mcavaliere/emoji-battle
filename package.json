@@ -11,7 +11,9 @@
     "test": "jest --watch",
     "test:ci": "jest --ci",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "types": "tsc --noEmit",
+    "types:watch": "tsc --noEmit --watch"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.2.1",

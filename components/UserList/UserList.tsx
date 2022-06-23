@@ -2,10 +2,10 @@ import { FC, useEffect, useState } from 'react';
 import { Container, Heading, VStack, Text } from '@chakra-ui/react';
 import { User } from '@prisma/client';
 
-import { UserRow } from '../components/UserRow';
-import { fetcher } from '../lib/fetcher';
-import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
-import * as Constants from '../lib/websocketConstants';
+import { UserRow } from '../UserRow/UserRow';
+import { fetcher } from '../../lib/fetcher';
+import { useWebsocketChannel } from '../../lib/hooks/useWebsocketChannel';
+import * as Constants from '../../lib/websocketConstants';
 
 export const UserList: FC = () => {
   const [users, setUsers] = useState<User[]>([]);
