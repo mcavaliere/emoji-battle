@@ -6,7 +6,7 @@ import { Emoji } from '.prisma/client';
 import { useWebsocketChannel } from '../../lib/hooks/useWebsocketChannel';
 import * as Constants from '../../lib/websocketConstants';
 import { EmojiFromListResponsePayload } from '../../lib/types/EmojiListResponsePayload';
-import { EmojiContainer } from '../EmojiContainer/EmojiContainer';
+import { EmojiBoxContainer } from '../EmojiBox/EmojiBox';
 
 export const mapEmojis = (emojis: Emoji[]) =>
   emojis.reduce((acc, emoji) => {
@@ -52,7 +52,7 @@ export const Leaderboard = () => {
       <Box width="100%">
         <AnimatePresence>
           {emojis.map((e) => (
-            <EmojiContainer emoji={e} key={e.id} />
+            <EmojiBoxContainer emoji={e} key={e.id} />
           ))}
         </AnimatePresence>
       </Box>

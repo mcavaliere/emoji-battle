@@ -2,13 +2,14 @@ import { useEffect } from 'react';
 import { Box, Text } from '@chakra-ui/react';
 import { motion, useAnimation } from 'framer-motion';
 
+import { HoverAnimationConfig } from '../../lib/hoverAnimations';
 import { EmojiCount } from '../EmojiCount/EmojiCount';
 import { EmojiFromListResponsePayload } from '../../lib/types/EmojiListResponsePayload';
 import { getRandomHoverAnimationConfig } from '../../lib/hoverAnimations';
 
 const MotionBox = motion(Box);
 
-export type EmojiContainerProps = {
+export type EmojiBoxContainerProps = {
   emoji: EmojiFromListResponsePayload;
 };
 
@@ -22,9 +23,26 @@ export const hoverInitialState = {
   filter: 'hue-rotate(0) blur(0px)',
 };
 
-export const EmojiContainer = ({ emoji }: EmojiContainerProps) => {
+/**
+ * Container component for Emoji display.
+ */
+export const EmojiBoxContainer = ({ emoji }: EmojiBoxContainerProps) => {
+  const hoverAnimationConfig: HoverAnimationConfig =
+    getRandomHoverAnimationConfig();
+
+  return <EmojiBox emoji={emoji} hoverAnimationConfig={hoverAnimationConfig} />;
+};
+
+export type EmojiBoxProps = {
+  emoji: EmojiFromListResponsePayload;
+  hoverAnimationConfig: HoverAnimationConfig;
+};
+
+/**
+ * Presentational component for Emoji display, with hover animations.
+ */
+export const EmojiBox = ({ emoji, hoverAnimationConfig }: EmojiBoxProps) => {
   const controls = useAnimation();
-  const hoverAnimationConfig = getRandomHoverAnimationConfig();
 
   // Fade in/slide up on mount
   useEffect(() => {

@@ -5,6 +5,7 @@ module.exports = {
   ],
   addons: [
     '@storybook/addon-links',
+    '@storybook/addon-controls',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
     '@chakra-ui/storybook-addon',
