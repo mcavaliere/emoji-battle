@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { Vote } from '@prisma/client';
 import { EmojiFromListResponsePayload } from '../lib/types/EmojiListResponsePayload';
@@ -20,7 +20,7 @@ const emoji: EmojiFromListResponsePayload = {
   native: '😅',
   name: 'Smiling Face with Open Mouth and Cold Sweat',
   _count: {
-    votes: 3,
+    votes: 8,
   },
   votes: [vote],
 };
@@ -47,9 +47,15 @@ const Template: ComponentStory<typeof EmojiBox> = ({ animationIndex }) => {
   const hoverAnimationConfig = hoverAnimations[animationIndex] || 0;
 
   return (
-    <Box width={200} height={200}>
+    <Flex
+      height={200}
+      width="100%"
+      direction="row"
+      align="center"
+      justify="center"
+    >
       <EmojiBox emoji={emoji} hoverAnimationConfig={hoverAnimationConfig} />
-    </Box>
+    </Flex>
   );
 };
 
