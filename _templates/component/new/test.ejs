@@ -1,0 +1,15 @@
+---
+to: components/<%= [h.camelizedBaseName(name), h.camelizedBaseName(name)].join('/') %>.test.tsx
+---
+<% formattedPath = h.camelizedPathName(name) -%>
+<% component = h.camelizedBaseName(name) -%>
+import React from 'react';
+import { render } from '@testing-library/react';
+import { <%= component %> } from './<%= component %>';
+
+describe('<%= component %>', () => {
+  it('renders correctly', () => {
+    const { container } = render(<<%= component %> myProp="foo" />);
+    expect(container).toMatchSnapshot();
+  });
+});

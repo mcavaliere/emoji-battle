@@ -9,17 +9,19 @@ import { validSession } from '../testUtils/sessions';
 jest.mock('next-auth/react');
 jest.mock('ably');
 
-it('renders homepage unchanged', async () => {
-  jest.spyOn(Hooks, 'useWebsocketChannel').mockImplementation(() => {
-    return [fakeAblyChannel, AblyStub];
+describe('HomePage', () => {
+  it('renders homepage unchanged', async () => {
+    jest.spyOn(Hooks, 'useWebsocketChannel').mockImplementation(() => {
+      return [fakeAblyChannel, AblyStub];
+    });
+
+    jest.spyOn(Fetcher, 'fetcher').mockResolvedValueOnce({ users: [] });
+
+    (useSession as jest.Mock).mockReturnValue(validSession);
+
+    const { findByText } = render(<Home />);
+
+    expect(await findByText('Emoji 🤪 ⚔️ 😀 Battle')).toBeVisible();
+    expect(await findByText(`Welcome to the Dojo, Dave.`)).toBeVisible();
   });
-
-  jest.spyOn(Fetcher, 'fetcher').mockResolvedValueOnce({ users: [] });
-
-  (useSession as jest.Mock).mockReturnValue(validSession);
-
-  const { findByText } = render(<Home />);
-
-  expect(await findByText('Emoji 🤪 ⚔️ 😀 Battle')).toBeVisible();
-  expect(await findByText(`Welcome to the Dojo, Dave.`)).toBeVisible();
 });

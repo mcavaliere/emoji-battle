@@ -1,6 +1,6 @@
 import React from 'react';
 import { Flex } from '@chakra-ui/react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { Story, ComponentMeta } from '@storybook/react';
 import { Vote } from '@prisma/client';
 import { EmojiFromListResponsePayload } from '../lib/types/EmojiListResponsePayload';
 import { EmojiBox } from '../components/EmojiBox/EmojiBox';
@@ -36,14 +36,16 @@ export default {
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
     animationIndex: {
-      control: { type: 'select' },
       options: animationIndices,
+      control: { type: 'select' },
     },
   },
 } as ComponentMeta<typeof EmojiBox>;
 
+type TemplateType = Story<typeof EmojiBox & { animationIndex: number }>;
+
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof EmojiBox> = ({ animationIndex }) => {
+const Template: TemplateType = ({ animationIndex, ...rest }) => {
   const hoverAnimationConfig = hoverAnimations[animationIndex] || 0;
 
   return (
