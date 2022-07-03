@@ -25,11 +25,12 @@ export const Leaderboard = () => {
         const { emoji } = message.data;
         const newEmojis = [...emojis];
 
+        // Find the emoji in the list, if it's there.
         const targetIndex = newEmojis.findIndex(
           (e) => e.native === emoji.native
         );
 
-        // If the emoji is not in the list, add it. Otherwise find it in the list and update its count.
+        // If the emoji is not in the list, add it. Otherwise update its count.
         if (targetIndex === -1) {
           newEmojis.push({ ...emoji, _count: { votes: 1 } });
         } else {
