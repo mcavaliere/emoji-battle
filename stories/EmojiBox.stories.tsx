@@ -63,4 +63,5 @@ const Template: TemplateType = ({ animationIndex, ...rest }) => {
 
 export const Primary = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
+// @ts-ignore
 Primary.args = { emoji, hoverAnimationConfig: hoverAnimations[0] };
