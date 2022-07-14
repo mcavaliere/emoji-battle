@@ -6,6 +6,7 @@ import { HoverAnimationConfig } from '../../lib/hoverAnimations';
 import { EmojiCount } from '../EmojiCount/EmojiCount';
 import { EmojiFromListResponsePayload } from '../../lib/types/EmojiListResponsePayload';
 import { getRandomHoverAnimationConfig } from '../../lib/hoverAnimations';
+import { useWebsocketChannel } from '../../lib/hooks/useWebsocketChannel';
 
 const MotionBox = motion(Box);
 
@@ -43,6 +44,10 @@ export type EmojiBoxProps = {
  */
 export const EmojiBox = ({ emoji, hoverAnimationConfig }: EmojiBoxProps) => {
   const controls = useAnimation();
+  const channelName = `EMOJI_BOXES`;
+  const [channel] = useWebsocketChannel(channelName, (data) => {
+    console.log(`Channel ${channelName} received `, data);
+  });
 
   // Fade in/slide up on mount
   useEffect(() => {

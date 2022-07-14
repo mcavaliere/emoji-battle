@@ -31,7 +31,7 @@ export const LeaderboardContainer = () => {
           (e) => e.native === emoji.native
         );
 
-        // If the emoji is not in the list, add it. Otherwise update its count.
+        // If the emoji is not in the list, add it. Otherwise update its count, and re-sort by count.
         if (targetIndex === -1) {
           newEmojis.push({ ...emoji, _count: { votes: 1 } });
         } else {
@@ -39,7 +39,10 @@ export const LeaderboardContainer = () => {
           newEmojis.sort((a, b) => b._count.votes - a._count.votes);
         }
 
-        emojiBoxChannel.publish('NEW_LEADER', newEmojis[0]);
+        // Let the boxes know when a new emoji has taken the lead.
+        if (newEmojis[0].id !== emojis[0].id) {
+          emojiBoxChannel.publish(Constants.EVENTS.NEW_LEADER, newEmojis[0]);
+        }
 
         setEmojis(newEmojis);
       }
