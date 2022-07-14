@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
-import Home from './index';
+import Home from '../../pages/index';
 import { useSession } from 'next-auth/react';
-import * as Hooks from '../lib/hooks/useWebsocketChannel';
-import * as Fetcher from '../lib/fetcher';
-import { fakeAblyChannel, AblyStub } from '../testUtils/ablyMocks';
-import { validSession } from '../testUtils/sessions';
+import * as Hooks from '../../lib/hooks/useWebsocketChannel';
+import * as Fetcher from '../../lib/fetcher';
+import { fakeAblyChannel, AblyStub } from '../../testUtils/ablyMocks';
+import { validSession } from '../../testUtils/sessions';
 
 jest.mock('next-auth/react');
 jest.mock('ably');

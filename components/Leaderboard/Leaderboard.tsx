@@ -56,7 +56,11 @@ export const LeaderboardContainer = () => {
 
 export const LeaderboardLoadingState = () => <div>loading...</div>;
 
-export const Leaderboard = ({ emojis }) => {
+export const Leaderboard = ({
+  emojis,
+}: {
+  emojis: EmojiFromListResponsePayload[];
+}) => {
   return (
     <>
       <Heading size="md" mb={5}>
