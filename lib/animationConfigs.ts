@@ -1,9 +1,9 @@
-export type HoverAnimationConfig = {
+export type AnimationConfig = {
   start: [Record<string, any>, Record<string, any>];
   cursor: string;
 };
 
-export const hoverAnimations: HoverAnimationConfig[] = [
+export const animationConfigs: AnimationConfig[] = [
   {
     start: [
       {
@@ -89,5 +89,5 @@ export const hoverAnimations: HoverAnimationConfig[] = [
   },
 ];
 
-export const getRandomHoverAnimationConfig = () =>
-  hoverAnimations[Math.floor(Math.random() * hoverAnimations.length)];
+export const getRandomAnimationConfig = () =>
+  animationConfigs[Math.floor(Math.random() * animationConfigs.length)];

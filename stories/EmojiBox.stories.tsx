@@ -4,7 +4,7 @@ import { Story, ComponentMeta } from '@storybook/react';
 import { Vote } from '@prisma/client';
 import { EmojiFromListResponsePayload } from '../lib/types/EmojiListResponsePayload';
 import { EmojiBox } from '../components/EmojiBox/EmojiBox';
-import { hoverAnimations } from '../lib/hoverAnimations';
+import { animationConfigs } from '../lib/animationConfigs';
 
 const vote: Vote = {
   id: 1,
@@ -25,7 +25,7 @@ const emoji: EmojiFromListResponsePayload = {
   votes: [vote],
 };
 
-const animationIndices = new Array(hoverAnimations.length)
+const animationIndices = new Array(animationConfigs.length)
   .fill(1)
   .map((x, i) => i);
 
@@ -46,7 +46,7 @@ type TemplateType = Story<typeof EmojiBox & { animationIndex: number }>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: TemplateType = ({ animationIndex, ...rest }) => {
-  const hoverAnimationConfig = hoverAnimations[animationIndex] || 0;
+  const animationConfig = animationConfigs[animationIndex] || 0;
 
   return (
     <Flex
@@ -56,7 +56,7 @@ const Template: TemplateType = ({ animationIndex, ...rest }) => {
       align="center"
       justify="center"
     >
-      <EmojiBox emoji={emoji} hoverAnimationConfig={hoverAnimationConfig} />
+      <EmojiBox emoji={emoji} animationConfig={animationConfig} />
     </Flex>
   );
 };
@@ -64,4 +64,4 @@ const Template: TemplateType = ({ animationIndex, ...rest }) => {
 export const Primary = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 // @ts-ignore
-Primary.args = { emoji, hoverAnimationConfig: hoverAnimations[0] };
+Primary.args = { emoji, animationConfig: animationConfigs[0] };

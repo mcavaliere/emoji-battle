@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import { Box, Text } from '@chakra-ui/react';
 import { motion, useAnimation } from 'framer-motion';
 
-import { HoverAnimationConfig } from '../../lib/hoverAnimations';
+import { AnimationConfig } from '../../lib/animationConfigs';
 import { EmojiCount } from '../EmojiCount/EmojiCount';
 import { EmojiFromListResponsePayload } from '../../lib/types/EmojiListResponsePayload';
-import { getRandomHoverAnimationConfig } from '../../lib/hoverAnimations';
+import { getRandomAnimationConfig } from '../../lib/animationConfigs';
 import { useWebsocketChannel } from '../../lib/hooks/useWebsocketChannel';
 
 const MotionBox = motion(Box);
@@ -28,21 +28,20 @@ export const hoverInitialState = {
  * Container component for Emoji display.
  */
 export const EmojiBoxContainer = ({ emoji }: EmojiBoxContainerProps) => {
-  const hoverAnimationConfig: HoverAnimationConfig =
-    getRandomHoverAnimationConfig();
+  const animationConfig: AnimationConfig = getRandomAnimationConfig();
 
-  return <EmojiBox emoji={emoji} hoverAnimationConfig={hoverAnimationConfig} />;
+  return <EmojiBox emoji={emoji} animationConfig={animationConfig} />;
 };
 
 export type EmojiBoxProps = {
   emoji: EmojiFromListResponsePayload;
-  hoverAnimationConfig: HoverAnimationConfig;
+  animationConfig: AnimationConfig;
 };
 
 /**
  * Presentational component for Emoji display, with hover animations.
  */
-export const EmojiBox = ({ emoji, hoverAnimationConfig }: EmojiBoxProps) => {
+export const EmojiBox = ({ emoji, animationConfig }: EmojiBoxProps) => {
   const controls = useAnimation();
   const channelName = `EMOJI_BOXES`;
   const [channel] = useWebsocketChannel(channelName, (data) => {
@@ -55,7 +54,7 @@ export const EmojiBox = ({ emoji, hoverAnimationConfig }: EmojiBoxProps) => {
   }, []);
 
   const onMouseEnter = (e) => {
-    controls.start(...hoverAnimationConfig.start);
+    controls.start(...animationConfig.start);
   };
 
   const onMouseOut = (e) => {
