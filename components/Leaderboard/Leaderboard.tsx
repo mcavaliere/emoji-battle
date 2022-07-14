@@ -40,7 +40,11 @@ export const LeaderboardContainer = () => {
         }
 
         // Let the boxes know when a new emoji has taken the lead.
-        if (newEmojis[0].id !== emojis[0].id) {
+        if (
+          newEmojis.length &&
+          emojis.length &&
+          newEmojis[0].id !== emojis[0].id
+        ) {
           emojiBoxChannel.publish(Constants.EVENTS.NEW_LEADER, newEmojis[0]);
         }
 
