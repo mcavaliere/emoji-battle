@@ -13,7 +13,7 @@ import {
 
 import * as Constants from '../lib/websocketConstants';
 import { CountdownTimer } from '../components/CountdownTimer/CountdownTimer';
-import { Leaderboard } from '../components/Leaderboard/Leaderboard';
+import { LeaderboardContainer } from '../components/Leaderboard/Leaderboard';
 import { EmojiPicker } from '../components/EmojiPicker/EmojiPicker';
 import { RoundSummary } from '../components/RoundSummary/RoundSummary';
 import { UserList } from '../components/UserList/UserList';
@@ -118,7 +118,7 @@ const Home: NextPage = () => {
             m={0}
             width="100%"
           >
-            {roundIsInProgress ? <Leaderboard /> : null}
+            {roundIsInProgress ? <LeaderboardContainer /> : null}
           </Flex>
           <Container textAlign="center">
             <UserList />
