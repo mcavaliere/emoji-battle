@@ -19,7 +19,7 @@
     "types": "tsc --noEmit"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.2.1",
+    "@chakra-ui/react": "^2.2.4",
     "@emoji-mart/data": "^1.0.2",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
@@ -29,8 +29,8 @@
     "@testing-library/react": "^13.3.0",
     "ably": "^1.2.25",
     "emoji-mart": "^5.1.0",
-    "framer-motion": "^6.4.3",
-    "next": "^12.2.1",
+    "framer-motion": "^6.5.1",
+    "next": "^12.2.2",
     "next-auth": "^4.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
