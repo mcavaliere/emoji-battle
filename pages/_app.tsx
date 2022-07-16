@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { PageLayout } from '../components/PageLayout';
 import { RoundProvider } from '../lib/context/RoundContext';
+import { EmojisProvider } from '../lib/context/EmojisContext';
 
 // Checks for required environment variables.
 if (typeof window === 'undefined') {
@@ -33,9 +34,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <ChakraProvider>
           <RoundProvider>
-            <PageLayout>
-              <Component {...pageProps} />
-            </PageLayout>
+            <EmojisProvider>
+              <PageLayout>
+                <Component {...pageProps} />
+              </PageLayout>
+            </EmojisProvider>
           </RoundProvider>
         </ChakraProvider>
       </QueryClientProvider>
