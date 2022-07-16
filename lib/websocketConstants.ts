@@ -3,6 +3,7 @@ export const CHANNELS = {
   ['LEADERBOARD']: 'LEADERBOARD',
   ['PLAYERS']: 'PLAYERS',
   ['TIMER']: 'TIMER',
+  ['EMOJI_BOXES']: 'EMOJI_BOXES',
 };
 
 export const EVENTS = {

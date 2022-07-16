@@ -1,6 +1,7 @@
 export type AnimationConfig = {
   start: [Record<string, any>, Record<string, any>];
   cursor: string;
+  name: string;
 };
 
 export const animationConfigs: AnimationConfig[] = [
@@ -14,7 +15,8 @@ export const animationConfigs: AnimationConfig[] = [
         repeat: Infinity,
       },
     ],
-    cursor: 'crosshair',
+    cursor: 'auto',
+    name: 'one',
   },
   {
     start: [
@@ -27,7 +29,8 @@ export const animationConfigs: AnimationConfig[] = [
         repeat: Infinity,
       },
     ],
-    cursor: 'grab',
+    cursor: 'auto',
+    name: 'two',
   },
   {
     start: [
@@ -40,7 +43,8 @@ export const animationConfigs: AnimationConfig[] = [
         duration: 0.5,
       },
     ],
-    cursor: 'pointer',
+    cursor: 'auto',
+    name: 'three',
   },
   {
     start: [
@@ -53,7 +57,8 @@ export const animationConfigs: AnimationConfig[] = [
         duration: 0.25,
       },
     ],
-    cursor: 'crosshair',
+    cursor: 'auto',
+    name: 'four',
   },
   {
     start: [
@@ -67,7 +72,8 @@ export const animationConfigs: AnimationConfig[] = [
         duration: 0.25,
       },
     ],
-    cursor: 'pointer',
+    cursor: 'auto',
+    name: 'five',
   },
   {
     start: [
@@ -78,16 +84,33 @@ export const animationConfigs: AnimationConfig[] = [
           'hue-rotate(45deg)  blur(0px)',
           'hue-rotate(0)  blur(0px)',
         ],
-        duration: 1,
+        scale: [2, 1],
+        // x: [-10, 10, 10, -10, -10],
+        duration: 4,
       },
       {
-        repeat: Infinity,
-        duration: 1,
+        repeat: 1,
       },
     ],
-    cursor: 'pointer',
+    cursor: 'auto',
+    name: 'color-and-blur',
+  },
+  {
+    start: [
+      {
+        backgroundColor: ['red', 'white'],
+      },
+      { duration: 2, repeat: 5 },
+    ],
+    cursor: 'auto',
+    name: 'highlight-bg',
   },
 ];
+
+export const animationConfigMap = animationConfigs.reduce((acc, config) => {
+  acc[config.name] = config;
+  return acc;
+}, {});
 
 export const getRandomAnimationConfig = () =>
   animationConfigs[Math.floor(Math.random() * animationConfigs.length)];

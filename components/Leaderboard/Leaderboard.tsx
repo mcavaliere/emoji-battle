@@ -16,7 +16,10 @@ export const mapEmojis = (emojis: Emoji[]) =>
 
 export const LeaderboardContainer = () => {
   const [emojis, setEmojis] = useState<EmojiFromListResponsePayload[]>([]);
-  const [emojiBoxChannel] = useWebsocketChannel('EMOJI_BOXES', () => {});
+  const [emojiBoxChannel] = useWebsocketChannel(
+    Constants.CHANNELS.EMOJI_BOXES,
+    () => {}
+  );
 
   const [leaderboardChannel] = useWebsocketChannel(
     Constants.CHANNELS.LEADERBOARD,
@@ -45,7 +48,9 @@ export const LeaderboardContainer = () => {
           emojis.length &&
           newEmojis[0].id !== emojis[0].id
         ) {
-          emojiBoxChannel.publish(Constants.EVENTS.NEW_LEADER, newEmojis[0]);
+          emojiBoxChannel.publish(Constants.EVENTS.NEW_LEADER, {
+            emoji: newEmojis[0],
+          });
         }
 
         setEmojis(newEmojis);

@@ -2,11 +2,15 @@ import { useEffect } from 'react';
 import { Box, Text } from '@chakra-ui/react';
 import { motion, useAnimation } from 'framer-motion';
 
-import { AnimationConfig } from '../../lib/animationConfigs';
+import {
+  AnimationConfig,
+  animationConfigMap,
+} from '../../lib/animationConfigs';
 import { EmojiCount } from '../EmojiCount/EmojiCount';
 import { EmojiFromListResponsePayload } from '../../lib/types/EmojiListResponsePayload';
 import { getRandomAnimationConfig } from '../../lib/animationConfigs';
 import { useWebsocketChannel } from '../../lib/hooks/useWebsocketChannel';
+import * as Constants from '../../lib/websocketConstants';
 
 const MotionBox = motion(Box);
 
@@ -43,9 +47,23 @@ export type EmojiBoxProps = {
  */
 export const EmojiBox = ({ emoji, animationConfig }: EmojiBoxProps) => {
   const controls = useAnimation();
-  const channelName = `EMOJI_BOXES`;
-  const [channel] = useWebsocketChannel(channelName, (data) => {
-    console.log(`Channel ${channelName} received `, data);
+  const channelName = Constants.CHANNELS.EMOJI_BOXES;
+  const [channel] = useWebsocketChannel(channelName, (message) => {
+    console.log(`Channel ${channelName} received `, message);
+
+    switch (message.name) {
+      case Constants.EVENTS.NEW_LEADER: {
+        const { emoji: leader } = message.data;
+
+        if (leader.id === emoji.id) {
+          controls.start(animationConfigMap['color-and-blur'].start, {
+            transition: {
+              duration: 0.5,
+            },
+          });
+        }
+      }
+    }
   });
 
   // Fade in/slide up on mount
@@ -53,15 +71,15 @@ export const EmojiBox = ({ emoji, animationConfig }: EmojiBoxProps) => {
     controls.start({ opacity: 1, y: 0 });
   }, []);
 
-  const onMouseEnter = (e) => {
-    controls.start(...animationConfig.start);
-  };
+  // const onMouseEnter = (e) => {
+  //   controls.start(...animationConfig.start);
+  // };
 
-  const onMouseOut = (e) => {
-    controls.start(hoverInitialState).then(() => {
-      controls.stop();
-    });
-  };
+  // const onMouseOut = (e) => {
+  //   controls.start(hoverInitialState).then(() => {
+  //     controls.stop();
+  //   });
+  // };
 
   return (
     <MotionBox
@@ -81,9 +99,10 @@ export const EmojiBox = ({ emoji, animationConfig }: EmojiBoxProps) => {
       pos="relative"
       textAlign="center"
       transition={{ duration: 0.2 }}
+      transformOrigin="center center"
       cursor="pointer"
-      onMouseEnter={onMouseEnter}
-      onMouseOut={onMouseOut}
+      // onMouseEnter={onMouseEnter}
+      // onMouseOut={onMouseOut}
     >
       <Text style={{ fontSize: 15 + emoji._count.votes * 5 }} margin="0 auto">
         {emoji.native}
