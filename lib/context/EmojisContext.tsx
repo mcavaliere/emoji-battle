@@ -5,9 +5,9 @@ import * as Constants from '../../lib/websocketConstants';
 import { Emoji } from '@prisma/client';
 
 export type EmojisContextType = {
-  emojis?: Emoji[];
-  largestEmojiSize?: number;
-  recordEmojiSize?: (size: number) => void;
+  emojis: Emoji[];
+  largestEmojiSize: number;
+  recordEmojiSize: (size: number) => void;
 };
 
 export enum EmojisActions {
