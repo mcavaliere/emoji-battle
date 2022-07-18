@@ -1,12 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import data from '@emoji-mart/data';
-import { inspect } from 'util';
 
 const prisma = new PrismaClient({
   log: ['query', 'error', 'info', 'warn'],
 });
-
-// console.log(' emoji data: ', inspect(data.emojis['100']));
 
 async function upsertEmoji(emoji) {
   const {
