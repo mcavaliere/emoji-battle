@@ -94,15 +94,13 @@ const Home: NextPage = () => {
 
           <LoggedInBranding name={session?.user?.name} />
 
-          <Box position="absolute" top={10} right={10}>
+          <Box position="absolute" top={20} right={10}>
             <HStack>
               {!roundIsInProgress ? (
                 <Button bg="green.200" onClick={() => startRound!()}>
                   Start Round
                 </Button>
               ) : null}
-
-              <Button onClick={() => signOut()}>Sign out</Button>
             </HStack>
           </Box>
         </SimpleGrid>
