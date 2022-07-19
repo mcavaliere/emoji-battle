@@ -1,6 +1,19 @@
 import { Round } from '@prisma/client';
 
 /**
+ * Get data for a round in progress.
+ */
+export async function status(): Promise<Round | undefined> {
+  const response = await fetch(`/api/rounds/status`);
+
+  if (response.status !== 200) {
+    return undefined;
+  }
+
+  return await response.json();
+}
+
+/**
  * Create a Round in the database, then kick off the timer API.
  */
 export async function start(): Promise<Round> {

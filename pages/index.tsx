@@ -1,10 +1,9 @@
 import type { NextPage } from 'next';
 import { useEffect } from 'react';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import {
   Box,
   Button,
-  HStack,
   Container,
   Flex,
   SimpleGrid,
@@ -19,6 +18,7 @@ import { RoundSummary } from '../components/RoundSummary/RoundSummary';
 import { UserList } from '../components/UserList/UserList';
 import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
 import { useRoundContext } from '../lib/context/RoundContext';
+
 import {
   LoggedInBranding,
   LoggedOutBranding,
