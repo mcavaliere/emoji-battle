@@ -19,3 +19,7 @@ export const EVENTS = {
 export const ROUNDS = {
   DURATION: 15,
 };
+
+export enum QUERY_CACHE_KEYS {
+  CURRENT_ROUND = 'current-round',
+}

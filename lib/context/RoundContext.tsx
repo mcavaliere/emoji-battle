@@ -1,10 +1,14 @@
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, useContext } from 'react';
 import { useEffectReducer } from '../hooks/useEffectReducer';
 import { useWebsocketChannel } from '../hooks/useWebsocketChannel';
 import * as Constants from '../../lib/websocketConstants';
 
-import { start as startRound } from '../../lib/api/rounds';
+import {
+  start as startRound,
+  status as fetchRoundStatus,
+} from '../../lib/api/rounds';
 import { Round } from '@prisma/client';
+import { useQuery, useQueryClient } from 'react-query';
 
 export type RoundContextType = {
   round?: Round;
@@ -25,6 +29,7 @@ export enum RoundActions {
   END = 'END',
   RESET = 'RESET',
   STEP = 'STEP',
+  HYDRATE = 'HYDRATE',
   SHOW_ROUND_SUMMARY = 'SHOW_ROUND_SUMMARY',
   HIDE_ROUND_SUMMARY = 'HIDE_ROUND_SUMMARY',
 }
@@ -42,10 +47,6 @@ export function triggerSummaryModalEffect(_, _effect, dispatch) {
   });
 }
 
-export const effectMap = {
-  triggerSummaryModal: triggerSummaryModalEffect,
-};
-
 export function roundReducer(
   state: RoundContextType = defaultRoundContext,
   action,
@@ -54,12 +55,22 @@ export function roundReducer(
   console.log(`ACTION: ${action.type}`);
   switch (action.type) {
     case RoundActions.START:
+      exec({ type: 'clearRoundQueryCache' });
+
       return {
         ...state,
         round: action.round,
         inProgress: true,
       };
+
+    case RoundActions.HYDRATE:
+      return {
+        ...state,
+        round: action.round,
+        inProgress: action.inProgress,
+      };
     case RoundActions.END:
+      exec({ type: 'clearRoundQueryCache' });
       exec({ type: 'triggerSummaryModal' });
 
       const previousRound = state.round;
@@ -102,11 +113,37 @@ export const useRoundContext = () => {
 };
 
 export const RoundProvider = ({ children }) => {
+  const queryClient = useQueryClient();
+  const {} = useQuery(
+    [Constants.QUERY_CACHE_KEYS.CURRENT_ROUND],
+    fetchRoundStatus,
+    {
+      onSuccess: (round) => {
+        if (round) {
+          hydrateRound(round);
+        }
+      },
+    }
+  );
+
+  const clearRoundQueryCache = () => {
+    queryClient.invalidateQueries([Constants.QUERY_CACHE_KEYS.CURRENT_ROUND]);
+  };
+
+  const effectMap = {
+    triggerSummaryModal: triggerSummaryModalEffect,
+    clearRoundQueryCache,
+  };
+
   const [state, dispatch] = useEffectReducer(
     roundReducer,
     defaultRoundContext,
     effectMap
   );
+
+  const hydrateRound = (round: Round) => {
+    dispatch({ type: RoundActions.HYDRATE, round, inProgress: true });
+  };
 
   const timerChannelMessageCallback = (message) => {
     // When the server sends TICK, dispatch a STEP to the reducer.
@@ -115,9 +152,16 @@ export const RoundProvider = ({ children }) => {
       return;
     }
 
-    // Dispatched by node server when timer completes;
+    // Dispatched by node server when timer starts.
+    if (message.name === Constants.EVENTS.ROUND_STARTED) {
+      clearRoundQueryCache();
+      return;
+    }
+
+    // Dispatched by node server when timer completes.
     if (message.name === Constants.EVENTS.ROUND_ENDED) {
       dispatch({ type: RoundActions.END });
+      return;
     }
   };
 
