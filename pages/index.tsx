@@ -91,18 +91,6 @@ const Home: NextPage = () => {
               />
             ) : null}
           </Box>
-
-          <LoggedInBranding name={session?.user?.name} />
-
-          <Box position="absolute" top={20} right={10}>
-            <HStack>
-              {!roundIsInProgress ? (
-                <Button bg="green.200" onClick={() => startRound!()}>
-                  Start Round
-                </Button>
-              ) : null}
-            </HStack>
-          </Box>
         </SimpleGrid>
 
         <SimpleGrid columns={3} spacing={3}>
@@ -117,6 +105,25 @@ const Home: NextPage = () => {
             width="100%"
           >
             {roundIsInProgress ? <LeaderboardContainer /> : null}
+
+            {!roundIsInProgress ? (
+              <Flex
+                flex={1}
+                direction="column"
+                width="100%"
+                minHeight={300}
+                justify="center"
+              >
+                <Button
+                  bg="green.200"
+                  size="xxl"
+                  onClick={() => startRound!()}
+                  p={5}
+                >
+                  Start Round
+                </Button>
+              </Flex>
+            ) : null}
           </Flex>
           <Container textAlign="center">
             <UserList />

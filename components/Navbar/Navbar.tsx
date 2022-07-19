@@ -8,7 +8,9 @@ import {
   VStack,
   Text,
   Link,
+  IconButton,
 } from '@chakra-ui/react';
+import { FaGithub } from 'react-icons/fa';
 import { useSession, signOut } from 'next-auth/react';
 
 export function Navbar(): JSX.Element | null {
@@ -24,13 +26,12 @@ export function Navbar(): JSX.Element | null {
   const src = session?.user?.image || undefined;
 
   return (
-    <Flex
-      direction="row"
-      bg="green.100"
-      padding={{ base: 3, lg: 5 }}
-      justify="space-between"
-    >
-      <Box></Box>
+    <Flex direction="row" padding={{ base: 3, lg: 5 }} justify="space-between">
+      <Box>
+        <Link href="https://github.com/mcavaliere/emoji-battle">
+          <FaGithub size={30} />
+        </Link>
+      </Box>
       <Center>
         <VStack>
           <Heading size="md">Emoji 🤪 ⚔️ 😀 Battle</Heading>
