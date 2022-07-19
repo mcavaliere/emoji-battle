@@ -28,6 +28,7 @@
     "@sentry/nextjs": "^7.5.1",
     "@testing-library/react": "^13.3.0",
     "ably": "^1.2.25",
+    "dayjs": "^1.11.4",
     "emoji-mart": "^5.1.0",
     "framer-motion": "^6.5.1",
     "next": "^12.2.2",
