@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Navbar renders correctly 1`] = `
+<div>
+  <div
+    class="css-15ojgsl"
+  >
+    <h2
+      class="chakra-heading css-0"
+    >
+      Navbar Created.
+    </h2>
+  </div>
+</div>
+`;

@@ -1,12 +1,12 @@
-import '../styles/globals.css';
-import type { AppProps } from 'next/app';
 import { SessionProvider } from 'next-auth/react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import { PageLayout } from '../components/PageLayout';
 import { RoundProvider } from '../lib/context/RoundContext';
 import { EmojisProvider } from '../lib/context/EmojisContext';
+
+import { AppPropsWithLayout } from '../lib/types/NextApp';
+import { getLayout as defaultGetLayout } from '../layouts/PageLayout';
 
 // Checks for required environment variables.
 if (typeof window === 'undefined') {
@@ -28,16 +28,20 @@ const queryClient = new QueryClient({
   },
 });
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+function MyApp({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppPropsWithLayout) {
+  // Grab the layout if set; otherwise default to the default layout.
+  const getLayout = Component.getLayout || defaultGetLayout;
+
   return (
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
         <ChakraProvider>
           <RoundProvider>
             <EmojisProvider>
-              <PageLayout>
-                <Component {...pageProps} />
-              </PageLayout>
+              {getLayout(<Component {...pageProps} />, pageProps)}
             </EmojisProvider>
           </RoundProvider>
         </ChakraProvider>

@@ -1,4 +1,5 @@
 import { Container, Flex } from '@chakra-ui/react';
+import { getLayout as getSiteLayout } from './SiteOuterLayout';
 
 export const PageLayout = ({ children }) => (
   <Container
@@ -12,3 +13,6 @@ export const PageLayout = ({ children }) => (
     {children}
   </Container>
 );
+
+export const getLayout = (page) =>
+  getSiteLayout(<PageLayout>{page}</PageLayout>);

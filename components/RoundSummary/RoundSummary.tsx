@@ -91,7 +91,7 @@ export const RoundSummary = ({ onClose, roundId }) => {
                                 {userMap[id].name}{' '}
                               </Flex>
                             </Td>
-                            <Td>{count}</Td>
+                            <Td>{count} votes</Td>
                           </Tr>
                         ))}
                       </Tbody>
