@@ -31,6 +31,8 @@ export default async function handler(
         endedAt: new Date().toISOString(),
       },
     });
+
+    res.status(200).json({ round: updatedRound });
   } catch (error) {
     console.log(`error in POST /rounds/stop: `, error);
     res.status(500);

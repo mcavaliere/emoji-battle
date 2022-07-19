@@ -27,7 +27,7 @@ export default async function handler(
       data: { startedByUserId: user.id },
     });
 
-    await startTimer();
+    await startTimer(round.id);
 
     return res.status(200).json(round);
   } catch (error) {
