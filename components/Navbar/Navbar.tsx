@@ -9,6 +9,7 @@ import {
   Text,
   Link,
   IconButton,
+  Show,
 } from '@chakra-ui/react';
 import { FaGithub } from 'react-icons/fa';
 import { useSession, signOut } from 'next-auth/react';
@@ -40,7 +41,13 @@ export function Navbar(): JSX.Element | null {
       </Center>
       <Flex direction="row" align="center">
         <Avatar size="sm" name={name} src={src} mr={2} />
-        <VStack alignItems="flex-start" justifyContent="flex-start" spacing={0}>
+
+        <VStack
+          alignItems="flex-start"
+          justifyContent="flex-start"
+          spacing={0}
+          display={{ base: 'none', md: 'flex' }}
+        >
           <Text size="sm">{name}</Text>
           <Link fontSize="xs" onClick={() => signOut()}>
             Sign out
