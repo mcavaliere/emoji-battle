@@ -21,7 +21,7 @@ import {
   Tr,
   Td,
 } from '@chakra-ui/react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from 'react-query';
 import { fetchStats } from '../../lib/api/rounds';
 
 export type RoundSummaryProps = {
