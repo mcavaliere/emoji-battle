@@ -25,6 +25,8 @@ export const LeaderboardContainer = () => {
     Constants.CHANNELS.LEADERBOARD,
     (message) => {
       // If an emoji was clicked, update its count optimistically.
+      // TODO: move this logic to the context/reducer, and have this component pull the emoji list from context.
+      // Websocket / API requests should be handled in a side effect.
       if (message.name === Constants.EVENTS.EMOJI_CLICKED) {
         const { emoji } = message.data;
         const newEmojis = [...emojis];

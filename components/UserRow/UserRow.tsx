@@ -12,6 +12,7 @@ export const UserRow = ({ id, image, name }) => {
   const [voteChannel] = useWebsocketChannel(
     Constants.CHANNELS.VOTE,
     (message) => {
+      // TODO: move this to a context-level side effect.
       if (message.name === Constants.EVENTS.EMOJI_CLICKED) {
         const { user } = message.data;
 

@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Heading, HStack } from '@chakra-ui/react';
+import { Box, Heading, HStack } from '@chakra-ui/react';
 
 import data from '@emoji-mart/data';
 import { Picker as EmojiMartPicker } from 'emoji-mart';
@@ -46,6 +46,7 @@ export const EmojiPicker = () => {
       return;
     }
 
+    // TODO: dispatch this up to a reducer, and fire these websocket/API events in a side effect.
     leaderboardChannel.publish(Constants.EVENTS.EMOJI_CLICKED, {
       emoji,
       user,
@@ -56,6 +57,7 @@ export const EmojiPicker = () => {
       user,
     });
 
+    // TODO: where do round and emoji data go in context? How do they get associated?
     recordVote(round?.id, emoji);
   };
 
