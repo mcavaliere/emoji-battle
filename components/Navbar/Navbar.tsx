@@ -1,18 +1,8 @@
 import React from 'react';
-import {
-  Avatar,
-  Box,
-  Heading,
-  Center,
-  Flex,
-  VStack,
-  Text,
-  Link,
-  IconButton,
-  Show,
-} from '@chakra-ui/react';
+import { Box, Heading, Center, Flex, VStack, Link } from '@chakra-ui/react';
 import { FaGithub } from 'react-icons/fa';
 import { useSession, signOut } from 'next-auth/react';
+import { NavbarAvatar } from '../NavbarAvatar/NavbarAvatar';
 
 export function Navbar(): JSX.Element | null {
   const { data: session, status } = useSession();
@@ -23,7 +13,7 @@ export function Navbar(): JSX.Element | null {
     return null;
   }
 
-  const name = session?.user?.name || 'Anonymous';
+  const name = session?.user?.name || undefined;
   const src = session?.user?.image || undefined;
 
   return (
@@ -40,19 +30,7 @@ export function Navbar(): JSX.Element | null {
         </VStack>
       </Center>
       <Flex direction="row" align="center">
-        <Avatar size="sm" name={name} src={src} mr={2} />
-
-        <VStack
-          alignItems="flex-start"
-          justifyContent="flex-start"
-          spacing={0}
-          display={{ base: 'none', md: 'flex' }}
-        >
-          <Text size="sm">{name}</Text>
-          <Link fontSize="xs" onClick={() => signOut()}>
-            Sign out
-          </Link>
-        </VStack>
+        <NavbarAvatar name={name} src={src} />
       </Flex>
     </Flex>
   );
