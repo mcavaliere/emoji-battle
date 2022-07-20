@@ -1,17 +1,22 @@
 import { createContext, useContext, useReducer } from 'react';
 import { useEffectReducer } from '../hooks/useEffectReducer';
-import { useWebsocketChannel } from '../hooks/useWebsocketChannel';
 import * as Constants from '../../lib/websocketConstants';
 import { Emoji } from '@prisma/client';
+import { ResponsePayload as StatusResponsePayload } from '../../pages/api/rounds/status';
+import {
+  start as startRound,
+  status as fetchRoundStatus,
+} from '../../lib/api/rounds';
+import { useQuery, useQueryClient } from 'react-query';
 
 export type EmojisContextType = {
-  emojis?: Emoji[];
-  largestEmojiSize?: number;
-  recordEmojiSize?: (size: number) => void;
+  emojis: Emoji[];
+  largestEmojiSize: number;
+  recordEmojiSize: (size: number) => void;
 };
 
 export enum EmojisActions {
-  SET_EMOJIS = 'SET_EMOJIS',
+  HYDRATE = 'HYDRATE',
   ADD_EMOJI = 'ADD_EMOJI',
   RECORD_EMOJI_SIZE = 'RECORD_EMOJI_SIZE',
 }
@@ -23,10 +28,12 @@ export const defaultEmojisContext: EmojisContextType = {
 };
 
 export function emojisReducer(state, action, exec) {
+  console.log(`ACTION: ${action.type}`, action);
   switch (action.type) {
-    case EmojisActions.SET_EMOJIS:
+    case EmojisActions.HYDRATE:
       return {
         ...state,
+        emojis: action.emojis,
       };
 
     case EmojisActions.ADD_EMOJI:
@@ -51,10 +58,27 @@ export const useEmojisContext = () => {
 };
 
 export const EmojisProvider = ({ children }) => {
+  //   const queryClient = useQueryClient();
+  const {} = useQuery(
+    [Constants.QUERY_CACHE_KEYS.CURRENT_ROUND],
+    fetchRoundStatus,
+    {
+      onSuccess: (data: StatusResponsePayload) => {
+        if (data?.emojis) {
+          hydrateEmojis(data.emojis);
+        }
+      },
+    }
+  );
+
   const [state, dispatch] = useEffectReducer(
     emojisReducer,
     defaultEmojisContext
   );
+
+  const hydrateEmojis = (emojis: Emoji[]) => {
+    dispatch({ type: EmojisActions.HYDRATE, emojis });
+  };
 
   /**
    * Record the size (aka, # votes) anytime a vote happens. This is used to calculate the size of a row.

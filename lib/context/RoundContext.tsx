@@ -2,6 +2,7 @@ import { createContext, useContext } from 'react';
 import { useEffectReducer } from '../hooks/useEffectReducer';
 import { useWebsocketChannel } from '../hooks/useWebsocketChannel';
 import * as Constants from '../../lib/websocketConstants';
+import { ResponsePayload as StatusResponsePayload } from '../../pages/api/rounds/status';
 
 import {
   start as startRound,
@@ -114,13 +115,18 @@ export const useRoundContext = () => {
 
 export const RoundProvider = ({ children }) => {
   const queryClient = useQueryClient();
+
+  // We'll invalidate this cache and refresh round metadata when the websocket
+  //  tells us that a round has been started elsewhere. That way the current
+  //  use will see a round in progress.
+  // TODO: move elsewhere, since it affects multiple contexts
   const {} = useQuery(
     [Constants.QUERY_CACHE_KEYS.CURRENT_ROUND],
     fetchRoundStatus,
     {
-      onSuccess: (round) => {
-        if (round) {
-          hydrateRound(round);
+      onSuccess: (data: StatusResponsePayload) => {
+        if (data?.round) {
+          hydrateRound(data.round);
         }
       },
     }

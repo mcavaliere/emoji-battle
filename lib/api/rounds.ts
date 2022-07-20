@@ -1,9 +1,9 @@
 import { Round } from '@prisma/client';
-
+import { ResponsePayload as StatusResponsePayload } from '../../pages/api/rounds/status';
 /**
  * Get data for a round in progress.
  */
-export async function status(): Promise<Round | undefined> {
+export async function status(): Promise<StatusResponsePayload | undefined> {
   const response = await fetch(`/api/rounds/status`);
 
   if (response.status !== 200) {
