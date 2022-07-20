@@ -71,16 +71,6 @@ export const EmojiBox = ({ emoji, animationConfig }: EmojiBoxProps) => {
     controls.start({ opacity: 1, y: 0 });
   }, []);
 
-  // const onMouseEnter = (e) => {
-  //   controls.start(...animationConfig.start);
-  // };
-
-  // const onMouseOut = (e) => {
-  //   controls.start(hoverInitialState).then(() => {
-  //     controls.stop();
-  //   });
-  // };
-
   return (
     <MotionBox
       align="flex-start"
@@ -101,14 +91,12 @@ export const EmojiBox = ({ emoji, animationConfig }: EmojiBoxProps) => {
       transition={{ duration: 0.2 }}
       transformOrigin="center center"
       cursor="pointer"
-      // onMouseEnter={onMouseEnter}
-      // onMouseOut={onMouseOut}
     >
-      <Text style={{ fontSize: 15 + emoji._count.votes * 5 }} margin="0 auto">
+      <Text style={{ fontSize: 15 + emoji.voteCount * 5 }} margin="0 auto">
         {emoji.native}
       </Text>
 
-      <EmojiCount value={emoji._count.votes} />
+      <EmojiCount value={emoji.voteCount} />
     </MotionBox>
   );
 };

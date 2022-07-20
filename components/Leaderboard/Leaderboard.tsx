@@ -1,12 +1,10 @@
-import { useState } from 'react';
 import { Box, Heading } from '@chakra-ui/react';
 import { AnimatePresence } from 'framer-motion';
+import { Emoji } from '@prisma/client';
 
-import { Emoji } from '.prisma/client';
-import { useWebsocketChannel } from '../../lib/hooks/useWebsocketChannel';
-import * as Constants from '../../lib/websocketConstants';
 import { EmojiFromListResponsePayload } from '../../lib/types/EmojiListResponsePayload';
 import { EmojiBoxContainer } from '../EmojiBox/EmojiBox';
+import { useEmojisContext } from '../../lib/context/EmojisContext';
 
 export const mapEmojis = (emojis: Emoji[]) =>
   emojis.reduce((acc, emoji) => {
@@ -15,50 +13,7 @@ export const mapEmojis = (emojis: Emoji[]) =>
   }, {});
 
 export const LeaderboardContainer = () => {
-  const [emojis, setEmojis] = useState<EmojiFromListResponsePayload[]>([]);
-  const [emojiBoxChannel] = useWebsocketChannel(
-    Constants.CHANNELS.EMOJI_BOXES,
-    () => {}
-  );
-
-  const [leaderboardChannel] = useWebsocketChannel(
-    Constants.CHANNELS.LEADERBOARD,
-    (message) => {
-      // If an emoji was clicked, update its count optimistically.
-      // TODO: move this logic to the context/reducer, and have this component pull the emoji list from context.
-      // Websocket / API requests should be handled in a side effect.
-      if (message.name === Constants.EVENTS.EMOJI_CLICKED) {
-        const { emoji } = message.data;
-        const newEmojis = [...emojis];
-
-        // Find the emoji in the list, if it's there.
-        const targetIndex = newEmojis.findIndex(
-          (e) => e.native === emoji.native
-        );
-
-        // If the emoji is not in the list, add it. Otherwise update its count, and re-sort by count.
-        if (targetIndex === -1) {
-          newEmojis.push({ ...emoji, _count: { votes: 1 } });
-        } else {
-          newEmojis[targetIndex]._count.votes += 1;
-          newEmojis.sort((a, b) => b._count.votes - a._count.votes);
-        }
-
-        // Let the boxes know when a new emoji has taken the lead.
-        if (
-          newEmojis.length &&
-          emojis.length &&
-          newEmojis[0].id !== emojis[0].id
-        ) {
-          emojiBoxChannel.publish(Constants.EVENTS.NEW_LEADER, {
-            emoji: newEmojis[0],
-          });
-        }
-
-        setEmojis(newEmojis);
-      }
-    }
-  );
+  const { emojis } = useEmojisContext();
 
   if (!emojis) return <LeaderboardLoadingState />;
 
@@ -67,11 +22,11 @@ export const LeaderboardContainer = () => {
 
 export const LeaderboardLoadingState = () => <div>loading...</div>;
 
-export const Leaderboard = ({
-  emojis,
-}: {
+export type LeaderboardProps = {
   emojis: EmojiFromListResponsePayload[];
-}) => {
+};
+
+export const Leaderboard = ({ emojis }: LeaderboardProps) => {
   return (
     <>
       <Heading size="md" mb={5}>

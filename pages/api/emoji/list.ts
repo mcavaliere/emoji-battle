@@ -3,6 +3,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../lib/prismaClientInstance';
 import { EmojiListResponsePayload } from '../../../lib/types/EmojiListResponsePayload';
 
+/**
+ * Deprecated endpoint. This data is now returned from /api/rounds/status.ts.
+ * @param req
+ * @param res
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<EmojiListResponsePayload>

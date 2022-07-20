@@ -2,10 +2,9 @@ import { useRef } from 'react';
 import { Box, Heading, HStack } from '@chakra-ui/react';
 
 import data from '@emoji-mart/data';
-import { Picker as EmojiMartPicker } from 'emoji-mart';
+import { Picker as EmojiMartPicker, BaseEmoji } from 'emoji-mart';
 import { useSession } from 'next-auth/react';
 
-import { create as recordVote } from '../../lib/api/votes';
 import { useRoundContext } from '../../lib/context/RoundContext';
 import { useEmojisContext } from '../../lib/context/EmojisContext';
 import { SessionType } from '../../lib/types/SessionType';
@@ -36,15 +35,12 @@ export const EmojiPicker = () => {
   const { data: session } = useSession();
   const { user } = session as SessionType;
 
-  const handleEmojiSelect = async (emoji: any) => {
+  const handleEmojiSelect = async (emoji: BaseEmoji) => {
     if (!round) {
       return;
     }
 
-    emojiClicked(emoji, user);
-
-    // TODO: where do round and emoji data go in context? How do they get associated?
-    recordVote(round?.id, emoji);
+    emojiClicked(emoji, user, round);
   };
 
   return (

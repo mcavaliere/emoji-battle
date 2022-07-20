@@ -9,6 +9,8 @@ const MotionBox = motion(Box);
 
 export const UserRow = ({ id, image, name }) => {
   const controls = useAnimation();
+
+  // Highlight the row when this user casts a vote.
   const [voteChannel] = useWebsocketChannel(
     Constants.CHANNELS.VOTE,
     (message) => {

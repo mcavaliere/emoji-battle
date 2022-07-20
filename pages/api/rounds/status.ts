@@ -3,9 +3,13 @@ import dayjs from 'dayjs';
 
 import { getSession } from 'next-auth/react';
 import prisma from '../../../lib/prismaClientInstance';
+import { EmojiFromListResponsePayload } from '../../../lib/types/EmojiListResponsePayload';
 import { Round, Emoji } from '@prisma/client';
 
-export type ResponsePayload = { round: Round; emojis: Emoji[] };
+export type ResponsePayload = {
+  round: Round;
+  emojis: EmojiFromListResponsePayload[];
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -44,13 +48,12 @@ export default async function handler(
       },
     });
 
-
     if (!round) {
       return res.status(204).end();
     }
 
     // Get the current round's emojis, and their votes.
-    const emojis = await prisma.emoji.findMany({
+    const emojisFromDb = await prisma.emoji.findMany({
       include: {
         votes: {
           where: {
@@ -68,7 +71,12 @@ export default async function handler(
     });
 
     // Sort in place descending by vote count.
-    emojis.sort((a, b) => b.votes.length - a.votes.length);
+    const emojis = emojisFromDb.map(({ votes, ...emoji }) => ({
+      ...emoji,
+      voteCount: votes.length,
+    }));
+
+    emojis.sort((a, b) => b.voteCount - a.voteCount);
 
     return res.status(200).json({ round, emojis });
   } catch (error) {
