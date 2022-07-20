@@ -4,12 +4,11 @@ import { Box, Heading, HStack } from '@chakra-ui/react';
 import data from '@emoji-mart/data';
 import { Picker as EmojiMartPicker } from 'emoji-mart';
 import { useSession } from 'next-auth/react';
-import { Session } from 'next-auth';
 
-import { useWebsocketChannel } from '../../lib/hooks/useWebsocketChannel';
-import * as Constants from '../../lib/websocketConstants';
 import { create as recordVote } from '../../lib/api/votes';
 import { useRoundContext } from '../../lib/context/RoundContext';
+import { useEmojisContext } from '../../lib/context/EmojisContext';
+import { SessionType } from '../../lib/types/SessionType';
 
 export function Picker(props) {
   const pickerRef = useRef<HTMLDivElement | null>(null);
@@ -32,30 +31,17 @@ export function Picker(props) {
 
 export const EmojiPicker = () => {
   const { round } = useRoundContext();
-  const [voteChannel] = useWebsocketChannel(Constants.CHANNELS.VOTE, () => {});
-  const { data: session } = useSession();
-  const { user } = session as Session;
+  const { emojiClicked } = useEmojisContext();
 
-  const [leaderboardChannel] = useWebsocketChannel(
-    Constants.CHANNELS.LEADERBOARD,
-    () => {}
-  );
+  const { data: session } = useSession();
+  const { user } = session as SessionType;
 
   const handleEmojiSelect = async (emoji: any) => {
     if (!round) {
       return;
     }
 
-    // TODO: dispatch this up to a reducer, and fire these websocket/API events in a side effect.
-    leaderboardChannel.publish(Constants.EVENTS.EMOJI_CLICKED, {
-      emoji,
-      user,
-    });
-
-    voteChannel.publish(Constants.EVENTS.EMOJI_CLICKED, {
-      emoji,
-      user,
-    });
+    emojiClicked(emoji, user);
 
     // TODO: where do round and emoji data go in context? How do they get associated?
     recordVote(round?.id, emoji);

@@ -1,18 +1,21 @@
 import { createContext, useContext, useReducer } from 'react';
 import { useEffectReducer } from '../hooks/useEffectReducer';
 import * as Constants from '../../lib/websocketConstants';
-import { Emoji } from '@prisma/client';
+import { useWebsocketChannel } from '../../lib/hooks/useWebsocketChannel';
+import { Emoji, User } from '@prisma/client';
 import { ResponsePayload as StatusResponsePayload } from '../../pages/api/rounds/status';
 import {
   start as startRound,
   status as fetchRoundStatus,
 } from '../../lib/api/rounds';
 import { useQuery, useQueryClient } from 'react-query';
+import { SessionUserType } from '../../lib/types/SessionType';
 
 export type EmojisContextType = {
   emojis: Emoji[];
   largestEmojiSize: number;
   recordEmojiSize: (size: number) => void;
+  emojiClicked: (emoji: Emoji, user: Partial<SessionUserType>) => void;
 };
 
 export enum EmojisActions {
@@ -25,6 +28,7 @@ export const defaultEmojisContext: EmojisContextType = {
   emojis: [] as Emoji[],
   largestEmojiSize: 0,
   recordEmojiSize: () => {},
+  emojiClicked: (emoji: Emoji, user: Partial<SessionUserType>) => {},
 };
 
 export function emojisReducer(state, action, exec) {
@@ -58,7 +62,12 @@ export const useEmojisContext = () => {
 };
 
 export const EmojisProvider = ({ children }) => {
-  //   const queryClient = useQueryClient();
+  const [voteChannel] = useWebsocketChannel(Constants.CHANNELS.VOTE, () => {});
+  const [leaderboardChannel] = useWebsocketChannel(
+    Constants.CHANNELS.LEADERBOARD,
+    () => {}
+  );
+
   const {} = useQuery(
     [Constants.QUERY_CACHE_KEYS.CURRENT_ROUND],
     fetchRoundStatus,
@@ -88,8 +97,21 @@ export const EmojisProvider = ({ children }) => {
     dispatch({ type: EmojisActions.RECORD_EMOJI_SIZE, size });
   };
 
+  const emojiClicked = (emoji: Emoji, user: Partial<SessionUserType>) => {
+    // TODO: dispatch this up to a reducer, and fire these websocket/API events in a side effect.
+    leaderboardChannel.publish(Constants.EVENTS.EMOJI_CLICKED, {
+      emoji,
+      user,
+    });
+
+    voteChannel.publish(Constants.EVENTS.EMOJI_CLICKED, {
+      emoji,
+      user,
+    });
+  };
+
   return (
-    <EmojisContext.Provider value={{ ...state, recordEmojiSize }}>
+    <EmojisContext.Provider value={{ ...state, recordEmojiSize, emojiClicked }}>
       {children}
     </EmojisContext.Provider>
   );
