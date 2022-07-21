@@ -48,7 +48,7 @@ export type EmojiBoxProps = {
 export const EmojiBox = ({ emoji, animationConfig }: EmojiBoxProps) => {
   const controls = useAnimation();
   const channelName = Constants.CHANNELS.EMOJI_BOXES;
-  const [channel] = useWebsocketChannel(channelName, (message) => {
+  const [] = useWebsocketChannel(channelName, (message) => {
     console.log(`Channel ${channelName} received `, message);
 
     switch (message.name) {

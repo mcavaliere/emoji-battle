@@ -79,16 +79,7 @@ export function emojisReducer(state, action, exec) {
         newEmojis.sort((a, b) => b.voteCount - a.voteCount);
       }
 
-      // Let the boxes know when a new emoji has taken the lead.
-      if (
-        newEmojis.length &&
-        state.emojis.length &&
-        newEmojis[0].id !== state.emojis[0].id
-      ) {
-        // emojiBoxChannel.publish(Constants.EVENTS.NEW_LEADER, {
-        //   emoji: newEmojis[0],
-        // });
-      }
+      exec({ type: 'newVoteEffects', existingEmojis: state.emojis, newEmojis });
 
       return {
         ...state,
@@ -111,13 +102,13 @@ export const useEmojisContext = () => {
 };
 
 export const EmojisProvider = ({ children }) => {
+  const [emojiBoxChannel] = useWebsocketChannel(
+    Constants.CHANNELS.EMOJI_BOXES,
+    () => {}
+  );
   const [voteChannel] = useWebsocketChannel(
     Constants.CHANNELS.VOTE,
     (message) => {
-      console.log(
-        `---------------- EmojisProvider -> Vote channel received message`,
-        message
-      );
       // When a new vote is received, update the emoji list in the context.
       if (message.name === Constants.EVENTS.NEW_VOTE) {
         dispatch({
@@ -135,10 +126,6 @@ export const EmojisProvider = ({ children }) => {
     fetchRoundStatus,
     {
       onSuccess: (data: StatusResponsePayload) => {
-        console.log(
-          `---------------- EmojisContext -> fetchRoundStatus success: `,
-          data
-        );
         if (data?.emojis) {
           hydrateEmojis(data.emojis);
         }
@@ -146,14 +133,24 @@ export const EmojisProvider = ({ children }) => {
     }
   );
 
+  const newVoteEffects = (_, effect) => {
+    const { existingEmojis, newEmojis } = effect;
+    // Let the boxes know when a new emoji has taken the lead.
+    if (
+      newEmojis.length &&
+      existingEmojis.length &&
+      newEmojis[0].id !== existingEmojis[0].id
+    ) {
+      emojiBoxChannel.publish(Constants.EVENTS.NEW_LEADER, {
+        emoji: newEmojis[0],
+      });
+    }
+  };
+
   const emojiClickedEffects = (_, effect) => {
-    console.log(`---------------- emojiClickedEffects -> effect:`, effect);
-    console.log(
-      `---------------- emojiClickedEffects -> voteChannel:`,
-      voteChannel
-    );
     const { emoji, user, round } = effect;
 
+    // Send the update to all players instantly.
     voteChannel.publish(
       Constants.EVENTS.NEW_VOTE,
       {
@@ -163,19 +160,18 @@ export const EmojisProvider = ({ children }) => {
       },
       (error) => {
         if (error) {
-          console.error(
-            `---------------- voteChannel.publish -> error:`,
-            error
-          );
+          console.warn(`---------------- voteChannel.publish -> error:`, error);
         }
       }
     );
 
+    // Record the vote in the database.
     recordVote(round?.id, emoji);
   };
 
   const effectMap = {
     emojiClickedEffects,
+    newVoteEffects,
   };
 
   const [state, dispatch] = useEffectReducer(
@@ -185,7 +181,6 @@ export const EmojisProvider = ({ children }) => {
   );
 
   const hydrateEmojis = (emojis: EmojiFromListResponsePayload[]) => {
-    console.log(`---------------- hydrateEmojis `);
     dispatch({ type: EmojisActions.HYDRATE, emojis });
   };
 
@@ -204,8 +199,6 @@ export const EmojisProvider = ({ children }) => {
   ) => {
     dispatch({ type: EmojisActions.EMOJI_CLICKED, emoji, user, round });
   };
-
-  console.log(`---------------- EmojisProvider -> state.emojis:`, state.emojis);
 
   return (
     <EmojisContext.Provider value={{ ...state, recordEmojiSize, emojiClicked }}>
