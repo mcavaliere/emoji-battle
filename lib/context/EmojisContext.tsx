@@ -24,9 +24,9 @@ export type EmojisContextType = {
 
 export enum EmojisActions {
   HYDRATE = 'HYDRATE',
-  ADD_EMOJI = 'ADD_EMOJI',
   RECORD_EMOJI_SIZE = 'RECORD_EMOJI_SIZE',
   EMOJI_CLICKED = 'EMOJI_CLICKED',
+  NEW_VOTE = 'NEW_VOTE',
 }
 
 export const defaultEmojisContext: EmojisContextType = {
@@ -45,21 +45,27 @@ export function emojisReducer(state, action, exec) {
         emojis: action.emojis,
       };
 
-    case EmojisActions.ADD_EMOJI:
-      return {
-        ...state,
-      };
-
     case EmojisActions.RECORD_EMOJI_SIZE:
       return {
         ...state,
       };
 
-    case EmojisActions.EMOJI_CLICKED:
+    case EmojisActions.EMOJI_CLICKED: {
       const { emoji, user, round } = action;
+      exec({
+        type: 'emojiClickedEffects',
+        emoji,
+        user,
+        round,
+      });
 
-      exec({ type: 'emojiClickedEffects', emoji, user, round });
+      return {
+        ...state,
+      };
+    }
 
+    case EmojisActions.NEW_VOTE: {
+      const { emoji, user, round } = action;
       const newEmojis = [...state.emojis];
 
       // Find the emoji in the list, if it's there.
@@ -88,6 +94,10 @@ export function emojisReducer(state, action, exec) {
         ...state,
         emojis: newEmojis,
       };
+    }
+
+    default:
+      return state;
   }
 }
 
@@ -101,14 +111,23 @@ export const useEmojisContext = () => {
 };
 
 export const EmojisProvider = ({ children }) => {
-  const [voteChannel] = useWebsocketChannel(Constants.CHANNELS.VOTE, () => {});
-  const [emojiBoxChannel] = useWebsocketChannel(
-    Constants.CHANNELS.EMOJI_BOXES,
-    () => {}
-  );
-  const [leaderboardChannel] = useWebsocketChannel(
-    Constants.CHANNELS.LEADERBOARD,
-    () => {}
+  const [voteChannel] = useWebsocketChannel(
+    Constants.CHANNELS.VOTE,
+    (message) => {
+      console.log(
+        `---------------- EmojisProvider -> Vote channel received message`,
+        message
+      );
+      // When a new vote is received, update the emoji list in the context.
+      if (message.name === Constants.EVENTS.NEW_VOTE) {
+        dispatch({
+          type: EmojisActions.NEW_VOTE,
+          emoji: message.data.emoji,
+          user: message.data.user,
+          round: message.data.round,
+        });
+      }
+    }
   );
 
   const {} = useQuery(
@@ -116,6 +135,10 @@ export const EmojisProvider = ({ children }) => {
     fetchRoundStatus,
     {
       onSuccess: (data: StatusResponsePayload) => {
+        console.log(
+          `---------------- EmojisContext -> fetchRoundStatus success: `,
+          data
+        );
         if (data?.emojis) {
           hydrateEmojis(data.emojis);
         }
@@ -123,19 +146,31 @@ export const EmojisProvider = ({ children }) => {
     }
   );
 
-  const emojiClickedEffects = (_, { emoji, user, round }, dispatch) => {
-    // TODO: dispatch this up to a reducer, and fire these websocket/API events in a side effect.
-    leaderboardChannel.publish(Constants.EVENTS.EMOJI_CLICKED, {
-      emoji,
-      user,
-    });
+  const emojiClickedEffects = (_, effect) => {
+    console.log(`---------------- emojiClickedEffects -> effect:`, effect);
+    console.log(
+      `---------------- emojiClickedEffects -> voteChannel:`,
+      voteChannel
+    );
+    const { emoji, user, round } = effect;
 
-    voteChannel.publish(Constants.EVENTS.EMOJI_CLICKED, {
-      emoji,
-      user,
-    });
+    voteChannel.publish(
+      Constants.EVENTS.NEW_VOTE,
+      {
+        emoji,
+        user,
+        round,
+      },
+      (error) => {
+        if (error) {
+          console.error(
+            `---------------- voteChannel.publish -> error:`,
+            error
+          );
+        }
+      }
+    );
 
-    // TODO: where do round and emoji data go in context? How do they get associated?
     recordVote(round?.id, emoji);
   };
 
@@ -145,10 +180,12 @@ export const EmojisProvider = ({ children }) => {
 
   const [state, dispatch] = useEffectReducer(
     emojisReducer,
-    defaultEmojisContext
+    defaultEmojisContext,
+    effectMap
   );
 
   const hydrateEmojis = (emojis: EmojiFromListResponsePayload[]) => {
+    console.log(`---------------- hydrateEmojis `);
     dispatch({ type: EmojisActions.HYDRATE, emojis });
   };
 
@@ -167,6 +204,8 @@ export const EmojisProvider = ({ children }) => {
   ) => {
     dispatch({ type: EmojisActions.EMOJI_CLICKED, emoji, user, round });
   };
+
+  console.log(`---------------- EmojisProvider -> state.emojis:`, state.emojis);
 
   return (
     <EmojisContext.Provider value={{ ...state, recordEmojiSize, emojiClicked }}>

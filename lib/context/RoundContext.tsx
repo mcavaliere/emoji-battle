@@ -42,7 +42,7 @@ export const defaultRoundContext: RoundContextType = {
   roundSummaryVisible: false,
 };
 
-export function triggerSummaryModalEffect(_, _effect, dispatch) {
+export function triggerSummaryModal(_, _effect, dispatch) {
   dispatch({
     type: RoundActions.SHOW_ROUND_SUMMARY,
   });
@@ -133,11 +133,11 @@ export const RoundProvider = ({ children }) => {
   );
 
   const clearRoundQueryCache = () => {
-    queryClient.invalidateQueries([Constants.QUERY_CACHE_KEYS.CURRENT_ROUND]);
+    queryClient.refetchQueries([Constants.QUERY_CACHE_KEYS.CURRENT_ROUND]);
   };
 
   const effectMap = {
-    triggerSummaryModal: triggerSummaryModalEffect,
+    triggerSummaryModal,
     clearRoundQueryCache,
   };
 
@@ -158,7 +158,7 @@ export const RoundProvider = ({ children }) => {
       return;
     }
 
-    // Dispatched by node server when timer starts.
+    // Dispatched by the node server when timer starts.
     if (message.name === Constants.EVENTS.ROUND_STARTED) {
       clearRoundQueryCache();
       return;
@@ -171,10 +171,7 @@ export const RoundProvider = ({ children }) => {
     }
   };
 
-  const [timerChannel] = useWebsocketChannel(
-    Constants.CHANNELS.TIMER,
-    timerChannelMessageCallback
-  );
+  useWebsocketChannel(Constants.CHANNELS.TIMER, timerChannelMessageCallback);
 
   const start = async () => {
     if (state!.inProgress) {

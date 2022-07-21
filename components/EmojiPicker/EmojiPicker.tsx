@@ -40,6 +40,8 @@ export const EmojiPicker = () => {
       return;
     }
 
+    // Dispatch an event up to the EmojisContext,
+    //  have it alter state and fire off effects.
     emojiClicked(emoji, user, round);
   };
 

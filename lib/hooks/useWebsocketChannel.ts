@@ -34,7 +34,7 @@ export function useWebsocketChannel(channelName: string, callbackOnMessage) {
     };
   };
 
-  useEffect(useEffectHook);
+  useEffect(useEffectHook, []);
 
   return [channel, ably];
 }

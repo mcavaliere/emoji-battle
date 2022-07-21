@@ -14,7 +14,8 @@ export async function status(): Promise<StatusResponsePayload | undefined> {
 }
 
 /**
- * Create a Round in the database, then kick off the timer API.
+ * Create a Round in the database, then kick off the timer API. The timer API
+ *  will then publish a ROUND_STARTED event to the TIMER websocket channel.
  */
 export async function start(): Promise<Round> {
   const response = await fetch(`/api/rounds/start`, {

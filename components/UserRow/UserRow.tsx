@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import { motion, useAnimation } from 'framer-motion';
 import { useWebsocketChannel } from '../../lib/hooks/useWebsocketChannel';
 import * as Constants from '../../lib/websocketConstants';
@@ -15,7 +15,7 @@ export const UserRow = ({ id, image, name }) => {
     Constants.CHANNELS.VOTE,
     (message) => {
       // TODO: move this to a context-level side effect.
-      if (message.name === Constants.EVENTS.EMOJI_CLICKED) {
+      if (message.name === Constants.EVENTS.NEW_VOTE) {
         const { user } = message.data;
 
         if (user.id === id) {
