@@ -14,7 +14,15 @@ if (process.env.NODE_ENV !== 'test') {
   }
 }
 
-export function useWebsocketChannel(channelName: string, callbackOnMessage) {
+export type useWebsocketChannelReturnType = [
+  channel: Ably.Types.RealtimeChannelPromise,
+  ably: typeof Ably.Realtime.Promise
+];
+
+export function useWebsocketChannel(
+  channelName: string,
+  callbackOnMessage
+): useWebsocketChannelReturnType {
   const channel = ably?.channels?.get(channelName);
 
   const onMount = () => {
