@@ -1,6 +1,6 @@
 import { BaseEmoji } from 'emoji-mart';
 import { Round } from '@prisma/client';
-
+import { EmojiFromListResponsePayload } from '../../lib/types/EmojiListResponsePayload';
 import { SessionUserType } from '../../lib/types/SessionType';
 
 export enum EmojisActions {
@@ -27,8 +27,23 @@ export const useEmojisActionCreators = (dispatch) => {
     dispatch({ type: EmojisActions.EMOJI_CLICKED, emoji, user, round });
   };
 
+  const hydrateEmojis = (emojis: EmojiFromListResponsePayload[]) => {
+    dispatch({ type: EmojisActions.HYDRATE, emojis });
+  };
+
+  const newVote = (emoji, user, round) => {
+    dispatch({
+      type: EmojisActions.NEW_VOTE,
+      emoji,
+      user,
+      round,
+    });
+  };
+
   return {
+    newVote,
     recordEmojiSize,
     emojiClicked,
+    hydrateEmojis,
   };
 };

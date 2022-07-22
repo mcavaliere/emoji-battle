@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 import { Box, Text } from '@chakra-ui/react';
 import { motion, useAnimation } from 'framer-motion';
-import { useWebsocketChannel } from '../../lib/hooks/useWebsocketChannel';
+import { useWebsocketEvent } from '../../lib/hooks/useWebsocketChannel';
 import * as Constants from '../../lib/websocketConstants';
 
 const MotionBox = motion(Box);
@@ -11,21 +11,21 @@ export const UserRow = ({ id, image, name }) => {
   const controls = useAnimation();
 
   // Highlight the row when this user casts a vote.
-  const [voteChannel] = useWebsocketChannel(
+  const [voteChannel] = useWebsocketEvent(
     Constants.CHANNELS.VOTE,
+    Constants.EVENTS.NEW_VOTE,
     (message) => {
       // TODO: move this to a context-level side effect.
-      if (message.name === Constants.EVENTS.NEW_VOTE) {
-        const { user } = message.data;
 
-        if (user.id === id) {
-          controls.start({
-            backgroundColor: ['#F09D51', '#ffffff'],
-            transition: {
-              duration: 1,
-            },
-          });
-        }
+      const { user } = message.data;
+
+      if (user.id === id) {
+        controls.start({
+          backgroundColor: ['#F09D51', '#ffffff'],
+          transition: {
+            duration: 1,
+          },
+        });
       }
     }
   );

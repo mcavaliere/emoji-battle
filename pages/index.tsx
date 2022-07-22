@@ -16,7 +16,7 @@ import { LeaderboardContainer } from '../components/Leaderboard/Leaderboard';
 import { EmojiPicker } from '../components/EmojiPicker/EmojiPicker';
 import { RoundSummary } from '../components/RoundSummary/RoundSummary';
 import { UserList } from '../components/UserList/UserList';
-import { useWebsocketChannel } from '../lib/hooks/useWebsocketChannel';
+import { useWebsocketChannels } from '../lib/hooks/useWebsocketChannel';
 import { useRoundContext } from '../lib/context/RoundContext';
 
 import {
@@ -31,10 +31,7 @@ const handleResetClick = async () => {
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
   const loading = status === 'loading';
-  const [playersChannel] = useWebsocketChannel(
-    Constants.CHANNELS.PLAYERS,
-    () => {}
-  );
+  const { playersChannel } = useWebsocketChannels();
 
   const {
     previousRound,
@@ -47,6 +44,7 @@ const Home: NextPage = () => {
 
   useEffect((): void => {
     if (session?.user) {
+      // TODO: lift this up into context side effect.
       playersChannel.publish(Constants.EVENTS.PLAYER_JOINED, session.user);
     }
   }, [session?.user]);

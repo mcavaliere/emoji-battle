@@ -9,7 +9,7 @@ import {
 import { EmojiCount } from '../EmojiCount/EmojiCount';
 import { EmojiFromListResponsePayload } from '../../lib/types/EmojiListResponsePayload';
 import { getRandomAnimationConfig } from '../../lib/animationConfigs';
-import { useWebsocketChannel } from '../../lib/hooks/useWebsocketChannel';
+import { useWebsocketEvent } from '../../lib/hooks/useWebsocketChannel';
 import * as Constants from '../../lib/websocketConstants';
 
 const MotionBox = motion(Box);
@@ -48,23 +48,21 @@ export type EmojiBoxProps = {
 export const EmojiBox = ({ emoji, animationConfig }: EmojiBoxProps) => {
   const controls = useAnimation();
   const channelName = Constants.CHANNELS.EMOJI_BOXES;
-  const [] = useWebsocketChannel(channelName, (message) => {
-    console.log(`Channel ${channelName} received `, message);
+  const [] = useWebsocketEvent(
+    channelName,
+    Constants.EVENTS.NEW_LEADER,
+    (message) => {
+      const { emoji: leader } = message.data;
 
-    switch (message.name) {
-      case Constants.EVENTS.NEW_LEADER: {
-        const { emoji: leader } = message.data;
-
-        if (leader.id === emoji.id) {
-          controls.start(animationConfigMap['color-and-blur'].start, {
-            transition: {
-              duration: 0.5,
-            },
-          });
-        }
+      if (leader.id === emoji.id) {
+        controls.start(animationConfigMap['color-and-blur'].start, {
+          transition: {
+            duration: 0.5,
+          },
+        });
       }
     }
-  });
+  );
 
   // Fade in/slide up on mount
   useEffect(() => {

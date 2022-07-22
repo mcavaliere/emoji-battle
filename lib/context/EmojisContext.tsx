@@ -8,9 +8,12 @@ import { status as fetchRoundStatus } from '../../lib/api/rounds';
 import { useQuery } from 'react-query';
 import { SessionUserType } from '../../lib/types/SessionType';
 import { EmojiFromListResponsePayload } from '../../lib/types/EmojiListResponsePayload';
-import { EmojisActions, useEmojisActionCreators } from './EmojisActions';
+import { useEmojisActionCreators } from './EmojisActions';
 import { useEmojisContextReducer } from './EmojisContextEffects';
-import { useEmojisContextWebsocketEvents } from './EmojisContextWebsocketEvents';
+import {
+  useWebsocketEvent,
+  useWebsocketChannels,
+} from '../../lib/hooks/useWebsocketChannel';
 
 export type EmojisContextType = {
   emojis: EmojiFromListResponsePayload[];
@@ -46,35 +49,21 @@ export const EmojisProvider = ({ children }) => {
     {
       onSuccess: (data: StatusResponsePayload) => {
         if (data?.emojis) {
-          hydrateEmojis(data.emojis);
+          actionCreators.hydrateEmojis(data.emojis);
         }
       },
     }
   );
 
   const [state, dispatch] = useEmojisContextReducer();
-  const { voteChannel } = useEmojisContextWebsocketEvents();
+  const { voteChannel } = useWebsocketChannels();
   const actionCreators = useEmojisActionCreators(dispatch);
 
-  useEffect(() => {
-    voteChannel.subscribe(Constants.EVENTS.NEW_VOTE, (message) => {
-      // When a new vote is received, update the emoji list in the context.
-      dispatch({
-        type: EmojisActions.NEW_VOTE,
-        emoji: message.data.emoji,
-        user: message.data.user,
-        round: message.data.round,
-      });
-    });
-
-    return () => {
-      voteChannel.unsubscribe(Constants.EVENTS.NEW_VOTE);
-    };
-  }, []);
-
-  const hydrateEmojis = (emojis: EmojiFromListResponsePayload[]) => {
-    dispatch({ type: EmojisActions.HYDRATE, emojis });
-  };
+  useWebsocketEvent(voteChannel, Constants.EVENTS.NEW_VOTE, (message) => {
+    // When a new vote is received, update the emoji list in the context.
+    const { emoji, user, round } = message.data;
+    actionCreators.newVote(emoji, user, round);
+  });
 
   return (
     <EmojisContext.Provider value={{ ...state, ...actionCreators }}>
