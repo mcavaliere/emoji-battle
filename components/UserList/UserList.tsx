@@ -4,7 +4,7 @@ import { User } from '@prisma/client';
 
 import { UserRow } from '../UserRow/UserRow';
 import { fetcher } from '../../lib/fetcher';
-import { useWebsocketEvent } from '../../lib/hooks/useWebsocketChannel';
+import { useWebsocketEvent } from '../../lib/hooks/useWebsocketEvent';
 import * as Constants from '../../lib/websocketConstants';
 
 export const UserList = () => {

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 import { Box, Text } from '@chakra-ui/react';
 import { motion, useAnimation } from 'framer-motion';
-import { useWebsocketEvent } from '../../lib/hooks/useWebsocketChannel';
+import { useWebsocketEvent } from '../../lib/hooks/useWebsocketEvent';
 import * as Constants from '../../lib/websocketConstants';
 
 const MotionBox = motion(Box);

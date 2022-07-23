@@ -6,10 +6,10 @@ import {
   AnimationConfig,
   animationConfigMap,
 } from '../../lib/animationConfigs';
-import { EmojiCount } from '../EmojiCount/EmojiCount';
+import { EmojiCount } from '../../components/EmojiCount/EmojiCount';
 import { EmojiFromListResponsePayload } from '../../lib/types/EmojiListResponsePayload';
 import { getRandomAnimationConfig } from '../../lib/animationConfigs';
-import { useWebsocketEvent } from '../../lib/hooks/useWebsocketChannel';
+import { useWebsocketEvent } from '../../lib/hooks/useWebsocketEvent';
 import * as Constants from '../../lib/websocketConstants';
 
 const MotionBox = motion(Box);

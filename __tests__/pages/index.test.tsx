@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import Home from '../../pages/index';
 import { useSession } from 'next-auth/react';
-import * as Hooks from '../../lib/hooks/useWebsocketChannel';
+import * as Hooks from '../../lib/hooks/useWebsocketChannels';
 import * as Fetcher from '../../lib/fetcher';
 import { fakeAblyChannel, AblyStub } from '../../testUtils/ablyMocks';
 import { validSession } from '../../testUtils/sessions';

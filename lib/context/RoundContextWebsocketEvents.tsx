@@ -1,5 +1,5 @@
 import * as Constants from '../../lib/websocketConstants';
-import { useWebsocketEvent } from '../hooks/useWebsocketChannel';
+import { useWebsocketEvent } from '../hooks/useWebsocketEvent';
 import { RoundActions } from './RoundActions';
 
 export const useRoundContextWebsocketEvents = (dispatch) => {

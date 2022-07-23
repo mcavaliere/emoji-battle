@@ -3,7 +3,7 @@ import { create as recordVote } from '../../lib/api/votes';
 import { defaultEmojisContext } from './EmojisContext';
 import { emojisReducer } from './EmojisContextReducer';
 import { useEffectReducer } from '../hooks/useEffectReducer';
-import { useWebsocketChannels } from '../hooks/useWebsocketChannel';
+import { useWebsocketChannels } from '../hooks/useWebsocketChannels';
 
 export const useEmojisContextReducer = () => {
   const { emojiBoxChannel, voteChannel } = useWebsocketChannels();

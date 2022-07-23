@@ -16,7 +16,7 @@ import { LeaderboardContainer } from '../components/Leaderboard/Leaderboard';
 import { EmojiPicker } from '../components/EmojiPicker/EmojiPicker';
 import { RoundSummary } from '../components/RoundSummary/RoundSummary';
 import { UserList } from '../components/UserList/UserList';
-import { useWebsocketChannels } from '../lib/hooks/useWebsocketChannel';
+import { useWebsocketChannels } from '../lib/hooks/useWebsocketChannels';
 import { useRoundContext } from '../lib/context/RoundContext';
 
 import {
