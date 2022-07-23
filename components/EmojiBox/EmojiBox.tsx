@@ -10,7 +10,7 @@ import { EmojiCount } from '../../components/EmojiCount/EmojiCount';
 import { EmojiFromListResponsePayload } from '../../lib/types/EmojiListResponsePayload';
 import { getRandomAnimationConfig } from '../../lib/animationConfigs';
 import { useWebsocketEvent } from '../../lib/hooks/useWebsocketEvent';
-import * as Constants from '../../lib/websocketConstants';
+import * as Constants from '../../lib/constants';
 
 const MotionBox = motion(Box);
 

@@ -1,5 +1,5 @@
 import { useQueryClient } from 'react-query';
-import * as Constants from '../../lib/websocketConstants';
+import * as Constants from '../constants';
 import { RoundActions } from './RoundActions';
 import { useEffectReducer } from '../hooks/useEffectReducer';
 import { roundReducer } from './RoundContextReducer';

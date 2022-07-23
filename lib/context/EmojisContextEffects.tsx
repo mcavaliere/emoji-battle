@@ -1,4 +1,4 @@
-import * as Constants from '../../lib/websocketConstants';
+import * as Constants from '../constants';
 import { create as recordVote } from '../../lib/api/votes';
 import { defaultEmojisContext } from './EmojisContext';
 import { emojisReducer } from './EmojisContextReducer';

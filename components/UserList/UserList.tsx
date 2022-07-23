@@ -5,7 +5,7 @@ import { User } from '@prisma/client';
 import { UserRow } from '../UserRow/UserRow';
 import { fetcher } from '../../lib/fetcher';
 import { useWebsocketEvent } from '../../lib/hooks/useWebsocketEvent';
-import * as Constants from '../../lib/websocketConstants';
+import * as Constants from '../../lib/constants';
 
 export const UserList = () => {
   const [users, setUsers] = useState<User[]>([]);

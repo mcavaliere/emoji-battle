@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Box, Text } from '@chakra-ui/react';
 import { motion, useAnimation } from 'framer-motion';
 import { useWebsocketEvent } from '../../lib/hooks/useWebsocketEvent';
-import * as Constants from '../../lib/websocketConstants';
+import * as Constants from '../../lib/constants';
 
 const MotionBox = motion(Box);
 

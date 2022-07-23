@@ -1,4 +1,4 @@
-import * as Constants from '../../lib/websocketConstants';
+import * as Constants from '../constants';
 import { getWebsocketChannel } from '../../lib/ablyInstance';
 
 /**

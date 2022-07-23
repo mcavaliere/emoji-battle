@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect } from 'react';
 import { BaseEmoji } from 'emoji-mart';
 
-import * as Constants from '../../lib/websocketConstants';
+import * as Constants from '../constants';
 import { Round } from '@prisma/client';
 import { ResponsePayload as StatusResponsePayload } from '../../pages/api/rounds/status';
 import { status as fetchRoundStatus } from '../../lib/api/rounds';

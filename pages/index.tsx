@@ -10,7 +10,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-import * as Constants from '../lib/websocketConstants';
+import * as Constants from '../lib/constants';
 import { CountdownTimer } from '../components/CountdownTimer/CountdownTimer';
 import { LeaderboardContainer } from '../components/Leaderboard/Leaderboard';
 import { EmojiPicker } from '../components/EmojiPicker/EmojiPicker';
