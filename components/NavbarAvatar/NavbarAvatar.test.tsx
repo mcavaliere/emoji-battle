@@ -4,7 +4,7 @@ import { NavbarAvatar } from './NavbarAvatar';
 
 describe('NavbarAvatar', () => {
   it('renders correctly', () => {
-    const { container } = render(<NavbarAvatar myProp="foo" />);
+    const { container } = render(<NavbarAvatar />);
     expect(container).toMatchSnapshot();
   });
 });

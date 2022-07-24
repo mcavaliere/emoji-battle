@@ -11,14 +11,20 @@ jest.mock('ably');
 
 describe('HomePage', () => {
   it('renders homepage unchanged', async () => {
-    jest.spyOn(Hooks, 'useWebsocketChannel').mockImplementation(() => {
-      return [fakeAblyChannel, AblyStub];
+    // @ts-ignore
+    jest.spyOn(Hooks, 'useWebsocketChannels').mockImplementation(() => {
+      return {
+        playersChannel: fakeAblyChannel,
+        emojiBoxChannel: fakeAblyChannel,
+        voteChannel: fakeAblyChannel,
+      };
     });
 
     jest.spyOn(Fetcher, 'fetcher').mockResolvedValueOnce({ users: [] });
 
     (useSession as jest.Mock).mockReturnValue(validSession);
 
+    // @ts-ignore
     const { findByText } = render(<Home />);
 
     expect(await findByText('Emoji 🤪 ⚔️ 😀 Battle')).toBeVisible();

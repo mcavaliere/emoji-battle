@@ -19,10 +19,10 @@ const emoji: EmojiFromListResponsePayload = {
   id: 1,
   native: '😅',
   name: 'Smiling Face with Open Mouth and Cold Sweat',
-  _count: {
-    votes: 8,
-  },
-  votes: [vote],
+  voteCount: 12,
+  externalId: 'sweat_smile',
+  unified: '1f605',
+  shortcodes: ':sweat_smile:',
 };
 
 const animationIndices = new Array(animationConfigs.length)

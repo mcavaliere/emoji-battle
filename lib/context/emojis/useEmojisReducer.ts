@@ -1,10 +1,14 @@
 import * as Constants from '../../constants';
 import { create as recordVote } from '../../api/votes';
 import { defaultEmojisContext } from './EmojisContext';
-import { emojisReducer } from './EmojisContextReducer';
+import { emojisReducer } from './EmojisReducer';
 import { useEffectReducer } from '../../hooks/useEffectReducer';
 import { useWebsocketChannels } from '../../hooks/useWebsocketChannels';
 
+/**
+ * Inistantiates Emojis context reducer and side effects.
+ * @returns
+ */
 export const useEmojisContextReducer = () => {
   const { emojiBoxChannel, voteChannel } = useWebsocketChannels();
 
