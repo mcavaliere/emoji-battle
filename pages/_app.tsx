@@ -2,8 +2,8 @@ import { SessionProvider } from 'next-auth/react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import { RoundProvider } from '../lib/context/RoundContext';
-import { EmojisProvider } from '../lib/context/EmojisContext';
+import { RoundProvider } from '../lib/context/round/RoundContext';
+import { EmojisProvider } from '../lib/context/emojis/EmojisContext';
 
 import { AppPropsWithLayout } from '../lib/types/NextApp';
 import { getLayout as defaultGetLayout } from '../layouts/PageLayout';

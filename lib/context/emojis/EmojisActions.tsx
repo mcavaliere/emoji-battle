@@ -1,7 +1,7 @@
 import { BaseEmoji } from 'emoji-mart';
 import { Round } from '@prisma/client';
-import { EmojiFromListResponsePayload } from '../../lib/types/EmojiListResponsePayload';
-import { SessionUserType } from '../../lib/types/SessionType';
+import { EmojiFromListResponsePayload } from '../../types/EmojiListResponsePayload';
+import { SessionUserType } from '../../types/SessionType';
 
 export enum EmojisActions {
   HYDRATE = 'HYDRATE',

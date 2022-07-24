@@ -4,7 +4,7 @@ import { Emoji } from '@prisma/client';
 
 import { EmojiFromListResponsePayload } from '../../lib/types/EmojiListResponsePayload';
 import { EmojiBoxContainer } from '../EmojiBox/EmojiBox';
-import { useEmojisContext } from '../../lib/context/EmojisContext';
+import { useEmojisContext } from '../../lib/context/emojis/EmojisContext';
 
 export const mapEmojis = (emojis: Emoji[]) =>
   emojis.reduce((acc, emoji) => {

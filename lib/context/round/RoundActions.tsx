@@ -1,5 +1,5 @@
 import { Round } from '@prisma/client';
-import { start as startRound } from '../api/rounds';
+import { start as startRound } from '../../api/rounds';
 
 export enum RoundActions {
   START = 'START',

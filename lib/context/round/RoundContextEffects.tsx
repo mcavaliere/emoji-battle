@@ -1,7 +1,7 @@
 import { useQueryClient } from 'react-query';
-import * as Constants from '../constants';
+import * as Constants from '../../constants';
 import { RoundActions } from './RoundActions';
-import { useEffectReducer } from '../hooks/useEffectReducer';
+import { useEffectReducer } from '../../hooks/useEffectReducer';
 import { roundReducer } from './RoundContextReducer';
 import { defaultRoundContext } from './RoundContext';
 

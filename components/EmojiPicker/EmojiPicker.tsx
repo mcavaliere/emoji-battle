@@ -5,8 +5,8 @@ import data from '@emoji-mart/data';
 import { Picker as EmojiMartPicker, BaseEmoji } from 'emoji-mart';
 import { useSession } from 'next-auth/react';
 
-import { useRoundContext } from '../../lib/context/RoundContext';
-import { useEmojisContext } from '../../lib/context/EmojisContext';
+import { useRoundContext } from '../../lib/context/round/RoundContext';
+import { useEmojisContext } from '../../lib/context/emojis/EmojisContext';
 import { SessionType } from '../../lib/types/SessionType';
 
 export function Picker(props) {

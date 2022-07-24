@@ -4,9 +4,9 @@ import { useQuery } from 'react-query';
 import { useRoundContextEffectReducer } from './RoundContextEffects';
 import { useRoundContextWebsocketEvents } from './RoundContextWebsocketEvents';
 import { useRoundActionCreators } from './RoundActions';
-import * as Constants from '../constants';
-import { ResponsePayload as StatusResponsePayload } from '../../pages/api/rounds/status';
-import { status as fetchRoundStatus } from '../../lib/api/rounds';
+import * as Constants from '../../constants';
+import { ResponsePayload as StatusResponsePayload } from '../../../pages/api/rounds/status';
+import { status as fetchRoundStatus } from '../../api/rounds';
 
 export type RoundContextType = {
   round?: Round;

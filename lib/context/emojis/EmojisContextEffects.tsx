@@ -1,9 +1,9 @@
-import * as Constants from '../constants';
-import { create as recordVote } from '../../lib/api/votes';
+import * as Constants from '../../constants';
+import { create as recordVote } from '../../api/votes';
 import { defaultEmojisContext } from './EmojisContext';
 import { emojisReducer } from './EmojisContextReducer';
-import { useEffectReducer } from '../hooks/useEffectReducer';
-import { useWebsocketChannels } from '../hooks/useWebsocketChannels';
+import { useEffectReducer } from '../../hooks/useEffectReducer';
+import { useWebsocketChannels } from '../../hooks/useWebsocketChannels';
 
 export const useEmojisContextReducer = () => {
   const { emojiBoxChannel, voteChannel } = useWebsocketChannels();
