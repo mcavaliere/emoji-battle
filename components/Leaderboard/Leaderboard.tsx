@@ -29,9 +29,9 @@ export type LeaderboardProps = {
 export const Leaderboard = ({ emojis }: LeaderboardProps) => {
   return (
     <>
-      <Heading size="md" mb={5}>
+      {/* <Heading size="md" mb={5}>
         Leaderboard
-      </Heading>
+      </Heading> */}
       <Box width="100%">
         <AnimatePresence>
           {emojis.map((e) => (
