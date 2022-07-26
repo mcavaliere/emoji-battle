@@ -2,6 +2,7 @@ import { SessionProvider } from 'next-auth/react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import { theme } from '../lib/theme/theme';
 import { RoundProvider } from '../lib/context/round/RoundContext';
 import { EmojisProvider } from '../lib/context/emojis/EmojisProvider';
 
@@ -39,7 +40,7 @@ function MyApp({
   return (
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
           <RoundProvider>
             <EmojisProvider>
               {getLayout(<Component {...pageProps} />, pageProps)}
