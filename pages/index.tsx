@@ -6,6 +6,7 @@ import {
   Button,
   Container,
   Flex,
+  Show,
   SimpleGrid,
   Text,
 } from '@chakra-ui/react';
@@ -91,7 +92,7 @@ const Home: NextPage = () => {
           </Box>
         </SimpleGrid>
 
-        <SimpleGrid columns={3} spacing={3}>
+        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={3}>
           <Container textAlign="center">
             {roundIsInProgress ? <EmojiPicker /> : null}
           </Container>
@@ -123,9 +124,11 @@ const Home: NextPage = () => {
               </Flex>
             ) : null}
           </Flex>
-          <Container textAlign="center">
-            <UserList />
-          </Container>
+          <Show above="sm">
+            <Container textAlign="center">
+              <UserList />
+            </Container>
+          </Show>
         </SimpleGrid>
       </Container>
     </>
