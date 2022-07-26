@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import { Box, Heading, HStack } from '@chakra-ui/react';
+import { useCallback, useEffect, useRef } from 'react';
+import { Heading, HStack } from '@chakra-ui/react';
 
 import data from '@emoji-mart/data';
 import { Picker as EmojiMartPicker, BaseEmoji } from 'emoji-mart';
@@ -11,21 +11,21 @@ import { SessionType } from '../../lib/types/SessionType';
 
 export function Picker(props) {
   const pickerRef = useRef<HTMLDivElement | null>(null);
-  const moduleRef = useRef<EmojiMartPicker | null>(null);
+  const showEmojis = useRef<boolean>(true);
 
-  // Use deferred import to make emoji-mart not break during SSR https://github.com/missive/emoji-mart/issues/575#issuecomment-1111323710
-  const handleDivRef = (divEl) => {
-    pickerRef.current = divEl;
-    if (!moduleRef.current) {
-      import('emoji-mart').then(
-        // @ts-ignore
-        (m) =>
-          (moduleRef.current = new m.Picker({ ...props, ref: pickerRef, data }))
-      );
+  useEffect(() => {
+    if (showEmojis.current) {
+      showEmojis.current = false;
+      // Use deferred import to make emoji-mart not break during SSR:
+      //  https://github.com/missive/emoji-mart/issues/575#issuecomment-1111323710
+      //  https://github.com/missive/emoji-mart/issues/575#issuecomment-1186794925
+      import('emoji-mart').then((EmojiMart) => {
+        new EmojiMart.Picker({ ...props, data, ref: pickerRef });
+      });
     }
-  };
+  }, [props]);
 
-  return <div ref={handleDivRef} />;
+  return <div ref={pickerRef} />;
 }
 
 export const EmojiPicker = () => {
@@ -35,7 +35,7 @@ export const EmojiPicker = () => {
   const { data: session } = useSession();
   const { user } = session as SessionType;
 
-  const handleEmojiSelect = async (emoji: BaseEmoji) => {
+  const handleEmojiSelect = useCallback(async (emoji: BaseEmoji) => {
     if (!round) {
       return;
     }
@@ -43,7 +43,7 @@ export const EmojiPicker = () => {
     // Dispatch an event up to the EmojisContext,
     //  have it alter state and fire off effects.
     emojiClicked(emoji, user, round);
-  };
+  }, []);
 
   return (
     <>
