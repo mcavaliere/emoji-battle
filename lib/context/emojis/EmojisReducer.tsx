@@ -22,7 +22,6 @@ export function emojisReducer(state, action, exec) {
         user,
         round,
       });
-      exec({ type: 'playEmojiClickSound' });
 
       return {
         ...state,
