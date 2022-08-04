@@ -10,6 +10,7 @@ export const useRoundContextEffectReducer = () => {
 
   const refreshRoundFromServer = () => {
     queryClient.refetchQueries([Constants.QUERY_CACHE_KEYS.CURRENT_ROUND]);
+    // TODO: publish to websocket
   };
 
   function triggerSummaryModal(_, _effect, dispatch) {
