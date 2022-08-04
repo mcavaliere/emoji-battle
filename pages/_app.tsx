@@ -1,6 +1,7 @@
 import { SessionProvider } from 'next-auth/react';
 import { ChakraProvider } from '@chakra-ui/react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { theme } from '../lib/theme/theme';
 import { RoundProvider } from '../lib/context/round/RoundContext';
@@ -47,6 +48,7 @@ function MyApp({
             </EmojisProvider>
           </RoundProvider>
         </ChakraProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </SessionProvider>
   );

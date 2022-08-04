@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 import { Round } from '@prisma/client';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useRoundContextEffectReducer } from './useRoundContextEffectReducer';
 import { useRoundContextWebsocketEvents } from './useRoundContextWebsocketEvents';
 import { useRoundActionCreators } from './useRoundActionCreators';

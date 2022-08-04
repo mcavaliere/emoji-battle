@@ -1,7 +1,7 @@
 import * as Constants from '../../constants';
 import { ResponsePayload as StatusResponsePayload } from '../../../pages/api/rounds/status';
 import { status as fetchRoundStatus } from '../../api/rounds';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useEmojisActionCreators } from './useEmojisActionCreators';
 import { useEmojisContextReducer } from './useEmojisReducer';
 import { useWebsocketChannels } from '../../hooks/useWebsocketChannels';

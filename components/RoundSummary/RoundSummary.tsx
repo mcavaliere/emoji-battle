@@ -21,8 +21,9 @@ import {
   Tr,
   Td,
 } from '@chakra-ui/react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { fetchStats } from '../../lib/api/rounds';
+import * as Constants from '../../lib/constants';
 
 export type RoundSummaryProps = {
   onClose: () => void;
@@ -30,9 +31,12 @@ export type RoundSummaryProps = {
 };
 
 export const RoundSummary = ({ onClose, roundId }) => {
-  const { isLoading, data } = useQuery('round-summary', () =>
-    fetchStats(roundId)
+  const { isLoading, data } = useQuery(
+    [Constants.QUERY_CACHE_KEYS.ROUND_SUMMARY],
+    () => fetchStats(roundId)
   );
+
+  console.log(`---------------- data: `, data);
 
   const roundStats = data?.stats?.round;
   const userStats = data?.stats?.users;
@@ -66,7 +70,7 @@ export const RoundSummary = ({ onClose, roundId }) => {
                     <Table>
                       <TableCaption placement="top">Top Emoji</TableCaption>
                       <Tbody>
-                        {emojiStats.map(([id, count]) => (
+                        {emojiStats?.map(([id, count]) => (
                           <Tr key={id}>
                             <Td>{emojiMap[id].native}</Td>
                             <Td>{count}</Td>

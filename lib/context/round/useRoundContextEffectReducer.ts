@@ -1,4 +1,4 @@
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import * as Constants from '../../constants';
 import { RoundActions } from './RoundActions';
 import { useEffectReducer } from '../../hooks/useEffectReducer';
