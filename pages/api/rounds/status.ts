@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import dayjs from 'dayjs';
 
 import { getSession } from 'next-auth/react';
+import * as RoundsService from '../../../lib/services/RoundsService';
 import prisma from '../../../lib/prismaClientInstance';
 import { EmojiFromListResponsePayload } from '../../../lib/types/EmojiListResponsePayload';
-import { Round, Emoji } from '@prisma/client';
+import { Round } from '@prisma/client';
 
 export type ResponsePayload = {
   round: Round;
@@ -28,25 +28,7 @@ export default async function handler(
   }
 
   try {
-    // A round is considered in progress if it's been started in the
-    //  last 5 minutes and has not been marked as ended.
-    const round = await prisma.round.findFirst({
-      where: {
-        AND: [
-          {
-            createdAt: {
-              gt: dayjs().subtract(5, 'minutes').toDate(),
-            },
-          },
-          {
-            endedAt: null,
-          },
-        ],
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+    const round = await RoundsService.fetchRoundInProgress();
 
     if (!round) {
       return res.status(204).end();

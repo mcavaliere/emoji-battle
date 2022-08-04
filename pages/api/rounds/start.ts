@@ -3,6 +3,7 @@ import { getSession } from 'next-auth/react';
 import prisma from '../../../lib/prismaClientInstance';
 import { Round, User } from '@prisma/client';
 import { start as startTimer } from '../../../lib/api/timer';
+import * as RoundsService from '../../../lib/services/RoundsService';
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,11 +24,17 @@ export default async function handler(
   const user = session.user as User;
 
   try {
-    const round = await prisma.round.create({
-      data: { startedByUserId: user.id },
-    });
+    // Check if round is already in progress, so we don't start two at once.
+    let round = await RoundsService.fetchRoundInProgress();
 
-    await startTimer(round.id);
+    if (!round) {
+      round = await prisma.round.create({
+        data: { startedByUserId: user.id },
+      });
+
+      // Only start the timer when creating the round.
+      await startTimer(round.id);
+    }
 
     return res.status(200).json(round);
   } catch (error) {
