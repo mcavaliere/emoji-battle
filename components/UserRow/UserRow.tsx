@@ -21,7 +21,7 @@ export const UserRow = ({ id, image, name }) => {
 
       if (user.id === id) {
         controls.start({
-          backgroundColor: ['#F09D51', '#EDF2F7 '],
+          backgroundColor: ['#F09D51', '#EDF2F7'],
           transition: {
             duration: 1,
           },
