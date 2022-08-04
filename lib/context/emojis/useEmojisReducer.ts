@@ -37,6 +37,7 @@ export const useEmojisContextReducer = () => {
     });
 
     // Record the vote in the database.
+    // TODO: can this be batched or stored in server memory so that we don't overload the DB?
     recordVote(round?.id, emoji);
   };
 
