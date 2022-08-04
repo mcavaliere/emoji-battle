@@ -6,14 +6,17 @@ import {
   Button,
   Container,
   Flex,
+  Show,
   SimpleGrid,
   Text,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 
 import * as Constants from '../lib/constants';
 import { CountdownTimer } from '../components/CountdownTimer/CountdownTimer';
 import { LeaderboardContainer } from '../components/Leaderboard/Leaderboard';
 import { EmojiPicker } from '../components/EmojiPicker/EmojiPicker';
+import { EmojiPickerDrawer } from '../components/EmojiPickerDrawer/EmojiPickerDrawer';
 import { RoundSummary } from '../components/RoundSummary/RoundSummary';
 import { UserList } from '../components/UserList/UserList';
 import { useWebsocketChannels } from '../lib/hooks/useWebsocketChannels';
@@ -41,6 +44,11 @@ const Home: NextPage = () => {
     roundSummaryVisible,
     currentStep,
   } = useRoundContext();
+
+  const layout = useBreakpointValue({
+    base: 'mobile',
+    md: 'desktop',
+  });
 
   useEffect((): void => {
     if (session?.user) {
@@ -91,9 +99,9 @@ const Home: NextPage = () => {
           </Box>
         </SimpleGrid>
 
-        <SimpleGrid columns={3} spacing={3}>
+        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={3}>
           <Container textAlign="center">
-            {roundIsInProgress ? <EmojiPicker /> : null}
+            {roundIsInProgress && layout === 'desktop' ? <EmojiPicker /> : null}
           </Container>
           <Flex
             direction="column"
@@ -123,11 +131,14 @@ const Home: NextPage = () => {
               </Flex>
             ) : null}
           </Flex>
-          <Container textAlign="center">
-            <UserList />
-          </Container>
+          {layout === 'desktop' ? (
+            <Container textAlign="center">
+              <UserList />
+            </Container>
+          ) : null}
         </SimpleGrid>
       </Container>
+      {roundIsInProgress && layout === 'mobile' ? <EmojiPickerDrawer /> : null}
     </>
   );
 };

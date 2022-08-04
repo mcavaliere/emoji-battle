@@ -20,7 +20,13 @@ export function Picker(props) {
       //  https://github.com/missive/emoji-mart/issues/575#issuecomment-1111323710
       //  https://github.com/missive/emoji-mart/issues/575#issuecomment-1186794925
       import('emoji-mart').then((EmojiMart) => {
-        new EmojiMart.Picker({ ...props, data, ref: pickerRef });
+        new EmojiMart.Picker({
+          ...props,
+          data,
+          ref: pickerRef,
+          previewPosition: 'none',
+          searchPosition: 'none',
+        });
       });
     }
   }, [props]);
@@ -36,6 +42,7 @@ export const EmojiPicker = () => {
   const { user } = session as SessionType;
 
   const handleEmojiSelect = useCallback(async (emoji: BaseEmoji) => {
+    console.log(`handleEmojiSelect`);
     if (!round) {
       return;
     }
@@ -47,12 +54,12 @@ export const EmojiPicker = () => {
 
   return (
     <>
-      <Heading size="md" mb={5}>
+      {/* <Heading size="md" mb={5}>
         Pick an emoji!
-      </Heading>
-      <HStack justifyContent="center" mb={5}>
-        <Picker onEmojiSelect={handleEmojiSelect} />
-      </HStack>
+      </Heading> */}
+      {/* <HStack justifyContent="center" mb={5}> */}
+      <Picker onEmojiSelect={handleEmojiSelect} />
+      {/* </HStack> */}
     </>
   );
 };
