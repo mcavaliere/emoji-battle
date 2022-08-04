@@ -1,6 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { User } from '@prisma/client';
+import dayjs from 'dayjs';
+
 import prisma from '../../../lib/prismaClientInstance';
 
 type Data = {
@@ -21,6 +23,14 @@ export default async function handler(
             expires: {
               // Show only users whose session expires in the future.
               gt: new Date(Date.now()).toISOString(),
+            },
+          },
+        },
+        votes: {
+          some: {
+            createdAt: {
+              // Show only users who have voted in the last 5 minutes.
+              gt: dayjs().subtract(5, 'minutes').toISOString(),
             },
           },
         },
