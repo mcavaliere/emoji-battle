@@ -1,4 +1,4 @@
-import { Round } from '@prisma/client';
+import { Round, User } from '@prisma/client';
 import { ResponsePayload as StatusResponsePayload } from '../../pages/api/rounds/status';
 /**
  * Get data for a round in progress.
@@ -8,6 +8,16 @@ export async function status(): Promise<StatusResponsePayload | undefined> {
 
   if (response.status !== 200) {
     return undefined;
+  }
+
+  return await response.json();
+}
+
+export async function users(roundId: Round['id']): Promise<User[]> {
+  const response = await fetch(`/api/rounds/${roundId}/users`);
+
+  if (response.status !== 200) {
+    throw new Error(`Failed to fetch users for round ${roundId}`);
   }
 
   return await response.json();

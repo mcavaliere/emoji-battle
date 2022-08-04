@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import { useEffect } from 'react';
+
 import { signIn, useSession } from 'next-auth/react';
 import {
   Box,
@@ -19,7 +19,6 @@ import { EmojiPicker } from '../components/EmojiPicker/EmojiPicker';
 import { EmojiPickerDrawer } from '../components/EmojiPickerDrawer/EmojiPickerDrawer';
 import { RoundSummary } from '../components/RoundSummary/RoundSummary';
 import { UserList } from '../components/UserList/UserList';
-import { useWebsocketChannels } from '../lib/hooks/useWebsocketChannels';
 import { useRoundContext } from '../lib/context/round/RoundContext';
 
 import {
@@ -27,14 +26,9 @@ import {
   LoggedOutBranding,
 } from '../components/Branding/Branding';
 
-const handleResetClick = async () => {
-  await fetch('/api/reset', { method: 'POST' });
-};
-
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
   const loading = status === 'loading';
-  const { playersChannel } = useWebsocketChannels();
 
   const {
     previousRound,
@@ -43,19 +37,13 @@ const Home: NextPage = () => {
     hideRoundSummary,
     roundSummaryVisible,
     currentStep,
+    users,
   } = useRoundContext();
 
   const layout = useBreakpointValue({
     base: 'mobile',
     md: 'desktop',
   });
-
-  useEffect((): void => {
-    if (session?.user) {
-      // TODO: lift this up into context side effect.
-      playersChannel.publish(Constants.EVENTS.PLAYER_JOINED, session.user);
-    }
-  }, [session?.user]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -133,7 +121,7 @@ const Home: NextPage = () => {
           </Flex>
           {layout === 'desktop' ? (
             <Container textAlign="center">
-              <UserList />
+              <UserList users={users} />
             </Container>
           ) : null}
         </SimpleGrid>

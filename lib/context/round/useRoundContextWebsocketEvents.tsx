@@ -28,4 +28,12 @@ export const useRoundContextWebsocketEvents = (dispatch) => {
       dispatch({ type: RoundActions.END });
     }
   );
+
+  useWebsocketEvent(
+    Constants.CHANNELS.PLAYERS,
+    Constants.EVENTS.PLAYER_JOINED,
+    (message) => {
+      dispatch({ type: RoundActions.USER_JOINED, user: message.data });
+    }
+  );
 };

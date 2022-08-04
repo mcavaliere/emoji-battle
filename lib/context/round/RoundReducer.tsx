@@ -24,6 +24,12 @@ export function roundReducer(
         inProgress: action.inProgress,
       };
 
+    case RoundActions.HYDRATE_USERS:
+      return {
+        ...state,
+        users: action.users,
+      };
+
     case RoundActions.END:
       exec({ type: 'refreshRoundFromServer' });
       exec({ type: 'triggerSummaryModal' });
@@ -60,6 +66,23 @@ export function roundReducer(
 
     case RoundActions.RESET:
       return defaultRoundContext;
+
+    case RoundActions.USER_JOINED: {
+      const newUsers = [...state.users];
+
+      const targetIndex = newUsers.findIndex((u) => u.id === action.user.id);
+
+      if (targetIndex === -1) {
+        newUsers.push(action.user);
+      }
+
+      newUsers.sort((a, b) => a.id - b.id);
+
+      return {
+        ...state,
+        users: newUsers,
+      };
+    }
 
     default:
       return state;

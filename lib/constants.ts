@@ -24,4 +24,5 @@ export const ROUNDS = {
 
 export enum QUERY_CACHE_KEYS {
   CURRENT_ROUND = 'current-round',
+  ROUND_USERS = 'round-users',
 }

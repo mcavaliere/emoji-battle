@@ -1,48 +1,13 @@
-import { useEffect, useState } from 'react';
 import { Heading, VStack } from '@chakra-ui/react';
 import { User } from '@prisma/client';
 
 import { UserRow } from '../UserRow/UserRow';
-import { fetcher } from '../../lib/fetcher';
-import { useWebsocketEvent } from '../../lib/hooks/useWebsocketEvent';
-import * as Constants from '../../lib/constants';
 
-export const UserList = () => {
-  const [users, setUsers] = useState<User[]>([]);
+export type UserListProps = {
+  users: User[];
+};
 
-  // Initial load.
-  useEffect(() => {
-    // TODO: move higher up into context, load with react query.
-    async function loadPlayers() {
-      try {
-        const { users } = await fetcher(`/api/users/list`);
-
-        setUsers(users);
-      } catch (e) {}
-    }
-
-    loadPlayers();
-  }, []);
-
-  // Todo: init this higher up in context, convert this to presentational component.
-  useWebsocketEvent(
-    Constants.CHANNELS.PLAYERS,
-    Constants.EVENTS.PLAYER_JOINED,
-    (message) => {
-      // Add user to list, if not already present.
-      const user = message.data as User;
-
-      setUsers((users = []) => {
-        const newUsers = [...users];
-
-        if (users.findIndex((u) => u.id === user.id) === -1) {
-          newUsers.push(user);
-        }
-        return newUsers;
-      });
-    }
-  );
-
+export const UserList = ({ users }: UserListProps) => {
   if (!users) return <div>loading...</div>;
 
   return (

@@ -1,4 +1,4 @@
-import { Round } from '@prisma/client';
+import { Round, User } from '@prisma/client';
 import { RoundActions } from './RoundActions';
 import { start as startRound } from '../../api/rounds';
 
@@ -20,6 +20,10 @@ export const useRoundActionCreators = (state, dispatch) => {
     dispatch({ type: RoundActions.HYDRATE, round, inProgress: true });
   };
 
+  const hydrateUsers = (users: User[]) => {
+    dispatch({ type: RoundActions.HYDRATE_USERS, users });
+  };
+
   const reset = () => {
     dispatch({ type: RoundActions.RESET });
   };
@@ -36,6 +40,7 @@ export const useRoundActionCreators = (state, dispatch) => {
     start,
     end,
     hydrateRound,
+    hydrateUsers,
     reset,
     showRoundSummary,
     hideRoundSummary,
