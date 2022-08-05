@@ -42,3 +42,14 @@ In another, start the timer server:
 `yarn start:dev`
 
 Visit `http://localhost:3000` to play on your local machine 🎉. Happy battling!
+
+### Contributing
+
+Reach out to me on Twitter: [@mcavaliere](https://twitter.com/mcavaliere). 
+
+-----
+
+
+<p align="center"><b>Built by <a href="https://mikecavaliere.com/">Mike Cavaliere</a> (<a href="https://twitter.com/mcavaliere">@mcavaliere</a>)</b></p>
+
+<p align="center"><b>Supported by <a href="https://echobind.com/">Echobind</a> (<a href="https://twitter.com/echobind">@echobind</a>).</b></p>
