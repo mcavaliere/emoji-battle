@@ -2,12 +2,12 @@
 <h2 align="center">🤪 ⚔️ 😀</h2>
 
 <p align="center">
-The makings of a simple, multiplayer game with the full-stack Jamstack.
+A simple, multiplayer game built with the full-stack Jamstack.
 </p>
 
 ### Libraries
 
-- [Next.js](https://nextjs.org/)
+- [Next.js](https://nextjs.org/) / [React](https://reactjs.org/)
 - [Ably Realtime](https://github.com/ably)
 - [Prisma](https://www.prisma.io/)
 - [Chakra-UI](https://chakra-ui.com/)
