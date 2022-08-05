@@ -5,6 +5,9 @@
 A simple, multiplayer game built with the full-stack Jamstack.
 </p>
 
+![emoji-battle-round-in-progress](https://user-images.githubusercontent.com/147237/183110938-345db52f-191f-47b7-94d8-666dc2bd3dbd.png)
+
+
 ### Libraries
 
 - [Next.js](https://nextjs.org/) / [React](https://reactjs.org/)
