@@ -1,11 +1,11 @@
-const API_BASE_URL = process.env.API_BASE_URL;
+const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 /**
  * Start the hearbeat timer for a round, on the Express server.
  * @returns
  */
 export async function start(roundId: number): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/rounds/start`, {
+  const response = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/rounds/start`, {
     method: 'POST',
     mode: 'cors',
     headers: {
