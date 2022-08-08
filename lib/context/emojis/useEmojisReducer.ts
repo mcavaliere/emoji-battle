@@ -39,12 +39,10 @@ export const useEmojisContextReducer = () => {
 
     // Record the vote in the database.
     // TODO: can this be batched or stored in server memory so that we don't overload the DB?
-    try {
-      recordVote(round?.id, emoji);
-    } catch (error) {
+    recordVote(round?.id, emoji).catch((error) => {
       console.warn(`---------------- error recording vote: `, error);
       Sentry.captureException(error);
-    }
+    });
   };
 
   const effectMap = {
