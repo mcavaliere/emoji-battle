@@ -76,7 +76,7 @@ export default async function handler(
     res.end();
     return;
   } catch (error) {
-    console.log(`error: `, error);
+    console.error(`error in /api/votes/create: `, error);
     res.status(500);
     res.end();
     return;
