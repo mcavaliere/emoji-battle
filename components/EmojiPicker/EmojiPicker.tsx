@@ -42,7 +42,6 @@ export const EmojiPicker = () => {
   const { user } = session as SessionType;
 
   const handleEmojiSelect = useCallback(async (emoji: BaseEmoji) => {
-    console.log(`handleEmojiSelect`);
     if (!round) {
       return;
     }
