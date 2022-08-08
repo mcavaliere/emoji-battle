@@ -4,6 +4,7 @@ import { defaultEmojisContext } from './EmojisContext';
 import { emojisReducer } from './EmojisReducer';
 import { useEffectReducer } from '../../hooks/useEffectReducer';
 import { useWebsocketChannels } from '../../hooks/useWebsocketChannels';
+import * as Sentry from '@sentry/nextjs';
 
 /**
  * Inistantiates Emojis context reducer and side effects.
@@ -38,7 +39,12 @@ export const useEmojisContextReducer = () => {
 
     // Record the vote in the database.
     // TODO: can this be batched or stored in server memory so that we don't overload the DB?
-    recordVote(round?.id, emoji);
+    try {
+      recordVote(round?.id, emoji);
+    } catch (error) {
+      console.warn(`---------------- error recording vote: `, error);
+      Sentry.captureException(error);
+    }
   };
 
   const effectMap = {
