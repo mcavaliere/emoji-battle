@@ -1,7 +1,7 @@
 import { EmojisActions } from './EmojisActions';
 
 export function emojisReducer(state, action, exec) {
-  console.log(`ACTION: ${action.type}`, action);
+  // console.log(`ACTION: ${action.type}`, action);
   switch (action.type) {
     case EmojisActions.HYDRATE:
       return {

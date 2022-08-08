@@ -36,8 +36,6 @@ export const RoundSummary = ({ onClose, roundId }) => {
     () => fetchStats(roundId)
   );
 
-  console.log(`---------------- data: `, data);
-
   const roundStats = data?.stats?.round;
   const userStats = data?.stats?.users;
   const emojiStats = data?.stats?.emoji;

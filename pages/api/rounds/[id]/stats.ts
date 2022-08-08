@@ -102,15 +102,11 @@ export default async function handler(
       },
     });
 
-    console.log(`---------------- emoji: `, emoji);
-
     // Emoji objects, keyed by id for easy lookup.
     const emojiMap = emoji.reduce((acc, item) => {
       acc[item.id] = item;
       return acc;
     }, {});
-
-    console.log(`---------------- emojiMap: `, emojiMap);
 
     const userMap = users.reduce((acc, item) => {
       acc[item.id] = item;

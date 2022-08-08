@@ -6,7 +6,7 @@ export function roundReducer(
   action,
   exec
 ) {
-  console.log(`ACTION: ${action.type}`);
+  // console.log(`ACTION: ${action.type}`);
   switch (action.type) {
     case RoundActions.START:
       exec({ type: 'refreshRoundFromServer' });
