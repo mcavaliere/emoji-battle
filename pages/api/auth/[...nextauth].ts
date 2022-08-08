@@ -12,6 +12,7 @@ if (!process.env.GITHUB_SECRET) {
 }
 
 export default NextAuth({
+  debug: true,
   adapter: PrismaAdapter(prisma),
   theme: {
     colorScheme: 'auto',
