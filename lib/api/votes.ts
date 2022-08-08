@@ -19,6 +19,7 @@ export async function create(
 
   if (!response.ok) {
     console.warn('Error creating emoji: ', response.statusText);
+    throw new Error("Couldn't create emoji.");
   }
 
   return await response.json();

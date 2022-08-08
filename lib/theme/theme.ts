@@ -5,8 +5,10 @@ export const theme = extendTheme({
     global: (props) => ({
       body: {
         bg: 'gray.100',
-        // Disable zooming on mobile, since it degrades the experience.
-        'touch-action': 'pan-x pan-y',
+      },
+      '*': {
+        // Disable double-tap on mobile, since it prevents people from tapping.
+        'touch-action': 'manipulation',
       },
     }),
   },
