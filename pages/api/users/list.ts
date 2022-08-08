@@ -1,7 +1,7 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { User } from '@prisma/client';
 import dayjs from 'dayjs';
+import * as Sentry from '@sentry/nextjs';
 
 import prisma from '../../../lib/prismaClientInstance';
 
@@ -41,6 +41,7 @@ export default async function handler(
     res.end();
   } catch (error) {
     console.log(`error`, error);
+    Sentry.captureException(error);
     res.status(500).json({ error });
     res.end();
   }

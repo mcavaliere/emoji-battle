@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import * as Sentry from '@sentry/nextjs';
 
 import { getSession } from 'next-auth/react';
 import * as RoundsService from '../../../lib/services/RoundsService';
@@ -63,6 +64,7 @@ export default async function handler(
     return res.status(200).json({ round, emojis });
   } catch (error) {
     console.log(`error in GET /rounds/status: `, error);
+    Sentry.captureException(error);
     res.status(500);
     res.end();
     return;

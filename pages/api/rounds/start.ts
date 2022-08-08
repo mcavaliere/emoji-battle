@@ -4,6 +4,7 @@ import prisma from '../../../lib/prismaClientInstance';
 import { Round, User } from '@prisma/client';
 import { start as startTimer } from '../../../lib/api/timer';
 import * as RoundsService from '../../../lib/services/RoundsService';
+import * as Sentry from '@sentry/nextjs';
 
 export default async function handler(
   req: NextApiRequest,
@@ -39,6 +40,7 @@ export default async function handler(
     return res.status(200).json(round);
   } catch (error) {
     console.log(`error in POST /rounds/start: `, error);
+    Sentry.captureException(error);
     res.status(500);
     res.end();
     return;

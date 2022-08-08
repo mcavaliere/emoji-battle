@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import prisma from '../../../../lib/prismaClientInstance';
 import { Round, Emoji, User, Vote } from '@prisma/client';
+import * as Sentry from '@sentry/nextjs';
 
 export type Data = {
   stats: {
@@ -128,6 +129,7 @@ export default async function handler(
     });
   } catch (error) {
     console.log(`error in GET /rounds/:roundId/stats: `, error);
+    Sentry.captureException(error);
     res.status(500);
     res.end();
     return;

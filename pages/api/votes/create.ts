@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import prisma from '../../../lib/prismaClientInstance';
 import { User, Vote } from '@prisma/client';
+import * as Sentry from '@sentry/nextjs';
 
 export default async function handler(
   req: NextApiRequest,
@@ -77,6 +78,7 @@ export default async function handler(
     return;
   } catch (error) {
     console.error(`error in /api/votes/create: `, error);
+    Sentry.captureException(error);
     res.status(500);
     res.end();
     return;

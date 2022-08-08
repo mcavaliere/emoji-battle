@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../../lib/prismaClientInstance';
 import { Round } from '@prisma/client';
+import * as Sentry from '@sentry/nextjs';
 
 type Data = {
   round?: Round;
@@ -35,6 +36,7 @@ export default async function handler(
     res.status(200).json({ round: updatedRound });
   } catch (error) {
     console.log(`error in POST /rounds/stop: `, error);
+    Sentry.captureException(error);
     res.status(500);
     res.end();
     return;
